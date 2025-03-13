@@ -1,12 +1,12 @@
 from bcrypt import gensalt, hashpw, checkpw
 
 
-def generate_hash(password: str) -> bytes:
-    # Gera um hash seguro para a senha
+def generate_hash(string: str) -> bytes:
+    # Gera um hash seguro para uma string
     salt = gensalt(rounds=12)
-    return hashpw(password.encode(), salt)
+    return hashpw(string.encode(), salt)
 
 
-def verify_hash(password: str, hashed_password: bytes) -> bool:
-    # Verifica se a senha digitada confere com o hash armazenado
-    return checkpw(password.encode(), hashed_password)
+def verify_hash(string: str, hash: bytes) -> bool:
+    # Verifica se a string digitada confere com o hash armazenado
+    return checkpw(string.encode(), hash)
