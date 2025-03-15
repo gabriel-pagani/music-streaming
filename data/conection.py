@@ -1,4 +1,4 @@
-Mfrom pyodbc import connect, Error
+from pyodbc import connect, Error
 
 
 def server_request(server: str, database: str, query_type: str, query: str, user: str = '', password: str = '') -> dict:
