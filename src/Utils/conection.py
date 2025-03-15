@@ -23,8 +23,8 @@ def server_request(server: str, database: str, query_type: str, query: str, user
         with connect(server_connection) as connection:
             # Cria um cursor para executar comandos
             with connection.cursor() as cursor:
-                # Formata a query removendo espaços e convertendo para maiúsculas
-                formatted_query = query.strip().upper()
+                # Formata a query removendo espaços
+                formatted_query = query.strip()
                 # Executa a query
                 cursor.execute(formatted_query)
 
