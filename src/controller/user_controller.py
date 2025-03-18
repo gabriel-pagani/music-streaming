@@ -6,17 +6,13 @@ class UserController:
         pass
 
     def insert_user(self) -> dict:
-        self.response = server_request(query='insert into usuarios values ...')
-        return self.response
+        return server_request(query='insert into usuarios values ...')
 
     def select_users(self) -> dict:
-        self.response = server_request(query='select * from usuarios')
-        return self.response
+        return server_request(query='select * from usuarios')
 
     def update_user(self) -> dict:
-        self.response = server_request(query='updete set usuarios ...')
-        return self.response
+        return server_request(query='updete set usuarios ...')
 
     def delete_user(self) -> dict:
-        self.response = server_request(query='delete from usuarios where ...')
-        return self.response
+        return server_request(query='delete from usuarios where ...')
