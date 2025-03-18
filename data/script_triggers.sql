@@ -1,7 +1,4 @@
-CREATE OR ALTER FUNCTION dbo.CalcularJurosMensal(@score INT)
-RETURNS DECIMAL(5,2)
-AS
-BEGIN
+CREATE OR ALTER FUNCTION dbo.CalcularJurosMensal(@score INT) RETURNS DECIMAL(5,2) AS BEGIN
     RETURN 5.00 - (FLOOR((@score + 1000) / 100) * 0.25);
 END
 GO
