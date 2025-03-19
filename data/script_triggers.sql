@@ -3,11 +3,11 @@ CREATE OR ALTER FUNCTION dbo.CalcularJurosMensal(@score INT) RETURNS DECIMAL(5,2
 END
 GO
 
-CREATE OR ALTER TRIGGER TRIGGER_USUARIOS_INCOMPLETOS ON SOLICITACOES INSTEAD OF INSERT AS BEGIN
+CREATE OR ALTER TRIGGER TRIGGER_USUARIOS_PENDENCIAS ON SOLICITACOES INSTEAD OF INSERT AS BEGIN
     SET NOCOUNT ON;
 
     BEGIN TRY
-        -- Verifica se todos os usuários envolvidos na inserção estão com o cadastro completo
+        -- Verifica se todos os usuários envolvidos na inserção estão com o cadastro completo ou não estão com pendências
         IF EXISTS (
             SELECT 1
             FROM INSERTED S
@@ -23,6 +23,47 @@ CREATE OR ALTER TRIGGER TRIGGER_USUARIOS_INCOMPLETOS ON SOLICITACOES INSTEAD OF 
             RETURN;
         END
 
+		-- Verifica se todos os usuários envolvidos na inserção estão sem pendências
+        IF EXISTS (
+            SELECT 1
+            FROM INSERTED S
+            INNER JOIN USUARIOS U ON S.ID_SOLICITANTE = U.ID
+            WHERE 
+                (U.STATUS = 'Bloqueado')
+        )
+        BEGIN
+            -- Impede a inserção na tabela SOLICITACOES
+            RAISERROR ('Não é possível solicitar empréstimos. Cadastro do usuário bloqueado.', 16, 1);
+            RETURN;
+        END
+
+		-- Verifica se todos os usuários envolvidos na inserção estão sem solicitações ou empréstimos ativos
+        IF EXISTS (
+			SELECT 1
+			FROM INSERTED S
+			WHERE 
+				-- Verifica se existe alguma solicitação em análise
+				EXISTS (
+					SELECT 1 
+					FROM SOLICITACOES SOL 
+					WHERE SOL.ID_SOLICITANTE = S.ID_SOLICITANTE
+					AND SOL.STATUS = 'Em análise'
+				)
+				OR
+				-- Verifica se existe algum empréstimo em andamento
+				EXISTS (
+					SELECT 1 
+					FROM EMPRESTIMOS E 
+					WHERE E.ID_USUARIO = S.ID_SOLICITANTE
+					AND (E.STATUS = 'Em andamento' OR E.STATUS = 'Atrasado')
+				)
+		)
+		BEGIN
+			-- Impede a inserção na tabela SOLICITACOES
+			RAISERROR ('Não é possível solicitar empréstimos. Usuário já tem uma solicitação ou empréstimo ativo.', 16, 1);
+			RETURN;
+		END
+
         -- Se o usuário estiver completo, permite a inserção normalmente
         INSERT INTO SOLICITACOES (ID_SOLICITANTE, VALOR_SOLICITADO, DATA_EMPRESTIMO, NUMERO_MESES, EXPLICACAO)
         SELECT 
@@ -35,7 +76,7 @@ CREATE OR ALTER TRIGGER TRIGGER_USUARIOS_INCOMPLETOS ON SOLICITACOES INSTEAD OF 
 
     END TRY
     BEGIN CATCH
-        PRINT 'Erro na trigger TRIGGER_USUARIOS_INCOMPLETOS: ' + ERROR_MESSAGE();
+        PRINT 'Erro na trigger TRIGGER_USUARIOS_PENDENCIAS: ' + ERROR_MESSAGE();
     END CATCH
 END
 GO
@@ -66,16 +107,28 @@ CREATE OR ALTER TRIGGER TRIGGER_USUARIOS_ATUALIZADOS ON USUARIOS AFTER UPDATE AS
         FROM USUARIOS
         INNER JOIN INSERTED ON USUARIOS.ID = INSERTED.ID;
 
+    END TRY
+    BEGIN CATCH
+        PRINT 'Erro na trigger TRIGGER_USUARIOS_ATUALIZADOS: ' + ERROR_MESSAGE();
+    END CATCH
+END
+GO
+
+CREATE OR ALTER TRIGGER TRIGGER_SOLICITACOES_ADICIONADAS ON SOLICITACOES AFTER INSERT AS BEGIN
+	SET NOCOUNT ON;
+
+	BEGIN TRY
+
 		UPDATE SOLICITACOES
 		SET SOLICITACOES.VALOR_INDICE = USUARIOS.RENDA_MENSAL * (CAST(USUARIOS.SCORE AS DECIMAL(10,1)) / 250)
 		FROM SOLICITACOES
 		JOIN USUARIOS ON SOLICITACOES.ID_SOLICITANTE = USUARIOS.ID
 		WHERE SOLICITACOES.STATUS = 'Em análise'
 
-    END TRY
-    BEGIN CATCH
-        PRINT 'Erro na trigger TRIGGER_USUARIOS_ATUALIZADOS: ' + ERROR_MESSAGE();
-    END CATCH
+	END TRY
+	BEGIN CATCH
+		PRINT 'Erro na trigger TRIGGER_SOLICITACOES_ATUALIZADAS ' + ERROR_MESSAGE();
+	END CATCH
 END
 GO
 
