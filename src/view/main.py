@@ -1,6 +1,8 @@
 from os import system
 from re import search, match
 from pyodbc import Error
+from utils.conection import server_request
+from utils.hash import generate_hash, verify_hash
 
 
 def exibir_titulo(titulo):
@@ -31,8 +33,9 @@ def fazer_login():
     email = input('Email: ')
     password = input('Senha: ')
 
-    # Aqui precisa ter uma requisição para o servidor que vai validar se a senha está correta ou se o usuário existe
-    if False:  # Placeholder para validação real
+    response = server_request(
+        query=f"select hash_senha from usuarios where email = '{email}'")
+    if verify_hash(string=password, hash=response['data']):
         print('\033[32mLogin efetuado com sucesso!\033[m')
         return True
     else:
@@ -60,9 +63,10 @@ def criar_conta():
     senha_valida = validar_senha(password)
 
     if senha_valida and email_valido:
-        # Aqui precisa ter uma requisição para o servidor que vai inserir um novo usuario no banco
-        # também vai ser necessario importar a função que criptografa a senha
         system('cls')
+        server_request(
+            query=f"insert into usuarios (email, hash_senha, a) values ('{email}','{generate_hash(password)}','{nome}')")
+
         print('\033[32mCadastro efetuado com sucesso!\033[m')
         print('=' * 50)
     else:
@@ -80,6 +84,7 @@ def criar_conta():
 # Programa principal
 exibir_titulo('EMPREXTAE')
 login = False
+user = None
 
 while True:
     if login:
