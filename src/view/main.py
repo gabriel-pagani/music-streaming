@@ -6,115 +6,150 @@ from utils.hash import generate_hash, verify_hash
 
 
 def exibir_titulo(titulo):
-    # Função para exibir títulos formatados com separadores
     print('=' * 50)
     print(f'{titulo:^50}')
     print('=' * 50)
 
 
 def validar_email(email):
-    # Valida formato de email
-    return bool(match(r'.+@.+\..+', email))
+    return bool(match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email))
 
 
 def validar_senha(password):
-    # Valida critérios de senha
-    return (len(password) >= 6 and
+    return (len(password) >= 8 and
             search(r'[A-Z]', password) and
             search(r'[a-z]', password) and
             search(r'[0-9]', password) and
             search(r'[!@#$%^&*(),.?":{}|<>]', password))
 
 
+def mostrar_erro(mensagem):
+    system('cls')
+    print(f'\033[31m{mensagem}\033[m')
+    print('=' * 50)
+
+
+def mostrar_aviso(mensagem):
+    system('cls')
+    print(f'\033[93m{mensagem}\033[m')
+    print('=' * 50)
+
+
 def fazer_login():
-    # Processo de login
     system('cls')
     exibir_titulo('Login')
-    email = input('Email: ')
-    password = input('Senha: ')
+    email = str(input('Email: '))
+    password = str(input('Senha: '))
 
-    response = server_request(
-        query=f"select hash_senha from usuarios where email = '{email}'")
-    if verify_hash(string=password, hash=response['data']):
-        print('\033[32mLogin efetuado com sucesso!\033[m')
-        return [True, email]
-    else:
-        system('cls')
-        print('\033[93mUsuário e/ou senha incorretos!\033[m')
-        print('=' * 50)
-        return False
+    if not validar_email(email):
+        mostrar_aviso("Formato de email inválido!")
+        return [False, None, None]
+
+    try:
+        response = server_request(
+            query=f"SELECT hash_senha, nome FROM usuarios WHERE email = '{email}'"
+        )
+        hash_senha = response['data'][0][0]
+        nome = response['data'][0][1]
+
+        if not response or 'data' not in response or not response['data']:
+            mostrar_aviso("Usuário inexistente!")
+            return [False, None, None]
+
+        if verify_hash(string=password, hash=hash_senha):
+            system('cls')
+            print('\033[32mLogin efetuado com sucesso!\033[m')
+            print('=' * 50)
+            return [True, email, nome]
+
+        else:
+            mostrar_aviso("Usuário e/ou senha incorretos!")
+            return [False, None, None]
+
+    except Error as e:
+        mostrar_erro(f"Erro na conexão com o banco: {e}")
+        return [False, None, None]
 
 
 def criar_conta():
-    # Processo de criação de conta
     system('cls')
     exibir_titulo('Cadastro')
-    nome = input('Nome: ')
-    email = input('Email: ')
-    password = input('Senha: ')
+    nome = str(input('Nome: '))
+    email = str(input('Email: '))
+    password = str(input('Senha: '))
 
     if not (nome and password and email):
-        system('cls')
-        print('\033[93mDados inválidos, tente novamente!\033[m')
-        print('=' * 50)
+        mostrar_aviso("Todos os campos são obrigatórios!")
         return False
 
-    email_valido = validar_email(email)
-    senha_valida = validar_senha(password)
+    if not validar_email(email):
+        mostrar_aviso("E-mail inválido! \nPor favor insira um e-mail válido.")
+        return False
 
-    if senha_valida and email_valido:
-        system('cls')
+    if not validar_senha(password):
+        mostrar_aviso("Senha fraca! \nA senha deve conter pelo menos 8 caracteres, \n"
+                      "uma letra maiúscula, uma letra minúscula, \n"
+                      "um número e um caractere especial.")
+        return False
+
+    try:
+        response = server_request(
+            query=f"SELECT COUNT(*) AS count FROM usuarios WHERE email = '{email}'"
+        )
+
+        if response and 'data' in response and response['data'] and response['data'][0][0]:
+            mostrar_aviso("Este email já está cadastrado!")
+            return False
+
         server_request(
-            query=f"insert into usuarios (email, hash_senha, a) values ('{email}','{generate_hash(password)}','{nome}')")
+            query=f"INSERT INTO usuarios (email, hash_senha, nome) VALUES ('{email}', '{generate_hash(password)}', '{nome}')"
+        )
 
+        system('cls')
         print('\033[32mCadastro efetuado com sucesso!\033[m')
         print('=' * 50)
-    else:
-        system('cls')
-        if not email_valido:
-            print(
-                '\033[93mE-mail inválido! \nPor favor insira um e-mail válido.\033[m')
-            print('=' * 50)
-        elif not senha_valida:
-            print('\033[93mSenha fraca! \nA senha deve conter pelo menos 6 caracteres, \numa letra maiúscula, uma letra minúscula, \num número e um caractere especial.\033[m')
-            print('=' * 50)
+        return True
+
+    except Error as e:
+        mostrar_erro(f"Erro na conexão com o banco: {e}")
         return False
 
 
-# Programa principal
-exibir_titulo('EMPREXTAE')
-login = False
-user = None
+def main():
+    exibir_titulo('IMPREXTAE')
+    login = False
+    user = None
+    nome = None
 
-while True:
-    if login:
-        ...  # Código para usuário logado
-    else:
+    while not login:
         try:
-            print('1 - Fazer login\n2 - Criar conta')
+            print('1 - Fazer login\n2 - Criar conta\n3 - Sair')
             print('=' * 50)
             escolhido = int(input('Escolha uma opção: '))
 
-            try:
-                if escolhido == 1:
-                    retorno = fazer_login()
-                    login = retorno[0]
-                    user = retorno[1]
-                    if login:
-                        break
+            if escolhido == 1:
+                retorno = fazer_login()
+                login = retorno[0]
+                user = retorno[1]
+                nome = retorno[2]
 
-                elif escolhido == 2:
-                    if criar_conta():
-                        break
+            elif escolhido == 2:
+                criar_conta()
 
-                else:
-                    raise ValueError
+            elif escolhido == 3:
+                system('cls')
+                print("Obrigado por usar nosso sistema!")
+                return
 
-            except Error as e:
-                print(f'\033[31mErro na requisição com o banco:\033[m {e}')
-                print('=' * 50)
+            else:
+                mostrar_aviso("Opção inválida, escolha novamente!")
 
         except ValueError:
-            system('cls')
-            print('\033[31mOpção inválida, escolha novamente!\033[m')
-            print('=' * 50)
+            mostrar_aviso("Opção inválida, escolha novamente!")
+
+    system('cls')
+    exibir_titulo(f"Bem-vindo, {nome}!")
+
+
+if __name__ == "__main__":
+    main()
