@@ -37,7 +37,7 @@ def fazer_login():
         query=f"select hash_senha from usuarios where email = '{email}'")
     if verify_hash(string=password, hash=response['data']):
         print('\033[32mLogin efetuado com sucesso!\033[m')
-        return True
+        return [True, email]
     else:
         system('cls')
         print('\033[93mUsuário e/ou senha incorretos!\033[m')
@@ -97,7 +97,9 @@ while True:
 
             try:
                 if escolhido == 1:
-                    login = fazer_login()
+                    retorno = fazer_login()
+                    login = retorno[0]
+                    user = retorno[1]
                     if login:
                         break
 
