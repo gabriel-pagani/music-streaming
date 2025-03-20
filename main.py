@@ -58,12 +58,12 @@ def fazer_login():
             params=(email,)
         )
 
-        hash_senha = response['data'][0]['hash_senha']
-        nome = response['data'][0]['nome']
-
         if not response or 'data' not in response or not response['data']:
             mostrar_aviso("Usuário inexistente!")
             return [False, None, None]
+
+        hash_senha = response['data'][0]['hash_senha']
+        nome = response['data'][0]['nome']
 
         if verify_hash(string=password, hash=hash_senha):
             limpar_tela()
