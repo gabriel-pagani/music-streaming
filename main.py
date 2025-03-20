@@ -27,16 +27,7 @@ def validar_email(email):
 
 def validar_senha(password):
     """Valida a força da senha."""
-    return (len(password) >= 8 and
-            search(r'[A-Z]', password) and
-            search(r'[a-z]', password) and
-            search(r'[0-9]', password) and
-            search(r'[!@#$%^&*(),.?":{}|<>]', password))
-
-
-def sanitizar_input(texto):
-    """Sanitiza o input para prevenir SQL injection e outros ataques."""
-    return texto.replace("'", "").replace('"', '').replace(';', '')
+    return bool(search(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$', password))
 
 
 def mostrar_erro(mensagem):
@@ -92,7 +83,7 @@ def fazer_login():
 def criar_conta():
     limpar_tela()
     exibir_titulo('Cadastro')
-    nome = sanitizar_input(str(input('Nome: ')).strip())
+    nome = str(input('Nome: ')).strip()
     email = str(input('Email: ')).lower().strip()
     password = str(input('Senha: '))
 
