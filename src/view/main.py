@@ -38,7 +38,7 @@ def mostrar_aviso(mensagem):
 def fazer_login():
     system('cls')
     exibir_titulo('Login')
-    email = str(input('Email: '))
+    email = str(input('Email: ')).lower()
     password = str(input('Senha: '))
 
     if not validar_email(email):
@@ -74,8 +74,8 @@ def fazer_login():
 def criar_conta():
     system('cls')
     exibir_titulo('Cadastro')
-    nome = str(input('Nome: '))
-    email = str(input('Email: '))
+    nome = str(input('Nome: ')).lower()
+    email = str(input('Email: ')).lower()
     password = str(input('Senha: '))
 
     if not (nome and password and email):
@@ -148,7 +148,9 @@ def main():
             mostrar_aviso("Opção inválida, escolha novamente!")
 
     system('cls')
-    exibir_titulo(f"Bem-vindo, {nome}!")
+    exibir_titulo(f"Bem-vindo, {nome.title()}!")
+
+    # Implementar o sistema aqui!
 
 
 if __name__ == "__main__":
