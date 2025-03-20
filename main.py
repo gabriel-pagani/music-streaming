@@ -45,7 +45,12 @@ def mostrar_aviso(mensagem):
 def fazer_login():
     limpar_tela()
     exibir_titulo('Login')
-    email = str(input('Email: ')).lower().strip()
+    while True:
+        email = str(input('Email: ')).lower().strip()
+        if not validar_email(email):
+            mostrar_aviso("Email inválido, tente novamente!")
+        else:
+            break
     password = str(input('Senha: '))
 
     if not validar_email(email):
@@ -83,9 +88,22 @@ def fazer_login():
 def criar_conta():
     limpar_tela()
     exibir_titulo('Cadastro')
-    nome = str(input('Nome: ')).strip()
-    email = str(input('Email: ')).lower().strip()
-    password = str(input('Senha: '))
+    nome = str(input('Nome: ')).lower().strip()
+    while True:
+        email = str(input('Email: ')).lower().strip()
+        if not validar_email(email):
+            mostrar_aviso(
+                "E-mail inválido! \nPor favor insira um e-mail válido.")
+        else:
+            break
+    while True:
+        password = str(input('Senha: '))
+        if not validar_senha(password):
+            mostrar_aviso("Senha fraca! \nA senha deve conter pelo menos 8 caracteres, \n"
+                          "uma letra maiúscula, uma letra minúscula, \n"
+                          "um número e um caractere especial.")
+        else:
+            break
 
     if not (nome and password and email):
         mostrar_aviso("Todos os campos são obrigatórios!")
@@ -153,7 +171,7 @@ def main():
 
                 elif escolhido == 3:
                     limpar_tela()
-                    print("Obrigado por usar nosso sistema!")
+                    exibir_titulo("Obrigado por usar nosso sistema!")
                     return
 
                 else:
