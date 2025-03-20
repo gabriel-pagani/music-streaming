@@ -6,7 +6,6 @@ import logging
 
 load_dotenv()
 
-# Variável global para guardar a conexão
 _connection = None
 
 
@@ -40,7 +39,6 @@ def server_request(query: str, params=None) -> dict:
         connection = get_connection()
         with connection.cursor() as cursor:
 
-            # Executa a query com parâmetros
             if params:
                 cursor.execute(query, params)
             else:
@@ -51,7 +49,6 @@ def server_request(query: str, params=None) -> dict:
                 columns = [column[0] for column in cursor.description]
                 data = cursor.fetchall()
 
-                # Converter para lista de dicionários para acesso mais claro
                 result = []
                 for row in data:
                     result.append(dict(zip(columns, row)))
@@ -66,12 +63,11 @@ def server_request(query: str, params=None) -> dict:
 
     except Error as e:
         logging.error(f"Erro de banco de dados: {e}")
-        connection.rollback()  # Reverter alterações em caso de erro
+        connection.rollback()
         response['error'] = True
         response['message'] = 'Erro na conexão com o banco de dados'
     except Exception as e:
         logging.error(f"Erro inesperado: {e}")
-        connection.rollback()  # Reverter alterações em caso de erro
         response['error'] = True
         response['message'] = 'Ocorreu um erro inesperado'
 
