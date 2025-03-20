@@ -1,8 +1,8 @@
 from os import system, name
 from re import search, match
 import logging
-from utils.connection import server_request, close_connection
-from utils.hash import generate_hash, verify_hash
+from src.utils.connection import server_request, close_connection
+from src.utils.hash import generate_hash, verify_hash
 
 
 logging.basicConfig(filename='app.log', level=logging.ERROR,
