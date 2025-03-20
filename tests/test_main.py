@@ -1,8 +1,8 @@
-from os import system
+from os import system, name
 from re import search, match
 import logging
-from copy_connection import server_request, close_connection
-from copy_hash import generate_hash, verify_hash
+from test_connection import server_request, close_connection
+from test_hash import generate_hash, verify_hash
 
 # Configurar logging
 logging.basicConfig(filename='app.log', level=logging.ERROR,
@@ -11,7 +11,7 @@ logging.basicConfig(filename='app.log', level=logging.ERROR,
 
 def limpar_tela():
     """Limpa a tela de forma compatível com diferentes sistemas operacionais."""
-    system('clear')
+    system('cls' if name == 'nt' else 'clear')
 
 
 def exibir_titulo(titulo):
@@ -44,7 +44,6 @@ def mostrar_erro(mensagem):
     limpar_tela()
     print(f'\033[31m{mensagem}\033[m')
     print('=' * 50)
-    logging.error(mensagem)
 
 
 def mostrar_aviso(mensagem):

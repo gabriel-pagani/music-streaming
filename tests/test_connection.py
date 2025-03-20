@@ -3,9 +3,6 @@ from os import getenv
 from dotenv import load_dotenv
 import logging
 
-# Configurar logging
-logging.basicConfig(filename='database.log', level=logging.ERROR,
-                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 load_dotenv()
 
