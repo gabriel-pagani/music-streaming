@@ -55,34 +55,36 @@ def fazer_login():
 
     if not validar_email(email):
         mostrar_aviso("Email inválido!")
-        return [False, None, None]
+        return [False, None, None, None]
 
     try:
         response = server_request(
-            query="SELECT hash_senha, nome FROM usuarios WHERE email = ?",
+            query="SELECT hash_senha, nome, tipo, id FROM usuarios WHERE email = ?",
             params=(email,)
         )
 
         if not response or 'data' not in response or not response['data']:
             mostrar_aviso("Usuário inexistente!")
-            return [False, None, None]
+            return [False, None, None, None]
 
         hash_senha = response['data'][0]['hash_senha']
         nome = response['data'][0]['nome']
+        tipo = response['data'][0]['tipo']
+        id = response['data'][0]['id']
 
         if verify_hash(string=password, hash=hash_senha):
             limpar_tela()
             print('\033[32mLogin efetuado com sucesso!\033[m')
             print('=' * 50)
-            return [True, email, nome]
+            return [True, id, nome, tipo]
         else:
             mostrar_aviso("Usuário e/ou senha incorretos!")
-            return [False, None, None]
+            return [False, None, None, None]
 
     except Exception as e:
         logging.error(f"Erro ao fazer login: {e}")
         mostrar_erro("Ocorreu um erro ao tentar fazer login. Tente novamente.")
-        return [False, None, None]
+        return [False, None, None, None]
 
 
 def criar_conta():
@@ -151,8 +153,9 @@ def main():
     try:
         exibir_titulo('IMPREXTAE')
         login = False
-        email = None
+        id = None
         nome = None
+        tipo = None
 
         while not login:
             try:
@@ -163,8 +166,9 @@ def main():
                 if escolhido == 1:
                     retorno = fazer_login()
                     login = retorno[0]
-                    email = retorno[1]
+                    id = retorno[1]
                     nome = retorno[2]
+                    tipo = retorno[3]
 
                 elif escolhido == 2:
                     criar_conta()
