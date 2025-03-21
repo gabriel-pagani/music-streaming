@@ -143,19 +143,19 @@ def main():
             try:
                 print('1 - Fazer login\n2 - Criar conta\n3 - Sair')
                 print('=' * 50)
-                escolhido = int(input('Escolha uma opção: '))
+                opcao = int(input('Escolha uma opção: '))
 
-                if escolhido == 1:
+                if opcao == 1:
                     retorno = fazer_login()
                     login = retorno[0]
                     id = retorno[1]
                     nome = retorno[2]
                     tipo = retorno[3]
 
-                elif escolhido == 2:
+                elif opcao == 2:
                     criar_conta()
 
-                elif escolhido == 3:
+                elif opcao == 3:
                     limpar_tela()
                     exibir_titulo("Obrigado por usar nosso sistema!")
                     return
