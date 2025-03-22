@@ -5,8 +5,8 @@ from src.utils.connection import server_request, close_connection
 from src.utils.hash import generate_hash, verify_hash
 
 
-logging.basicConfig(filename='app.log', level=logging.ERROR,
-                    format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename='main.log', level=logging.ERROR,
+                    format='%(asctime)s - %(levelname)s - %(filename)s - %(message)s')
 
 
 def limpar_tela():
