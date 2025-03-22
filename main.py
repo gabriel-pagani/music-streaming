@@ -1,45 +1,12 @@
-from os import system, name
-from re import search, match
-import logging
+from src.utils.terminal import limpar_tela, exibir_titulo, mostrar_aviso, mostrar_erro
+from src.utils.validation import validar_email, validar_senha
+from logging import basicConfig, error, ERROR
 from src.utils.connection import server_request, close_connection
 from src.utils.hash import generate_hash, verify_hash
 
 
-logging.basicConfig(filename='main.log', level=logging.ERROR,
-                    format='%(asctime)s - %(levelname)s - %(filename)s - %(message)s')
-
-
-def limpar_tela():
-    """Limpa a tela de forma compatível com diferentes sistemas operacionais."""
-    system('cls' if name == 'nt' else 'clear')
-
-
-def exibir_titulo(titulo):
-    print('=' * 50)
-    print(f'{titulo:^50}')
-    print('=' * 50)
-
-
-def validar_email(email):
-    """Valida o formato do email."""
-    return bool(match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email))
-
-
-def validar_senha(password):
-    """Valida a força da senha."""
-    return bool(search(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$', password))
-
-
-def mostrar_erro(mensagem):
-    limpar_tela()
-    print(f'\033[31m{mensagem}\033[m')
-    print('=' * 50)
-
-
-def mostrar_aviso(mensagem):
-    limpar_tela()
-    print(f'\033[93m{mensagem}\033[m')
-    print('=' * 50)
+basicConfig(filename='main.log', level=ERROR,
+            format='%(asctime)s - %(levelname)s - %(filename)s - %(message)s')
 
 
 def fazer_login():
@@ -61,6 +28,7 @@ def fazer_login():
 
         if not response or 'data' not in response or not response['data']:
             mostrar_aviso("Usuário inexistente!")
+            return [False, None, None, None]
 
         hash_senha = response['data'][0]['hash_senha']
         nome = response['data'][0]['nome']
@@ -74,10 +42,12 @@ def fazer_login():
             return [True, id, nome, tipo]
         else:
             mostrar_aviso("Usuário e/ou senha incorretos!")
+            return [False, None, None, None]
 
     except Exception as e:
-        logging.error(f"Erro ao fazer login: {e}")
+        error(f"Erro ao fazer login: {e}")
         mostrar_erro("Ocorreu um erro ao tentar fazer login. Tente novamente.")
+        return [False, None, None, None]
 
 
 def criar_conta():
@@ -126,7 +96,7 @@ def criar_conta():
         print('=' * 50)
 
     except Exception as e:
-        logging.error(f"Erro ao criar conta: {e}")
+        error(f"Erro ao criar conta: {e}")
         mostrar_erro(
             "Ocorreu um erro ao tentar criar a conta. Tente novamente.")
 
