@@ -1,7 +1,7 @@
 from pyodbc import connect, Error
 from os import getenv
 from dotenv import load_dotenv
-import logging
+from logging import error
 
 
 load_dotenv()
@@ -17,7 +17,7 @@ def get_connection():
         try:
             _connection = connect(server_connection)
         except Error as e:
-            logging.error(f"Erro ao conectar ao banco de dados: {e}")
+            error(f"Erro ao conectar ao banco de dados: {e}")
             raise
     return _connection
 
@@ -62,12 +62,12 @@ def server_request(query: str, params=None) -> dict:
                 response['message'] = 'Script executado com sucesso!'
 
     except Error as e:
-        logging.error(f"Erro de banco de dados: {e}")
+        error(f"Erro de banco de dados: {e}")
         connection.rollback()
         response['error'] = True
         response['message'] = 'Erro na conexão com o banco de dados'
     except Exception as e:
-        logging.error(f"Erro inesperado: {e}")
+        error(f"Erro inesperado: {e}")
         response['error'] = True
         response['message'] = 'Ocorreu um erro inesperado'
 
