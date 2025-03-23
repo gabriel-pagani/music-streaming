@@ -7,8 +7,9 @@ from logging import error
 class User:
 
     def __init__(self, email: str, password: str, name: str = None, id_number: str = None, birth_date: str = None, monthly_income: float = None,
-                 phone: str = None, state: str = None, city: str = None, neighborhood: str = None, street: str = None,
-                 number: int = None, complement: str = None, zip_code: str = None, id: int = None, user_type: str = None) -> None:
+                 phone: str = None, state: str = None, city: str = None, neighborhood: str = None, street: str = None, number: int = None,
+                 complement: str = None, zip_code: str = None, id: int = None, score: int = None, status: str = None, user_type: str = None,
+                 registration_date: str = None, update_date: str = None, observations: str = None) -> None:
         self.email = email
         self.password = password
         self.name = name
@@ -25,6 +26,11 @@ class User:
         self.zip_code = zip_code
         self.id = id
         self.user_type = user_type
+        self.score = score
+        self.status = status
+        self.registration_date = registration_date
+        self.update_date = update_date
+        self.observations = observations
 
     def create_account(self):
         try:
@@ -78,6 +84,11 @@ class User:
                 complement = response['data'][0]['COMPLEMENTO']
                 zip_code = response['data'][0]['CEP']
                 user_type = response['data'][0]['TIPO']
+                score = response['data'][0]['SCORE']
+                status = response['data'][0]['STATUS']
+                registration_date = response['data'][0]['DATA_CADASTRO']
+                update_date = response['data'][0]['DATA_ATUALIZACAO']
+                observations = response['data'][0]['OBSERVACOES']
 
                 if verify_hash(string=self.password, hash=hash_senha):
                     limpar_tela()
@@ -98,6 +109,11 @@ class User:
                     self.complement = complement
                     self.zip_code = zip_code
                     self.user_type = user_type
+                    self.score = score
+                    self.status = status
+                    self.registration_date = registration_date
+                    self.update_date = update_date
+                    self.observations = observations
 
                     return self
                 else:
