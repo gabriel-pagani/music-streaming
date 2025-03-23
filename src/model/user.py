@@ -52,10 +52,10 @@ class User:
             mostrar_erro(
                 "Ocorreu um erro ao tentar criar a conta. Tente novamente.")
 
-    def log_in(self):
+    def login(self):
         try:
             response = server_request(
-                query="SELECT id, nome, tipo, hash_senha FROM usuarios WHERE email = ?",
+                query="SELECT * FROM usuarios WHERE email = ?",
                 params=(self.email,)
             )
 
@@ -63,10 +63,21 @@ class User:
                 mostrar_aviso("Usuário inexistente!")
                 return False
             else:
-                id = response['data'][0]['id']
-                name = response['data'][0]['nome']
-                user_type = response['data'][0]['tipo']
-                hash_senha = response['data'][0]['hash_senha']
+                id = response['data'][0]['ID']
+                hash_senha = response['data'][0]['HASH_SENHA']
+                name = response['data'][0]['NOME']
+                id_number = response['data'][0]['CPF']
+                birth_date = response['data'][0]['DATA_NASCIMENTO']
+                monthly_income = response['data'][0]['RENDA_MENSAL']
+                phone = response['data'][0]['TELEFONE']
+                state = response['data'][0]['ESTADO']
+                city = response['data'][0]['CIDADE']
+                neighborhood = response['data'][0]['BAIRRO']
+                street = response['data'][0]['LOGRADOURO']
+                number = response['data'][0]['NUMERO']
+                complement = response['data'][0]['COMPLEMENTO']
+                zip_code = response['data'][0]['CEP']
+                user_type = response['data'][0]['TIPO']
 
                 if verify_hash(string=self.password, hash=hash_senha):
                     limpar_tela()
@@ -75,6 +86,17 @@ class User:
 
                     self.id = id
                     self.name = name
+                    self.id_number = id_number
+                    self.birth_date = birth_date
+                    self.monthly_income = monthly_income
+                    self.phone = phone
+                    self.state = state
+                    self.city = city
+                    self.neighborhood = neighborhood
+                    self.street = street
+                    self.number = number
+                    self.complement = complement
+                    self.zip_code = zip_code
                     self.user_type = user_type
 
                     return self
