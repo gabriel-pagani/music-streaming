@@ -11,16 +11,16 @@ def validate_password(password):
     return bool(search(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$', password))
 
 
-def validate_zip_code(cep):
-    """Valida o formato do CEP."""
-    return bool(match(r'^\d{5}-?\d{3}$', cep))
+def format_zip_code(cep):
+    """Formata o CEP para o padrão 00000-000."""
+    return f"{cep[:5]}-{cep[5:]}" if len(cep) >= 5 else cep
 
 
-def validate_id(cpf):
-    """Valida o formato do CPF."""
-    return bool(match(r'^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$', cpf))
+def format_id(cpf):
+    """Formata o CPF para o padrão 000.000.000-00."""
+    return f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}" if len(cpf) == 11 else cpf
 
 
-def validate_phone(phone):
-    """Valida o formato do número de telefone."""
-    return bool(search(r'^\(\d{2}\)\s?\d{4,5}-?\d{4}$', phone))
+def format_phone(phone):
+    """Formata o número de telefone para o padrão (00) 00000-0000."""
+    return f"({phone[:2]}) {phone[2:7]}-{phone[7:]}" if len(phone) == 11 else phone
