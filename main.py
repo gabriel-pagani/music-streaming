@@ -13,7 +13,7 @@ def main():
     try:
         exibir_titulo('IMPREXTAE')
         login = False
-        id = nome = tipo = None
+        user = None
 
         while not login:
             try:
@@ -31,12 +31,11 @@ def main():
                         else:
                             break
                     password = str(input('Senha: '))
-                    user = User(email=email, password=password)
-                    retorno = user.log_in()
-                    login = retorno[0]
-                    id = retorno[1]
-                    nome = retorno[2]
-                    tipo = retorno[3]
+                    user = User(email=email, password=password).log_in()
+                    if user:
+                        login = True
+                    else:
+                        login = False
 
                 elif opcao == 2:
                     limpar_tela()
@@ -63,8 +62,8 @@ def main():
                                           "um número e um caractere especial.")
                         else:
                             break
-                    user = User(name=nome, email=email, password=password)
-                    user.create_account()
+                    new_user = User(name=nome, email=email, password=password)
+                    new_user.create_account()
 
                 elif opcao == 3:
                     limpar_tela()
@@ -78,7 +77,7 @@ def main():
                 mostrar_aviso("Opção inválida, escolha novamente!")
 
         limpar_tela()
-        exibir_titulo(f"Bem-vindo, {nome.title()}!")
+        exibir_titulo(f"Bem-vindo, {user.name.title()}!")
 
         # Implementar a continuação do sistema aqui!
 

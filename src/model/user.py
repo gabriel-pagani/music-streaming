@@ -8,7 +8,7 @@ class User:
 
     def __init__(self, email: str, password: str, name: str = None, id_number: str = None, birth_date: str = None, monthly_income: float = None,
                  phone: str = None, state: str = None, city: str = None, neighborhood: str = None, street: str = None,
-                 number: int = None, complement: str = None, zip_code: str = None) -> None:
+                 number: int = None, complement: str = None, zip_code: str = None, id: int = None, user_type: str = None) -> None:
         self.email = email
         self.password = password
         self.name = name
@@ -23,6 +23,8 @@ class User:
         self.number = number
         self.complement = complement
         self.zip_code = zip_code
+        self.id = id
+        self.user_type = user_type
 
     def create_account(self):
         try:
@@ -59,25 +61,29 @@ class User:
 
             if not response or 'data' not in response or not response['data']:
                 mostrar_aviso("Usuário inexistente!")
-                return [False, None, None, None]
-
+                return False
             else:
                 id = response['data'][0]['id']
-                nome = response['data'][0]['nome']
-                tipo = response['data'][0]['tipo']
+                name = response['data'][0]['nome']
+                user_type = response['data'][0]['tipo']
                 hash_senha = response['data'][0]['hash_senha']
 
                 if verify_hash(string=self.password, hash=hash_senha):
                     limpar_tela()
                     print('\033[32mLogin efetuado com sucesso!\033[m')
                     print('=' * 50)
-                    return [True, id, nome, tipo]
+
+                    self.id = id
+                    self.name = name
+                    self.user_type = user_type
+
+                    return self
                 else:
                     mostrar_aviso("Usuário e/ou senha incorretos!")
-                    return [False, None, None, None]
+                    return False
 
         except Exception as e:
             error(f"Erro ao fazer login: {e}")
             mostrar_erro(
                 "Ocorreu um erro ao tentar fazer login. Tente novamente.")
-            return [False, None, None, None]
+            return False
