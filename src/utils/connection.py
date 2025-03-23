@@ -44,7 +44,6 @@ def server_request(query: str, params=None) -> dict:
             else:
                 cursor.execute(query)
 
-            # Para consultas do tipo SELECT
             if query.lower().strip().startswith('select'):
                 columns = [column[0] for column in cursor.description]
                 data = cursor.fetchall()
@@ -56,7 +55,6 @@ def server_request(query: str, params=None) -> dict:
                 response['data'] = result
                 response['message'] = 'Consulta executada com sucesso!'
             else:
-                # Para INSERT, UPDATE, DELETE
                 connection.commit()
                 response['affected_rows'] = cursor.rowcount
                 response['message'] = 'Script executado com sucesso!'
