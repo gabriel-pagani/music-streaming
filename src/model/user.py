@@ -151,8 +151,10 @@ class User:
                 query = f"UPDATE usuarios SET {set_clause} WHERE id = ?"
 
                 server_request(query=query, params=valores)
+                limpar_tela()
                 print(
                     '\033[32mCadastro atualizado com sucesso!\033[m')
+                print('=' * 50)
                 return
 
             except Exception as e:
