@@ -66,5 +66,6 @@ def validate_number(number: str):
     """Valida se o número é composto apenas por dígitos."""
     try:
         number = int(number)
+        return number
     except ValueError:
         return None
