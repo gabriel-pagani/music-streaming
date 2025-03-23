@@ -1,5 +1,5 @@
 from src.utils.terminal import limpar_tela, exibir_titulo, mostrar_aviso
-from src.utils.validation import validate_email, validate_password
+from src.utils.validation_formatting import *
 from logging import basicConfig, ERROR
 from src.utils.connection import close_connection
 from src.model.user import User
@@ -31,7 +31,7 @@ def main():
                         else:
                             break
                     password = str(input('Senha: '))
-                    user = User(email=email, password=password).log_in()
+                    user = User(email=email, password=password).login()
                     if user:
                         login = True
                     else:
@@ -79,7 +79,65 @@ def main():
         limpar_tela()
         exibir_titulo(f"Bem-vindo, {user.name.title()}!")
 
-        # Implementar a continuação do sistema aqui!
+        if user.user_type == 'User':
+            while True:
+                try:
+                    print(
+                        '1 - Solicitar empréstimo\n2 - Acompanhar solicitação\n3 - Acompanhar Empréstimos\n4 - Atualizar cadastro')
+                    print('='*50)
+                    opcao = int(input('Escolha uma opção: '))
+                    if opcao == 1:
+                        limpar_tela()
+                        ...
+                    elif opcao == 2:
+                        limpar_tela()
+                        ...
+                    elif opcao == 3:
+                        limpar_tela()
+                        ...
+                    elif opcao == 4:
+                        limpar_tela()
+                        exibir_titulo('Atualização de Cadastro')
+                        print('Deixe em branco os campos que não deseja alterar.')
+                        print('=' * 50)
+                        while True:
+                            campos = {
+                                'cpf': format_id(str(input('CPF (Somente dígitos): ')).strip()),
+                                'data_nascimento': validate_birth_date(str(input('Data Nascimento (dd/mm/aaaa): ')).strip()),
+                                'renda_mensal': validate_monthly_income(str(input('Renda Mensal: ')).strip()),
+                                'telefone': format_phone(str(input('Telefone (Somente dígitos): ')).strip()),
+                                'estado': validate_state(str(input('Estado (Sigla): ')).upper().strip()),
+                                'cidade': str(input('Cidade: ')).strip(),
+                                'bairro': str(input('Bairro: ')).strip(),
+                                'logradouro': str(input('Logradouro: ')).strip(),
+                                'numero': validate_number(str(input('Número (Somente dígitos): ')).strip()),
+                                'complemento': str(input('Complemento: ')).strip(),
+                                'cep': format_zip_code(str(input('CEP (Somente dígitos): ')).strip())
+                            }
+
+                            user.update_account(campos)
+                            break
+
+                    else:
+                        raise ValueError
+
+                except ValueError:
+                    mostrar_aviso("Opção inválida, escolha novamente!")
+
+        elif user.user_type == 'Approver':
+            """
+                aprovar as solicitações
+                acompanhar a solicitação
+            """
+
+        elif user.user_type == 'Admin':
+            """
+                editar os usuários
+                editar as solicitações
+                editar os empréstimos
+                acompanhar a solicitação
+                acompanhar o empréstimo
+            """
 
     finally:
         close_connection()

@@ -125,3 +125,39 @@ class User:
             mostrar_erro(
                 "Ocorreu um erro ao tentar fazer login. Tente novamente.")
             return False
+
+    def update_account(self, fields: dict):
+        filled_fields = {}
+
+        for field, value in fields.items():
+            if not value:
+                continue
+
+            else:
+                filled_fields[field] = value
+
+        if not filled_fields:
+            mostrar_aviso(
+                'Nenhum dado foi informado ou estão\n'
+                'fora do formato necessário para atualização.')
+            return
+
+        else:
+            try:
+                set_clause = ", ".join(
+                    [f"{col} = ?" for col in filled_fields])
+                valores = tuple(
+                    filled_fields.values()) + (self.id,)
+                query = f"UPDATE usuarios SET {set_clause} WHERE id = ?"
+
+                server_request(query=query, params=valores)
+                print(
+                    '\033[32mCadastro atualizado com sucesso!\033[m')
+                return
+
+            except Exception as e:
+                error(
+                    f"Erro ao atualizar cadastro: {e}")
+                mostrar_erro(
+                    "Erro ao atualizar cadastro. Tente novamente mais tarde.")
+                return
