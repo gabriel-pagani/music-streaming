@@ -40,23 +40,18 @@ class User:
             )
 
             if response and 'data' in response and response['data'] and response['data'][0]['count'] > 0:
-                mostrar_aviso("Este email já está cadastrado!")
-
+                return ['Warning', 'Este email já está cadastrado!']
             else:
                 hashed_password = generate_hash(self.password)
                 server_request(
                     query="INSERT INTO usuarios (email, hash_senha, nome) VALUES (?, ?, ?)",
                     params=(self.email, hashed_password, self.name)
                 )
-
-                limpar_tela()
-                print('\033[32mCadastro efetuado com sucesso!\033[m')
-                print('=' * 50)
+                return ['Success', 'Cadastro efetuado com sucesso!']
 
         except Exception as e:
             error(f"Erro ao criar conta: {e}")
-            mostrar_erro(
-                "Ocorreu um erro ao tentar criar a conta. Tente novamente.")
+            return ['Error', 'Ocorreu um erro ao tentar criar a conta. Tente novamente.']
 
     def login(self):
         try:
@@ -66,8 +61,7 @@ class User:
             )
 
             if not response or 'data' not in response or not response['data']:
-                mostrar_aviso("Usuário inexistente!")
-                return False
+                return ['Warning', 'Usuário inexistente!']
             else:
                 id = response['data'][0]['ID']
                 hash_senha = response['data'][0]['HASH_SENHA']
@@ -91,10 +85,6 @@ class User:
                 observations = response['data'][0]['OBSERVACOES']
 
                 if verify_hash(string=self.password, hash=hash_senha):
-                    limpar_tela()
-                    print('\033[32mLogin efetuado com sucesso!\033[m')
-                    print('=' * 50)
-
                     self.id = id
                     self.name = name
                     self.id_number = id_number
@@ -115,16 +105,13 @@ class User:
                     self.update_date = update_date
                     self.observations = observations
 
-                    return self
+                    return ['Success', 'Login efetuado com sucesso!', self]
                 else:
-                    mostrar_aviso("Usuário e/ou senha incorretos!")
-                    return False
+                    return ['Warning', "Senha incorreta!"]
 
         except Exception as e:
             error(f"Erro ao fazer login: {e}")
-            mostrar_erro(
-                "Ocorreu um erro ao tentar fazer login. Tente novamente.")
-            return False
+            return ['Error', "Ocorreu um erro ao tentar fazer login. Tente novamente."]
 
     def update_account(self, fields: dict):
         filled_fields = {}
