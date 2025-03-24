@@ -264,6 +264,6 @@ def main(page: ft.Page):
 
 if __name__ == "__main__":
     try:
-        ft.app(target=main, assets_dir='assets')
+        ft.app(target=main, assets_dir='assets', view=ft.WEB_BROWSER)
     finally:
         close_connection()
