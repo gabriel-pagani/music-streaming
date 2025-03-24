@@ -30,27 +30,30 @@ class ImprextaeApp:
         self.page.update()
 
     def show_error(self, message):
-        self.page.snack_bar = ft.SnackBar(
+        snack_bar = ft.SnackBar(
             content=ft.Text(message, color=ft.Colors.WHITE),
             bgcolor=ft.Colors.RED_600
         )
-        self.page.snack_bar.open = True
+        self.page.overlay.append(snack_bar)
+        snack_bar.open = True
         self.page.update()
 
     def show_success(self, message):
-        self.page.snack_bar = ft.SnackBar(
+        snack_bar = ft.SnackBar(
             content=ft.Text(message, color=ft.Colors.WHITE),
             bgcolor=ft.Colors.GREEN_600
         )
-        self.page.snack_bar.open = True
+        self.page.overlay.append(snack_bar)
+        snack_bar.open = True
         self.page.update()
 
     def show_warning(self, message):
-        self.page.snack_bar = ft.SnackBar(
+        snack_bar = ft.SnackBar(
             content=ft.Text(message, color=ft.Colors.BLACK),
             bgcolor=ft.Colors.AMBER_400
         )
-        self.page.snack_bar.open = True
+        self.page.overlay.append(snack_bar)
+        snack_bar.open = True
         self.page.update()
 
     def show_login_view(self):
@@ -165,11 +168,20 @@ class ImprextaeApp:
                     "Senha fraca! A senha deve conter 8 caracteres ou mais, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.")
                 return
 
-            new_user = User(name=name, email=email, password=password)
-            new_user.create_account()
-            self.show_success("Cadastro efetuado com sucesso!")
-            self.page.clean()
-            self.show_login_view()
+            try:
+                new_user = User(name=name, email=email, password=password)
+                result = new_user.create_account()
+
+                if result:
+                    self.show_success("Cadastro efetuado com sucesso!")
+                    self.page.clean()
+                    self.show_login_view()
+                else:
+                    self.show_warning(
+                        "Email já cadastrado. Por favor use outro email.")
+            except Exception as e:
+                self.show_error(f"Erro ao criar conta: {str(e)}")
+                return
 
         def go_to_login(e):
             self.page.clean()
@@ -264,6 +276,6 @@ def main(page: ft.Page):
 
 if __name__ == "__main__":
     try:
-        ft.app(target=main, assets_dir='assets', view=ft.WEB_BROWSER)
+        ft.app(target=main, assets_dir='assets')
     finally:
         close_connection()
