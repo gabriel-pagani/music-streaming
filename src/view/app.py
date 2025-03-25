@@ -72,6 +72,14 @@ class ImprextaeApp:
                     self.user = login_result[2]
                     self.page.clean()
                     self.show_success(login_result[1])
+
+                    if self.user.user_type == 'Admin':
+                        print('Visão do administrador')
+                    elif self.user.user_type == 'Approver':
+                        print('Visão do aprovador')
+                    else:
+                        print('Visão do usuário padrão')
+
                 elif login_result[0] == 'Warning':
                     self.show_warning(login_result[1])
                 elif login_result[0] == 'Error':
