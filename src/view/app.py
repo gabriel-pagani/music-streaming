@@ -55,6 +55,13 @@ class ImprextaeApp:
         snack_bar.open = True
         self.page.update()
 
+    def show_password_confirmation(self, e, password_confirmed_input):
+        if e.control.value:
+            password_confirmed_input.visible = True
+        else:
+            password_confirmed_input.visible = False
+        self.page.update()
+
     def show_login_view(self) -> None:
         def login_click(e):
             email = email_input.value.lower().strip()
@@ -169,6 +176,7 @@ class ImprextaeApp:
             name = name_input.value.lower().strip()
             email = email_input.value.lower().strip()
             password = password_input.value
+            password_confirmed = password_confirmed_input.value
 
             if not name:
                 self.show_warning("O campo de nome é obrigatório!")
@@ -186,6 +194,10 @@ class ImprextaeApp:
             elif not validate_password(password):
                 self.show_warning(
                     "Senha fraca! A senha deve conter no mínimo 8 caracteres ou mais, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.")
+                return
+            elif password != password_confirmed:
+                self.show_warning(
+                    "As senhas não coincidem! Por favor, verifique novamente.")
                 return
             else:
                 try:
@@ -239,7 +251,21 @@ class ImprextaeApp:
             can_reveal_password=True,
             width=400,
             border_color=ft.Colors.BLUE_400,
-            cursor_color=ft.Colors.BLUE_900
+            cursor_color=ft.Colors.BLUE_900,
+            on_change=lambda e: self.show_password_confirmation(
+                e, password_confirmed_input)
+        )
+
+        password_confirmed_input = ft.TextField(
+            label="Confirmar Senha",
+            prefix_icon=ft.Icons.LOCK,
+            hint_text="Confirme sua senha aqui...",
+            password=True,
+            can_reveal_password=True,
+            width=400,
+            border_color=ft.Colors.BLUE_400,
+            cursor_color=ft.Colors.BLUE_900,
+            visible=False
         )
 
         register_button = ft.ElevatedButton(
@@ -274,6 +300,7 @@ class ImprextaeApp:
                 name_input,
                 email_input,
                 password_input,
+                password_confirmed_input,
                 ft.Divider(height=10, color=ft.Colors.TRANSPARENT),
                 register_button,
                 login_button
