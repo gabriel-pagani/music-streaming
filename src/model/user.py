@@ -31,7 +31,7 @@ class User:
         self.update_date = update_date
         self.observations = observations
 
-    def create_account(self):
+    def create_account(self) -> list:
         try:
             response = server_request(
                 query="SELECT COUNT(*) AS count FROM usuarios WHERE email = ?",
@@ -52,7 +52,7 @@ class User:
             error(f"Erro ao criar conta: {e}")
             return ['Error', 'Ocorreu um erro ao tentar criar a conta. Tente novamente.']
 
-    def login(self):
+    def login(self) -> list:
         try:
             response = server_request(
                 query="SELECT * FROM usuarios WHERE email = ?",
@@ -112,7 +112,7 @@ class User:
             error(f"Erro ao fazer login: {e}")
             return ['Error', "Ocorreu um erro ao tentar fazer login. Tente novamente."]
 
-    def update_account(self):
+    def update_account(self) -> list:
         try:
             clause = ''
             values = list()

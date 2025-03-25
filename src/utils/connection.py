@@ -9,7 +9,7 @@ load_dotenv()
 _connection = None
 
 
-def get_connection():
+def get_connection() -> connect:
     """Retorna uma conexão com o banco de dados, criando-a se necessário."""
     global _connection
     if _connection is None or _connection.closed:
@@ -22,7 +22,7 @@ def get_connection():
     return _connection
 
 
-def server_request(query: str, params=None) -> dict:
+def server_request(query: str, params: tuple = None) -> dict:
     """
     Executa uma query SQL com parâmetros para evitar SQL injection
 

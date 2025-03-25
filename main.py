@@ -3,7 +3,7 @@ from src.view.app import ImprextaeApp
 from src.utils.connection import close_connection
 
 
-def main(page: Page):
+def main(page: Page) -> None:
     ImprextaeApp(page)
 
 

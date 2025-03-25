@@ -8,13 +8,13 @@ basicConfig(filename='main.log', level=ERROR,
 
 
 class ImprextaeApp:
-    def __init__(self, page: ft.Page):
+    def __init__(self, page: ft.Page) -> None:
         self.page = page
         self.user = None
         self.setup_page()
         self.show_login_view()
 
-    def setup_page(self):
+    def setup_page(self) -> None:
         self.page.title = 'IMPREXTAE'
         self.page.window.width = 800
         self.page.window.min_width = 600
@@ -28,7 +28,7 @@ class ImprextaeApp:
         self.page.padding = 20
         self.page.update()
 
-    def show_error(self, message):
+    def show_error(self, message: str) -> None:
         snack_bar = ft.SnackBar(
             content=ft.Text(message, color=ft.Colors.WHITE),
             bgcolor=ft.Colors.RED_600
@@ -37,7 +37,7 @@ class ImprextaeApp:
         snack_bar.open = True
         self.page.update()
 
-    def show_success(self, message):
+    def show_success(self, message: str) -> None:
         snack_bar = ft.SnackBar(
             content=ft.Text(message, color=ft.Colors.WHITE),
             bgcolor=ft.Colors.GREEN_600
@@ -46,7 +46,7 @@ class ImprextaeApp:
         snack_bar.open = True
         self.page.update()
 
-    def show_warning(self, message):
+    def show_warning(self, message: str) -> None:
         snack_bar = ft.SnackBar(
             content=ft.Text(message, color=ft.Colors.BLACK),
             bgcolor=ft.Colors.AMBER_400
@@ -55,7 +55,7 @@ class ImprextaeApp:
         snack_bar.open = True
         self.page.update()
 
-    def show_login_view(self):
+    def show_login_view(self) -> None:
         def login_click(e):
             email = email_input.value.lower().strip()
             password = password_input.value
@@ -161,7 +161,7 @@ class ImprextaeApp:
 
         self.page.add(container)
 
-    def show_register_view(self):
+    def show_register_view(self) -> None:
         def register_click(e):
             name = name_input.value.lower().strip()
             email = email_input.value.lower().strip()
