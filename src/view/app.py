@@ -82,7 +82,7 @@ class ImprextaeApp:
             self.show_register_view()
 
         # Componentes da tela de login
-        title = ft.Text("IMPREXTAE", size=50,
+        title = ft.Text("Imprextae", size=50,
                         weight=ft.FontWeight.BOLD, color=ft.Colors.BLUE_900)
 
         email_input = ft.TextField(
@@ -199,7 +199,7 @@ class ImprextaeApp:
             self.show_login_view()
 
         # Componentes da tela de registro
-        title = ft.Text("Criar Conta", size=40,
+        title = ft.Text("Criar Conta", size=50,
                         weight=ft.FontWeight.BOLD, color=ft.Colors.BLUE_900)
 
         name_input = ft.TextField(
