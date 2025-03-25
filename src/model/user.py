@@ -1,4 +1,3 @@
-from src.utils.terminal import limpar_tela, mostrar_aviso, mostrar_erro
 from src.utils.connection import server_request
 from src.utils.hash import generate_hash, verify_hash
 from logging import error
