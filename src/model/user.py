@@ -113,40 +113,37 @@ class User:
             error(f"Erro ao fazer login: {e}")
             return ['Error', "Ocorreu um erro ao tentar fazer login. Tente novamente."]
 
-    def update_account(self, fields: dict):
-        filled_fields = {}
+    def update_account(self):
+        try:
+            clause = ''
+            values = list()
+            fields = {
+                'cpf': self.id_number,
+                'data_nascimento': self.birth_date,
+                'renda_mensal': self.monthly_income,
+                'telefone': self.phone,
+                'estado': self.state,
+                'cidade': self.city,
+                'bairro': self.neighborhood,
+                'logradouro': self.street,
+                'numero': self.number,
+                'complemento': self.complement,
+                'cep': self.zip_code
+            }
 
-        for field, value in fields.items():
-            if not value:
-                continue
+            for field, value in fields.items():
+                if value != None:
+                    values.append(value)
+                    clause += f'{field} = ?, '
 
-            else:
-                filled_fields[field] = value
+            values.append(self.id)
 
-        if not filled_fields:
-            mostrar_aviso(
-                'Nenhum dado foi informado ou estão\n'
-                'fora do formato necessário para atualização.')
-            return
+            query = f"UPDATE usuarios SET {clause.rstrip(', ')} WHERE id = ?"
 
-        else:
-            try:
-                set_clause = ", ".join(
-                    [f"{col} = ?" for col in filled_fields])
-                valores = tuple(
-                    filled_fields.values()) + (self.id,)
-                query = f"UPDATE usuarios SET {set_clause} WHERE id = ?"
+            server_request(query=query, params=tuple(values))
 
-                server_request(query=query, params=valores)
-                limpar_tela()
-                print(
-                    '\033[32mCadastro atualizado com sucesso!\033[m')
-                print('=' * 50)
-                return
+            return ['Success', 'Cadastro atualizado com sucesso!']
 
-            except Exception as e:
-                error(
-                    f"Erro ao atualizar cadastro: {e}")
-                mostrar_erro(
-                    "Erro ao atualizar cadastro. Tente novamente mais tarde.")
-                return
+        except Exception as e:
+            error(f"Erro ao atualizar cadastro: {e}")
+            return ['Error', 'Erro ao atualizar cadastro. Tente novamente mais tarde.']
