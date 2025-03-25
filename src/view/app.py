@@ -1,7 +1,6 @@
 import flet as ft
 from src.utils.validation_formatting import *
 from logging import basicConfig, ERROR, error
-from src.utils.connection import close_connection
 from src.model.user import User
 
 basicConfig(filename='main.log', level=ERROR,
@@ -175,7 +174,7 @@ class ImprextaeApp:
                 return
             elif not validate_password(password):
                 self.show_warning(
-                    "Senha fraca! A senha deve conter 8 caracteres ou mais, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.")
+                    "Senha fraca! A senha deve conter no mínimo 8 caracteres ou mais, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.")
                 return
             else:
                 try:
@@ -280,14 +279,3 @@ class ImprextaeApp:
         )
 
         self.page.add(container)
-
-
-def main(page: ft.Page):
-    app = ImprextaeApp(page)
-
-
-if __name__ == "__main__":
-    try:
-        ft.app(target=main, assets_dir='assets')
-    finally:
-        close_connection()
