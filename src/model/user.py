@@ -50,7 +50,7 @@ class User:
 
         except Exception as e:
             error(f"Erro ao criar conta: {e}")
-            return ['Error', 'Ocorreu um erro ao tentar criar a conta. Tente novamente.']
+            return ['Error', 'Ocorreu um erro ao tentar criar a conta. Tente novamente mais tarde.']
 
     def login(self) -> list:
         try:
@@ -110,7 +110,7 @@ class User:
 
         except Exception as e:
             error(f"Erro ao fazer login: {e}")
-            return ['Error', "Ocorreu um erro ao tentar fazer login. Tente novamente."]
+            return ['Error', "Ocorreu um erro ao tentar fazer login. Tente novamente mais tarde."]
 
     def update_account(self) -> list:
         try:
