@@ -1,6 +1,6 @@
 import flet as ft
 from src.utils.validation_formatting import *
-from logging import basicConfig, ERROR
+from logging import basicConfig, ERROR, error
 from src.utils.connection import close_connection
 from src.model.user import User
 
@@ -61,16 +61,22 @@ class ImprextaeApp:
             email = email_input.value.lower().strip()
             password = password_input.value
 
-            if not validate_email(email):
+            if not email:
+                self.show_warning("O campo de email é obrigatório!")
+                return
+            elif not validate_email(email):
                 self.show_warning("Email inválido, tente novamente!")
                 return
-
-            self.user = User(email=email, password=password).login()
-            if self.user:
-                self.show_success("Login efetuado com sucesso!")
-                self.page.clean()
             else:
-                self.show_error("Usuário inexistente ou senha incorreta!")
+                login_result = User(email=email, password=password).login()
+                if login_result[0] == 'Success':
+                    self.user = login_result[2]
+                    self.page.clean()
+                    self.show_success(login_result[1])
+                elif login_result[0] == 'Warning':
+                    self.show_warning(login_result[1])
+                elif login_result[0] == 'Error':
+                    self.show_error(login_result[1])
 
         def go_to_register(e):
             self.page.clean()
@@ -157,31 +163,37 @@ class ImprextaeApp:
             if not name:
                 self.show_warning("O campo de nome é obrigatório!")
                 return
-
-            if not validate_email(email):
+            elif not email:
+                self.show_warning("O campo de email é obrigatório!")
+                return
+            elif not validate_email(email):
                 self.show_warning(
                     "E-mail inválido! Por favor insira um e-mail válido.")
                 return
-
-            if not validate_password(password):
+            elif not password:
+                self.show_warning("O campo de senha é obrigatório!")
+                return
+            elif not validate_password(password):
                 self.show_warning(
                     "Senha fraca! A senha deve conter 8 caracteres ou mais, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.")
                 return
-
-            try:
-                new_user = User(name=name, email=email, password=password)
-                result = new_user.create_account()
-
-                if result:
-                    self.show_success("Cadastro efetuado com sucesso!")
-                    self.page.clean()
-                    self.show_login_view()
-                else:
-                    self.show_warning(
-                        "Email já cadastrado. Por favor use outro email.")
-            except Exception as e:
-                self.show_error(f"Erro ao criar conta: {str(e)}")
-                return
+            else:
+                try:
+                    register_result = User(
+                        name=name, email=email, password=password).create_account()
+                    if register_result[0] == 'Success':
+                        self.show_success("Cadastro efetuado com sucesso!")
+                        self.page.clean()
+                        self.show_login_view()
+                    elif register_result[0] == 'Warning':
+                        self.show_warning(register_result[1])
+                    elif register_result[0] == 'Error':
+                        self.show_error(register_result[1])
+                except Exception as e:
+                    error(f"Erro ao criar conta: {e}")
+                    self.show_error(
+                        'Ocorreu um erro ao tentar criar a conta. Tente novamente.')
+                    return
 
         def go_to_login(e):
             self.page.clean()
