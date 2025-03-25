@@ -66,6 +66,9 @@ class ImprextaeApp:
             elif not validate_email(email):
                 self.show_warning("Email inválido, tente novamente!")
                 return
+            elif not password:
+                self.show_warning("O campo de senha é obrigatório!")
+                return
             else:
                 login_result = User(email=email, password=password).login()
                 if login_result[0] == 'Success':
