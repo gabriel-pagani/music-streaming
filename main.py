@@ -9,6 +9,6 @@ def main(page: Page) -> None:
 
 if __name__ == "__main__":
     try:
-        app(target=main, assets_dir='assets', view=WEB_BROWSER)
+        app(target=main, assets_dir='assets')
     finally:
         close_connection()
