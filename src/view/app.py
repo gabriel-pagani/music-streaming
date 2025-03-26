@@ -318,10 +318,343 @@ class ImprextaeApp:
 
         self.page.add(container)
 
+    def show_update_profile(self) -> None:
+        def back_to_menu(e):
+            self.page.clean()
+            self.show_user_menu()
+
+        def save_profile(e):
+            # Implementação futura para salvar o perfil
+            self.show_success("Perfil atualizado com sucesso!")
+            self.page.clean()
+            self.show_user_menu()
+
+        # Barra superior
+        user_greeting = ft.Text(
+            f"Atualização de Cadastro",
+            size=20,
+            weight=ft.FontWeight.BOLD,
+            color=ft.Colors.WHITE
+        )
+
+        back_btn = ft.IconButton(
+            icon=ft.Icons.ARROW_BACK,
+            icon_color=ft.Colors.WHITE,
+            tooltip="Voltar",
+            on_click=back_to_menu
+        )
+
+        top_bar = ft.Container(
+            content=ft.Row(
+                [back_btn, user_greeting, ft.Container(expand=True)],
+                alignment=ft.MainAxisAlignment.START
+            ),
+            padding=ft.padding.all(20),
+            bgcolor=ft.Colors.BLUE_900,
+            border_radius=ft.border_radius.only(
+                bottom_left=10, bottom_right=10),
+        )
+
+        # Estilo comum para os cards
+        card_style = {
+            "elevation": 3,
+            "margin": ft.margin.only(bottom=15),
+        }
+
+        # Informações Pessoais
+        name_input = ft.TextField(
+            label="Nome",
+            prefix_icon=ft.Icons.PERSON,
+            hint_text="Digite seu nome aqui...",
+            width=350,
+            border_color=ft.Colors.BLUE_400,
+            cursor_color=ft.Colors.BLUE_900,
+            # on_change=format_cpf,
+            keyboard_type=ft.KeyboardType.NUMBER
+        )
+
+        cpf_input = ft.TextField(
+            label="CPF",
+            prefix_icon=ft.Icons.PERSON,
+            hint_text="Digite seu CPF aqui... (xxx.xxx.xxx-xx)",
+            width=350,
+            border_color=ft.Colors.BLUE_400,
+            cursor_color=ft.Colors.BLUE_900,
+            # on_change=format_cpf,
+            keyboard_type=ft.KeyboardType.NUMBER
+        )
+
+        birth_date_input = ft.TextField(
+            label="Data de Aniversário",
+            prefix_icon=ft.Icons.CAKE,
+            hint_text="Digite sua data de aniversário aqui... (dd/mm/aaaa)",
+            width=350,
+            border_color=ft.Colors.BLUE_400,
+            cursor_color=ft.Colors.BLUE_900,
+            # on_change=format_date,
+            keyboard_type=ft.KeyboardType.NUMBER
+        )
+
+        monthly_income_input = ft.TextField(
+            label="Renda Mensal",
+            prefix_icon=ft.Icons.ATTACH_MONEY,
+            hint_text="Digite sua renda mensal aqui... (R$)",
+            width=350,
+            border_color=ft.Colors.BLUE_400,
+            cursor_color=ft.Colors.BLUE_900,
+            # on_change=format_currency,
+            keyboard_type=ft.KeyboardType.NUMBER
+        )
+
+        phone_input = ft.TextField(
+            label="Telefone",
+            prefix_icon=ft.Icons.LOCAL_PHONE,
+            hint_text="Digite seu telefone aqui... ((xx) xxxxx-xxxx)",
+            width=350,
+            border_color=ft.Colors.BLUE_400,
+            cursor_color=ft.Colors.BLUE_900,
+            on_change=format_phone,
+            keyboard_type=ft.KeyboardType.NUMBER
+        )
+
+        email_input = ft.TextField(
+            label="Email",
+            prefix_icon=ft.Icons.MAIL,
+            hint_text="Digite seu email aqui... ",
+            width=350,
+            border_color=ft.Colors.BLUE_400,
+            cursor_color=ft.Colors.BLUE_900,
+            on_change=format_phone,
+        )
+
+        password_input = ft.TextField(
+            label="Senha",
+            prefix_icon=ft.Icons.LOCK,
+            hint_text="Digite sua senha aqui... ",
+            width=350,
+            border_color=ft.Colors.BLUE_400,
+            cursor_color=ft.Colors.BLUE_900,
+            on_change=format_phone,
+        )
+
+        password_confirmed_input = ft.TextField(
+            label="Senha",
+            prefix_icon=ft.Icons.LOCK,
+            hint_text="Digite sua senha aqui... ",
+            width=350,
+            border_color=ft.Colors.BLUE_400,
+            cursor_color=ft.Colors.BLUE_900,
+            on_change=format_phone,
+        )
+
+        # Endereço
+        zip_code_input = ft.TextField(
+            label="CEP",
+            prefix_icon=ft.Icons.LOCATION_ON,
+            hint_text="Digite seu CEP aqui... (xxxxx-xxx)",
+            width=350,
+            border_color=ft.Colors.BLUE_400,
+            cursor_color=ft.Colors.BLUE_900,
+            # on_change=format_cep,
+            keyboard_type=ft.KeyboardType.NUMBER
+        )
+
+        state_input = ft.TextField(
+            label="Estado",
+            prefix_icon=ft.Icons.MAP,
+            hint_text="Digite seu estado aqui...",
+            width=350,
+            border_color=ft.Colors.BLUE_400,
+            cursor_color=ft.Colors.BLUE_900,
+        )
+
+        city_input = ft.TextField(
+            label="Cidade",
+            prefix_icon=ft.Icons.LOCATION_CITY,
+            hint_text="Digite sua cidade aqui...",
+            width=350,
+            border_color=ft.Colors.BLUE_400,
+            cursor_color=ft.Colors.BLUE_900
+        )
+
+        neighborhood_input = ft.TextField(
+            label="Bairro",
+            prefix_icon=ft.Icons.HOLIDAY_VILLAGE,
+            hint_text="Digite seu bairro aqui...",
+            width=350,
+            border_color=ft.Colors.BLUE_400,
+            cursor_color=ft.Colors.BLUE_900
+        )
+
+        street_input = ft.TextField(
+            label="Rua",
+            prefix_icon=ft.Icons.SIGNPOST,
+            hint_text="Digite sua rua aqui...",
+            width=350,
+            border_color=ft.Colors.BLUE_400,
+            cursor_color=ft.Colors.BLUE_900
+        )
+
+        number_input = ft.TextField(
+            label="Número",
+            prefix_icon=ft.Icons.TAG,
+            hint_text="Digite seu número aqui...",
+            width=350,
+            border_color=ft.Colors.BLUE_400,
+            cursor_color=ft.Colors.BLUE_900,
+            keyboard_type=ft.KeyboardType.NUMBER,
+            # on_change=validate_only_numbers
+        )
+
+        complement_input = ft.TextField(
+            label="Complemento",
+            prefix_icon=ft.Icons.APARTMENT,
+            hint_text="Digite seu complemento aqui...",
+            width=350,
+            border_color=ft.Colors.BLUE_400,
+            cursor_color=ft.Colors.BLUE_900
+        )
+
+        # Cards
+        personal_card = ft.Card(
+            content=ft.Container(
+                content=ft.Column([
+                    ft.Container(
+                        content=ft.Row([
+                            ft.Icon(ft.Icons.PERSON, color=ft.Colors.BLUE_900),
+                            ft.Text("Informações Pessoais",
+                                    weight=ft.FontWeight.BOLD,
+                                    size=18,
+                                    color=ft.Colors.BLUE_900)
+                        ]),
+                        padding=ft.padding.only(bottom=10)
+                    ),
+                    ft.Divider(height=1, color=ft.Colors.BLUE_100),
+                    ft.Container(
+                        content=ft.Row([
+                            name_input,
+                            cpf_input
+                        ], wrap=True, spacing=20),
+                        padding=ft.padding.only(top=10)
+                    ),
+                    ft.Container(
+                        content=ft.Row([
+                            birth_date_input,
+                            monthly_income_input
+                        ], wrap=True, spacing=20),
+                        padding=ft.padding.only(top=10)
+                    ),
+                    ft.Container(
+                        content=ft.Row([
+                            phone_input,
+                            email_input
+                        ], wrap=True, spacing=20),
+                        padding=ft.padding.only(top=10)
+                    ),
+                    ft.Container(
+                        content=ft.Row([
+                            password_input,
+                            password_confirmed_input
+                        ], wrap=True, spacing=20),
+                        padding=ft.padding.only(top=10)
+                    )
+                ]),
+                padding=20
+            ),
+            **card_style
+        )
+
+        address_card = ft.Card(
+            content=ft.Container(
+                content=ft.Column([
+                    ft.Container(
+                        content=ft.Row([
+                            ft.Icon(ft.Icons.HOME, color=ft.Colors.BLUE_900),
+                            ft.Text("Endereço",
+                                    weight=ft.FontWeight.BOLD,
+                                    size=18,
+                                    color=ft.Colors.BLUE_900)
+                        ]),
+                        padding=ft.padding.only(bottom=10)
+                    ),
+                    ft.Divider(height=1, color=ft.Colors.BLUE_100),
+                    ft.Container(
+                        content=ft.Row([
+                            zip_code_input,
+                            state_input
+                        ], wrap=True, spacing=20),
+                        padding=ft.padding.only(top=10)
+                    ),
+                    ft.Container(
+                        content=ft.Row([
+                            city_input,
+                            neighborhood_input
+                        ], wrap=True, spacing=20),
+                        padding=ft.padding.only(top=10)
+                    ),
+                    ft.Container(
+                        content=ft.Row([
+                            street_input,
+                            number_input
+                        ], wrap=True, spacing=20),
+                        padding=ft.padding.only(top=10)
+                    ),
+                    ft.Container(
+                        content=ft.Row([
+                            complement_input
+                        ], wrap=True, spacing=20),
+                        padding=ft.padding.only(top=10)
+                    )
+                ]),
+                padding=20
+            ),
+            **card_style
+        )
+
+        # Botão de salvar
+        save_button = ft.ElevatedButton(
+            text="Atualizar Informações",
+            icon=ft.Icons.SAVE,
+            icon_color=ft.Colors.WHITE,
+            width=400,
+            height=50,
+            bgcolor=ft.Colors.BLUE_900,
+            color=ft.Colors.WHITE,
+            on_click=save_profile,
+            style=ft.ButtonStyle(
+                shape=ft.RoundedRectangleBorder(radius=8)
+            )
+        )
+
+        # Container do formulário em uma ListView com scroll
+        form_content = ft.ListView(
+            controls=[
+                personal_card,
+                address_card,
+                save_button
+            ],
+            spacing=10,
+            padding=ft.padding.symmetric(horizontal=20, vertical=10),
+            expand=True
+        )
+
+        # Layout principal
+        content = ft.Column(
+            [
+                top_bar,
+                form_content
+            ],
+            spacing=10,
+            expand=True
+        )
+
+        self.page.clean()
+        self.page.add(content)
+
     def show_user_menu(self) -> None:
-        def navigate(e, route):
-            # Função para navegação futura
-            print(f"Navegando para: {route}")
+        def update_click(e):
+            self.page.clean()
+            self.show_update_profile()
 
         def logout(e):
             self.page.clean()
@@ -337,7 +670,7 @@ class ImprextaeApp:
         )
 
         logout_btn = ft.IconButton(
-            icon=ft.icons.LOGOUT,
+            icon=ft.Icons.LOGOUT,
             icon_color=ft.Colors.WHITE,
             tooltip="Sair",
             on_click=logout
@@ -370,13 +703,13 @@ class ImprextaeApp:
                 content=ft.Column(
                     [
                         ft.Row([
-                            ft.Icon(ft.icons.PERSON_OUTLINE, size=30,
+                            ft.Icon(ft.Icons.PERSON_OUTLINE, size=30,
                                     color=ft.Colors.BLUE_900),
                             ft.Text("Atualizar Cadastro",
                                     weight=ft.FontWeight.BOLD, size=18)
                         ]),
                         ft.Text("Mantenha seus dados pessoais atualizados",
-                                size=14, color=ft.colors.GREY_700),
+                                size=14, color=ft.Colors.GREY_700),
                         ft.Container(expand=True),
                         ft.Container(
                             content=ft.Text(
@@ -385,7 +718,7 @@ class ImprextaeApp:
                             border_radius=20,
                             padding=ft.padding.symmetric(
                                 horizontal=15, vertical=8),
-                            on_click=lambda e: navigate(e, "update_profile"),
+                            on_click=update_click,
                             ink=True
                         )
                     ],
@@ -402,13 +735,13 @@ class ImprextaeApp:
                 content=ft.Column(
                     [
                         ft.Row([
-                            ft.Icon(ft.icons.ADD_CARD, size=30,
+                            ft.Icon(ft.Icons.ADD_CARD, size=30,
                                     color=ft.Colors.GREEN),
                             ft.Text("Solicitar Empréstimo",
                                     weight=ft.FontWeight.BOLD, size=18)
                         ]),
                         ft.Text("Crie uma nova solicitação de empréstimo",
-                                size=14, color=ft.colors.GREY_700),
+                                size=14, color=ft.Colors.GREY_700),
                         ft.Container(expand=True),
                         ft.Container(
                             content=ft.Text(
@@ -417,7 +750,7 @@ class ImprextaeApp:
                             border_radius=20,
                             padding=ft.padding.symmetric(
                                 horizontal=15, vertical=8),
-                            on_click=lambda e: navigate(e, "new_loan"),
+                            on_click=...,
                             ink=True
                         )
                     ],
@@ -434,13 +767,13 @@ class ImprextaeApp:
                 content=ft.Column(
                     [
                         ft.Row([
-                            ft.Icon(ft.icons.SEARCH, size=30,
+                            ft.Icon(ft.Icons.SEARCH, size=30,
                                     color=ft.Colors.AMBER_700),
                             ft.Text("Acompanhar Solicitação",
                                     weight=ft.FontWeight.BOLD, size=18)
                         ]),
                         ft.Text("Verifique o andamento das suas solicitações",
-                                size=14, color=ft.colors.GREY_700),
+                                size=14, color=ft.Colors.GREY_700),
                         ft.Container(expand=True),
                         ft.Container(
                             content=ft.Text(
@@ -449,7 +782,7 @@ class ImprextaeApp:
                             border_radius=20,
                             padding=ft.padding.symmetric(
                                 horizontal=15, vertical=8),
-                            on_click=lambda e: navigate(e, "track_request"),
+                            on_click=...,
                             ink=True
                         )
                     ],
@@ -466,13 +799,13 @@ class ImprextaeApp:
                 content=ft.Column(
                     [
                         ft.Row([
-                            ft.Icon(ft.icons.ACCOUNT_BALANCE,
+                            ft.Icon(ft.Icons.ACCOUNT_BALANCE,
                                     size=30, color=ft.Colors.INDIGO),
                             ft.Text("Acompanhar Empréstimo",
                                     weight=ft.FontWeight.BOLD, size=18)
                         ]),
                         ft.Text("Acompanhe seus empréstimos ativos",
-                                size=14, color=ft.colors.GREY_700),
+                                size=14, color=ft.Colors.GREY_700),
                         ft.Container(expand=True),
                         ft.Container(
                             content=ft.Text(
@@ -481,7 +814,7 @@ class ImprextaeApp:
                             border_radius=20,
                             padding=ft.padding.symmetric(
                                 horizontal=15, vertical=8),
-                            on_click=lambda e: navigate(e, "track_loan"),
+                            on_click=...,
                             ink=True
                         )
                     ],
