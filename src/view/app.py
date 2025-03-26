@@ -16,16 +16,16 @@ class ImprextaeApp:
 
     def setup_page(self) -> None:
         self.page.title = 'IMPREXTAE'
-        self.page.window.width = 800
-        self.page.window.min_width = 600
-        self.page.window.height = 700
-        self.page.window.min_height = 500
+        self.page.window.width = 825
+        self.page.window.height = 750
         self.page.window.center()
         self.page.window.to_front()
+        self.page.window.maximizable = False
+        self.page.window.resizable = False
         self.page.window.icon = r'icons\logo.ico'
         self.page.theme_mode = ft.ThemeMode.LIGHT
         self.page.bgcolor = ft.Colors.WHITE
-        self.page.padding = 20
+        self.page.padding = 0
         self.page.update()
 
     def show_error(self, message: str) -> None:
@@ -88,7 +88,7 @@ class ImprextaeApp:
                     elif self.user.user_type == 'Approver':
                         print('Visão do aprovador')
                     else:
-                        print('Visão do usuário padrão')
+                        self.show_user_menu()
 
                 elif login_result[0] == 'Warning':
                     self.show_warning(login_result[1])
@@ -317,3 +317,202 @@ class ImprextaeApp:
         )
 
         self.page.add(container)
+
+    def show_user_menu(self) -> None:
+        def navigate(e, route):
+            # Função para navegação futura
+            print(f"Navegando para: {route}")
+
+        def logout(e):
+            self.page.clean()
+            self.show_login_view()
+            self.show_success('Logout efetuado com sucesso!')
+
+        # Barra superior com informações do usuário
+        user_greeting = ft.Text(
+            f"Olá, {self.user.name.title()}!",
+            size=20,
+            weight=ft.FontWeight.BOLD,
+            color=ft.Colors.WHITE
+        )
+
+        logout_btn = ft.IconButton(
+            icon=ft.icons.LOGOUT,
+            icon_color=ft.Colors.WHITE,
+            tooltip="Sair",
+            on_click=logout
+        )
+
+        top_bar = ft.Container(
+            content=ft.Row(
+                [user_greeting, ft.Container(expand=True), logout_btn],
+                alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+            ),
+            padding=ft.padding.all(20),
+            bgcolor=ft.Colors.BLUE_900,
+            border_radius=ft.border_radius.only(
+                bottom_left=10, bottom_right=10),
+        )
+
+        # Container comuns para os cards
+        container_style = {
+            "width": 350,
+            "height": 150,
+            "padding": 20,
+            "border_radius": 15,
+            "margin": 10
+        }
+
+        # Cards para cada opção do menu
+        update_profile_card = ft.Card(
+            elevation=5,
+            content=ft.Container(
+                content=ft.Column(
+                    [
+                        ft.Row([
+                            ft.Icon(ft.icons.PERSON_OUTLINE, size=30,
+                                    color=ft.Colors.BLUE_900),
+                            ft.Text("Atualizar Cadastro",
+                                    weight=ft.FontWeight.BOLD, size=18)
+                        ]),
+                        ft.Text("Mantenha seus dados pessoais atualizados",
+                                size=14, color=ft.colors.GREY_700),
+                        ft.Container(expand=True),
+                        ft.Container(
+                            content=ft.Text(
+                                "ACESSAR", color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD),
+                            bgcolor=ft.Colors.BLUE_900,
+                            border_radius=20,
+                            padding=ft.padding.symmetric(
+                                horizontal=15, vertical=8),
+                            on_click=lambda e: navigate(e, "update_profile"),
+                            ink=True
+                        )
+                    ],
+                    spacing=10,
+                    alignment=ft.MainAxisAlignment.START
+                ),
+                **container_style
+            )
+        )
+
+        new_loan_card = ft.Card(
+            elevation=5,
+            content=ft.Container(
+                content=ft.Column(
+                    [
+                        ft.Row([
+                            ft.Icon(ft.icons.ADD_CARD, size=30,
+                                    color=ft.Colors.GREEN),
+                            ft.Text("Solicitar Empréstimo",
+                                    weight=ft.FontWeight.BOLD, size=18)
+                        ]),
+                        ft.Text("Crie uma nova solicitação de empréstimo",
+                                size=14, color=ft.colors.GREY_700),
+                        ft.Container(expand=True),
+                        ft.Container(
+                            content=ft.Text(
+                                "SOLICITAR", color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD),
+                            bgcolor=ft.Colors.GREEN,
+                            border_radius=20,
+                            padding=ft.padding.symmetric(
+                                horizontal=15, vertical=8),
+                            on_click=lambda e: navigate(e, "new_loan"),
+                            ink=True
+                        )
+                    ],
+                    spacing=10,
+                    alignment=ft.MainAxisAlignment.START
+                ),
+                **container_style
+            )
+        )
+
+        track_request_card = ft.Card(
+            elevation=5,
+            content=ft.Container(
+                content=ft.Column(
+                    [
+                        ft.Row([
+                            ft.Icon(ft.icons.SEARCH, size=30,
+                                    color=ft.Colors.AMBER_700),
+                            ft.Text("Acompanhar Solicitação",
+                                    weight=ft.FontWeight.BOLD, size=18)
+                        ]),
+                        ft.Text("Verifique o andamento das suas solicitações",
+                                size=14, color=ft.colors.GREY_700),
+                        ft.Container(expand=True),
+                        ft.Container(
+                            content=ft.Text(
+                                "VERIFICAR", color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD),
+                            bgcolor=ft.Colors.AMBER_700,
+                            border_radius=20,
+                            padding=ft.padding.symmetric(
+                                horizontal=15, vertical=8),
+                            on_click=lambda e: navigate(e, "track_request"),
+                            ink=True
+                        )
+                    ],
+                    spacing=10,
+                    alignment=ft.MainAxisAlignment.START
+                ),
+                **container_style
+            )
+        )
+
+        track_loan_card = ft.Card(
+            elevation=5,
+            content=ft.Container(
+                content=ft.Column(
+                    [
+                        ft.Row([
+                            ft.Icon(ft.icons.ACCOUNT_BALANCE,
+                                    size=30, color=ft.Colors.INDIGO),
+                            ft.Text("Acompanhar Empréstimo",
+                                    weight=ft.FontWeight.BOLD, size=18)
+                        ]),
+                        ft.Text("Acompanhe seus empréstimos ativos",
+                                size=14, color=ft.colors.GREY_700),
+                        ft.Container(expand=True),
+                        ft.Container(
+                            content=ft.Text(
+                                "GERENCIAR", color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD),
+                            bgcolor=ft.Colors.INDIGO,
+                            border_radius=20,
+                            padding=ft.padding.symmetric(
+                                horizontal=15, vertical=8),
+                            on_click=lambda e: navigate(e, "track_loan"),
+                            ink=True
+                        )
+                    ],
+                    spacing=10,
+                    alignment=ft.MainAxisAlignment.START
+                ),
+                **container_style
+            )
+        )
+
+        # Grid de cards
+        card_grid = ft.Row(
+            [
+                ft.Column([update_profile_card, track_request_card],
+                          alignment=ft.MainAxisAlignment.CENTER),
+                ft.Column([new_loan_card, track_loan_card],
+                          alignment=ft.MainAxisAlignment.CENTER)
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+            spacing=15
+        )
+
+        # Layout principal
+        content = ft.Column(
+            controls=[
+                top_bar,
+                card_grid
+            ],
+            spacing=15,
+            expand=True
+        )
+
+        self.page.clean()
+        self.page.add(content)
