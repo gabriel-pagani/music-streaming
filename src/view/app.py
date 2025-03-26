@@ -330,7 +330,7 @@ class ImprextaeApp:
             self.show_user_menu()
 
         # Barra superior
-        user_greeting = ft.Text(
+        title = ft.Text(
             f"Atualização de Cadastro",
             size=20,
             weight=ft.FontWeight.BOLD,
@@ -346,7 +346,7 @@ class ImprextaeApp:
 
         top_bar = ft.Container(
             content=ft.Row(
-                [back_btn, user_greeting, ft.Container(expand=True)],
+                [back_btn, title, ft.Container(expand=True)],
                 alignment=ft.MainAxisAlignment.START
             ),
             padding=ft.padding.all(20),
@@ -434,7 +434,8 @@ class ImprextaeApp:
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
-            on_change=format_phone,
+            on_change=lambda e: self.show_password_confirmation(
+                e, password_confirmed_input)
         )
 
         password_confirmed_input = ft.TextField(
@@ -445,6 +446,7 @@ class ImprextaeApp:
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
             on_change=format_phone,
+            visible=False
         )
 
         # Endereço
@@ -656,6 +658,15 @@ class ImprextaeApp:
             self.page.clean()
             self.show_update_profile()
 
+        def new_loan_click(e):
+            self.show_warning('Funcionalidade em desenvolvimento!')
+
+        def track_request_click(e):
+            self.show_warning('Funcionalidade em desenvolvimento!')
+
+        def track_loan_click(e):
+            self.show_warning('Funcionalidade em desenvolvimento!')
+
         def logout(e):
             self.page.clean()
             self.show_login_view()
@@ -750,7 +761,7 @@ class ImprextaeApp:
                             border_radius=20,
                             padding=ft.padding.symmetric(
                                 horizontal=15, vertical=8),
-                            on_click=...,
+                            on_click=new_loan_click,
                             ink=True
                         )
                     ],
@@ -782,7 +793,7 @@ class ImprextaeApp:
                             border_radius=20,
                             padding=ft.padding.symmetric(
                                 horizontal=15, vertical=8),
-                            on_click=...,
+                            on_click=track_request_click,
                             ink=True
                         )
                     ],
@@ -814,7 +825,7 @@ class ImprextaeApp:
                             border_radius=20,
                             padding=ft.padding.symmetric(
                                 horizontal=15, vertical=8),
-                            on_click=...,
+                            on_click=track_loan_click,
                             ink=True
                         )
                     ],
