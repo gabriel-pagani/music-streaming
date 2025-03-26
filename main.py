@@ -1,4 +1,4 @@
-from flet import Page, app, WEB_BROWSER
+from flet import Page, app
 from src.view.app import ImprextaeApp
 from src.utils.connection import close_connection
 
