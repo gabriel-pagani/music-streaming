@@ -335,8 +335,6 @@ class ImprextaeApp:
                 self.show_warning('Telefone inválido!')
             elif zip_code_input.value != '' and not validate_zip_code(zip_code_input.value):
                 self.show_warning('CEP inválido!')
-            elif number_input.value != '' and not validate_number(number_input.value):
-                self.show_warning('Número de residência inválido!')
             elif password_input.value != password_confirmed_input.value:
                 self.show_warning('As senhas não coincidem!')
             elif password_input.value != '' and not validate_password(password_input.value):
@@ -590,7 +588,7 @@ class ImprextaeApp:
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
-            on_change=format_number
+            input_filter=ft.NumbersOnlyInputFilter()
         )
 
         complement_input = ft.TextField(
