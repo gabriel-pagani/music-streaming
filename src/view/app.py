@@ -382,6 +382,8 @@ class ImprextaeApp:
                         self.show_warning(update_result[1])
                     else:
                         # Atualize o usuário atual com os novos valores
+                        if password_input.value:
+                            self.user.password = password_input.value
                         if cpf_input.value:
                             self.user.id_number = cpf_input.value
                         if birth_date_input.value:
