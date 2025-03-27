@@ -117,6 +117,7 @@ class User:
             clause = ''
             values = list()
             fields = {
+                'hash_senha': self.password,
                 'cpf': self.id_number,
                 'data_nascimento': self.birth_date,
                 'renda_mensal': self.monthly_income,
@@ -131,9 +132,12 @@ class User:
             }
 
             for field, value in fields.items():
-                if value != None:
+                if value is not None and value != '':
                     values.append(value)
                     clause += f'{field} = ?, '
+
+            if not clause:
+                return ['Warning', 'Nenhum campo foi preenchido para atualização.']
 
             values.append(self.id)
 

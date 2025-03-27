@@ -344,23 +344,67 @@ class ImprextaeApp:
                     'Senha fraca! A senha deve conter no mínimo 8 caracteres ou mais, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.')
             else:
                 try:
-                    self.user.id_number = cpf_input.value
-                    self.user.birth_date = birth_date_input.value
-                    self.user.monthly_income = monthly_income_input.value
-                    self.user.phone = phone_input.value
-                    self.user.zip_code = zip_code_input.value
-                    self.user.state = state_input.value
-                    self.user.city = city_input.value
-                    self.user.neighborhood = neighborhood_input.value
-                    self.user.street = street_input.value
-                    self.user.number = number_input.value
-                    self.user.complement = complement_input.value
-                    self.user.password = generate_hash(password_input.value)
-                    update_result = self.user.update_account()
+                    # Cria um novo objeto User com apenas os campos preenchidos
+                    updated_user = User(id=self.user.id)
+
+                    # Adiciona apenas os campos que foram realmente preenchidos
+                    if cpf_input.value:
+                        updated_user.id_number = cpf_input.value
+                    if birth_date_input.value:
+                        updated_user.birth_date = birth_date_input.value
+                    if monthly_income_input.value:
+                        updated_user.monthly_income = monthly_income_input.value
+                    if phone_input.value:
+                        updated_user.phone = phone_input.value
+                    if zip_code_input.value:
+                        updated_user.zip_code = zip_code_input.value
+                    if state_input.value:
+                        updated_user.state = state_input.value
+                    if city_input.value:
+                        updated_user.city = city_input.value
+                    if neighborhood_input.value:
+                        updated_user.neighborhood = neighborhood_input.value
+                    if street_input.value:
+                        updated_user.street = street_input.value
+                    if number_input.value:
+                        updated_user.number = int(number_input.value)
+                    if complement_input.value:
+                        updated_user.complement = complement_input.value
+                    if password_input.value:
+                        updated_user.password = generate_hash(
+                            password_input.value)
+
+                    update_result = updated_user.update_account()
 
                     if update_result[0] == 'Error':
                         self.show_error(update_result[1])
+                    elif update_result[0] == 'Warning':
+                        self.show_warning(update_result[1])
                     else:
+                        # Atualize o usuário atual com os novos valores
+                        if cpf_input.value:
+                            self.user.id_number = cpf_input.value
+                        if birth_date_input.value:
+                            self.user.birth_date = birth_date_input.value
+                        if monthly_income_input.value:
+                            self.user.monthly_income = monthly_income_input.value
+                        if phone_input.value:
+                            self.user.phone = phone_input.value
+                        if zip_code_input.value:
+                            self.user.zip_code = zip_code_input.value
+                        if state_input.value:
+                            self.user.state = state_input.value
+                        if city_input.value:
+                            self.user.city = city_input.value
+                        if neighborhood_input.value:
+                            self.user.neighborhood = neighborhood_input.value
+                        if street_input.value:
+                            self.user.street = street_input.value
+                        if number_input.value:
+                            self.user.number = number_input.value
+                        if complement_input.value:
+                            self.user.complement = complement_input.value
+
                         self.page.clean()
                         self.show_success('Perfil atualizado com sucesso!')
                         self.show_user_menu()
