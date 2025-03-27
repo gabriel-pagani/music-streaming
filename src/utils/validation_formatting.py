@@ -62,12 +62,10 @@ def validate_birth_date(date_str: str) -> bool:
         return False
 
 
-# Essa função pode causar problemas
 def validate_monthly_income(income: str) -> bool:
     """Valida se a renda mensal é um valor numérico positivo."""
     # Remove símbolos de moeda e formatação
-    clean_income = income.replace('R$', '').replace(
-        '.', '').replace(',', '.').strip()
+    clean_income = income.replace('R$ ', '').replace(',', '.').strip()
 
     try:
         income_value = float(clean_income)
@@ -89,15 +87,6 @@ def validate_phone(phone: str) -> bool:
     phone = ''.join(filter(str.isdigit, phone))
     # Verifica se tem 10 ou 11 dígitos (com ou sem o 9)
     return len(phone) == 11 and phone.isdigit()
-
-
-def validate_number(number: str) -> bool:
-    """Valida se o número é um inteiro positivo."""
-    try:
-        num = int(number)
-        return num > 0
-    except ValueError:
-        return False
 
 
 def format_cpf(e):
@@ -192,11 +181,4 @@ def format_cep(e):
         formatted = f"{value[:5]}-{value[5:]}"
 
     e.control.value = formatted
-    e.control.update()
-
-
-def format_number(e):
-    """Formata número em tempo real no campo de entrada."""
-    value = ''.join(filter(str.isdigit, e.control.value))
-    e.control.value = value
     e.control.update()
