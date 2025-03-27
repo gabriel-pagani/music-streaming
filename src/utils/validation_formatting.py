@@ -133,9 +133,10 @@ def format_date(e):
 def format_currency(e):
     """Formata valor monetário em tempo real no campo de entrada."""
     # Remove caracteres não numéricos e R$
-    value = ''.join(filter(str.isdigit, e.control.value))
+    value = ''.join(filter(str.isdigit, e.control.value.replace(
+        'R$', '').replace(',', '').replace('.', '')))
 
-    if e.control.value == "R$ 0,0":
+    if not value:
         e.control.value = ""
         e.control.update()
         return
@@ -144,6 +145,8 @@ def format_currency(e):
     numeric_value_float = float(value) / 100
     # Formata com R$ e vírgula para separador decimal
     e.control.value = f"R$ {numeric_value_float:.2f}".replace(".", ",")
+    if e.control.value == 'R$ 0,00':
+        e.control.value = ''
     e.control.update()
 
 
