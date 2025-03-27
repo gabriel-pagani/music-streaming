@@ -5,7 +5,7 @@ from logging import error
 
 class User:
 
-    def __init__(self, email: str, password: str, name: str = None, id_number: str = None, birth_date: str = None, monthly_income: float = None,
+    def __init__(self, email: str = None, password: str = None, name: str = None, id_number: str = None, birth_date: str = None, monthly_income: float = None,
                  phone: str = None, state: str = None, city: str = None, neighborhood: str = None, street: str = None, number: int = None,
                  complement: str = None, zip_code: str = None, id: int = None, score: int = None, status: str = None, user_type: str = None,
                  registration_date: str = None, update_date: str = None, observations: str = None) -> None:
