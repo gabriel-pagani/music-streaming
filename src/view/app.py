@@ -369,52 +369,42 @@ class ImprextaeApp:
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
-            # on_change=format_cpf,
-            keyboard_type=ft.KeyboardType.NUMBER
         )
 
         cpf_input = ft.TextField(
             label="CPF",
             prefix_icon=ft.Icons.PERSON,
-            hint_text="Digite seu CPF aqui... (xxx.xxx.xxx-xx)",
+            hint_text="Digite seu CPF aqui...",
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
-            # on_change=format_cpf,
-            keyboard_type=ft.KeyboardType.NUMBER
         )
 
         birth_date_input = ft.TextField(
-            label="Data de Aniversário",
+            label="Data de Nascimento",
             prefix_icon=ft.Icons.CAKE,
-            hint_text="Digite sua data de aniversário aqui... (dd/mm/aaaa)",
+            hint_text="Digite sua data de nascimento aqui...",
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
-            # on_change=format_date,
-            keyboard_type=ft.KeyboardType.NUMBER
         )
 
         monthly_income_input = ft.TextField(
             label="Renda Mensal",
             prefix_icon=ft.Icons.ATTACH_MONEY,
-            hint_text="Digite sua renda mensal aqui... (R$)",
+            hint_text="Digite sua renda mensal aqui...",
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
-            # on_change=format_currency,
-            keyboard_type=ft.KeyboardType.NUMBER
         )
 
         phone_input = ft.TextField(
             label="Telefone",
             prefix_icon=ft.Icons.LOCAL_PHONE,
-            hint_text="Digite seu telefone aqui... ((xx) xxxxx-xxxx)",
+            hint_text="Digite seu telefone aqui...",
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
-            on_change=format_phone,
-            keyboard_type=ft.KeyboardType.NUMBER
         )
 
         email_input = ft.TextField(
@@ -424,13 +414,14 @@ class ImprextaeApp:
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
-            on_change=format_phone,
         )
 
         password_input = ft.TextField(
-            label="Senha",
+            label="Nova Senha",
             prefix_icon=ft.Icons.LOCK,
             hint_text="Digite sua senha aqui... ",
+            password=True,
+            can_reveal_password=True,
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
@@ -439,13 +430,14 @@ class ImprextaeApp:
         )
 
         password_confirmed_input = ft.TextField(
-            label="Senha",
+            label="Confirmar Senha",
             prefix_icon=ft.Icons.LOCK,
             hint_text="Digite sua senha aqui... ",
+            password=True,
+            can_reveal_password=True,
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
-            on_change=format_phone,
             visible=False
         )
 
@@ -453,12 +445,10 @@ class ImprextaeApp:
         zip_code_input = ft.TextField(
             label="CEP",
             prefix_icon=ft.Icons.LOCATION_ON,
-            hint_text="Digite seu CEP aqui... (xxxxx-xxx)",
+            hint_text="Digite seu CEP aqui...",
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
-            # on_change=format_cep,
-            keyboard_type=ft.KeyboardType.NUMBER
         )
 
         state_input = ft.TextField(
@@ -504,8 +494,6 @@ class ImprextaeApp:
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
-            keyboard_type=ft.KeyboardType.NUMBER,
-            # on_change=validate_only_numbers
         )
 
         complement_input = ft.TextField(
