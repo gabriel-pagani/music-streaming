@@ -88,7 +88,7 @@ def validate_phone(phone: str) -> bool:
     # Remove formatação se existir
     phone = ''.join(filter(str.isdigit, phone))
     # Verifica se tem 10 ou 11 dígitos (com ou sem o 9)
-    return len(phone) in (10, 11) and phone.isdigit()
+    return len(phone) == 11 and phone.isdigit()
 
 
 def validate_number(number: str) -> bool:
@@ -171,10 +171,8 @@ def format_phone(e):
         formatted = ""
     elif len(value) <= 2:
         formatted = f"({value}"
-    elif len(value) <= 6:
+    elif len(value) <= 7:
         formatted = f"({value[:2]}){value[2:]}"
-    elif len(value) <= 10:
-        formatted = f"({value[:2]}){value[2:6]}-{value[6:]}"
     else:
         formatted = f"({value[:2]}){value[2:7]}-{value[7:]}"
 
