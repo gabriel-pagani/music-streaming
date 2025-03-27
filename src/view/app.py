@@ -324,7 +324,74 @@ class ImprextaeApp:
             self.show_user_menu()
 
         def save_profile(e):
-            # Implementação futura para salvar o perfil
+            # VERIFICAR O FUNCIONAMENTO DO CÓDIGO ATÉ O LIMITADOR ======================================================================================================================================================
+
+            # Validar todos os campos antes de salvar
+            valid_form = True
+            error_messages = []
+
+            # Validação de nome (não deve estar vazio)
+            name = name_input.value.strip()
+            if not name:
+                valid_form = False
+                error_messages.append("Nome é obrigatório")
+
+            # Validação de CPF
+            cpf = ''.join(filter(str.isdigit, cpf_input.value))
+            if cpf and not validate_cpf(cpf):
+                valid_form = False
+                error_messages.append("CPF inválido")
+
+            # Validação de data de nascimento
+            birth_date = birth_date_input.value
+            if birth_date and not validate_birth_date(birth_date):
+                valid_form = False
+                error_messages.append("Data de nascimento inválida")
+
+            # Validação de renda mensal
+            income = monthly_income_input.value
+            if income and not validate_monthly_income(income):
+                valid_form = False
+                error_messages.append("Valor de renda mensal inválido")
+
+            # Validação de telefone
+            phone = phone_input.value
+            if phone and not validate_phone(phone):
+                valid_form = False
+                error_messages.append("Telefone inválido")
+
+            # Validação de senha (apenas se foi preenchida)
+            password = password_input.value
+            password_confirmed = password_confirmed_input.value
+
+            if password:
+                if not validate_password(password):
+                    valid_form = False
+                    error_messages.append(
+                        "Senha fraca! A senha deve conter no mínimo 8 caracteres, uma letra maiúscula, uma minúscula, um número e um caractere especial")
+                elif password != password_confirmed:
+                    valid_form = False
+                    error_messages.append("As senhas não coincidem")
+
+            # Validação de CEP
+            zip_code = ''.join(filter(str.isdigit, zip_code_input.value))
+            if zip_code and not validate_zip_code(zip_code):
+                valid_form = False
+                error_messages.append("CEP inválido")
+
+            # Validação de número
+            number = number_input.value
+            if number and not validate_number(number):
+                valid_form = False
+                error_messages.append("Número inválido")
+
+            # Se houver erros, mostrar mensagem e não prosseguir
+            if not valid_form:
+                self.show_warning("\n".join(error_messages))
+                return
+
+            # LIMITADOR =====================================================================================================================================================================================================
+
             self.show_success("Perfil atualizado com sucesso!")
             self.page.clean()
             self.show_user_menu()
@@ -369,6 +436,8 @@ class ImprextaeApp:
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
+            value=self.user.name.title(),
+            disabled=True
         )
 
         cpf_input = ft.TextField(
@@ -378,33 +447,37 @@ class ImprextaeApp:
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
+            on_change=format_cpf
         )
 
         birth_date_input = ft.TextField(
             label="Data de Nascimento",
             prefix_icon=ft.Icons.CAKE,
-            hint_text="Digite sua data de nascimento aqui...",
+            hint_text="DD/MM/AAAA",
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
+            on_change=format_date
         )
 
         monthly_income_input = ft.TextField(
             label="Renda Mensal",
             prefix_icon=ft.Icons.ATTACH_MONEY,
-            hint_text="Digite sua renda mensal aqui...",
+            hint_text="R$ 0,00",
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
+            on_change=format_currency
         )
 
         phone_input = ft.TextField(
             label="Telefone",
             prefix_icon=ft.Icons.LOCAL_PHONE,
-            hint_text="Digite seu telefone aqui...",
+            hint_text="(00) 00000-0000",
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
+            on_change=format_phone
         )
 
         email_input = ft.TextField(
@@ -414,6 +487,8 @@ class ImprextaeApp:
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
+            disabled=True,
+            value=self.user.email
         )
 
         password_input = ft.TextField(
@@ -445,10 +520,11 @@ class ImprextaeApp:
         zip_code_input = ft.TextField(
             label="CEP",
             prefix_icon=ft.Icons.LOCATION_ON,
-            hint_text="Digite seu CEP aqui...",
+            hint_text="00000-000",
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
+            on_change=format_cep
         )
 
         state_input = ft.TextField(
@@ -494,6 +570,7 @@ class ImprextaeApp:
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
+            on_change=lambda e: validate_number(e)
         )
 
         complement_input = ft.TextField(
