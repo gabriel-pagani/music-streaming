@@ -140,14 +140,12 @@ def format_date(e):
     e.control.update()
 
 
-# Essa função não deixa o usuário apagar o campo
 def format_currency(e):
     """Formata valor monetário em tempo real no campo de entrada."""
     # Remove caracteres não numéricos e R$
     value = ''.join(filter(str.isdigit, e.control.value))
 
-    # Se não houver dígitos, deixa o campo completamente vazio
-    if not value:
+    if e.control.value == "R$ 0,0":
         e.control.value = ""
         e.control.update()
         return
