@@ -453,7 +453,7 @@ class ImprextaeApp:
         birth_date_input = ft.TextField(
             label="Data de Nascimento",
             prefix_icon=ft.Icons.CAKE,
-            hint_text="DD/MM/AAAA",
+            hint_text="dd/mm/aaaa",
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
@@ -473,7 +473,7 @@ class ImprextaeApp:
         phone_input = ft.TextField(
             label="Telefone",
             prefix_icon=ft.Icons.LOCAL_PHONE,
-            hint_text="(00) 00000-0000",
+            hint_text="(00)00000-0000",
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,

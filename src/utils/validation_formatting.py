@@ -12,8 +12,6 @@ def validate_password(password: str) -> bool:
     return bool(search(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$', password))
 
 
-# VERIFICAR TODAS AS FUNÇÕES ABAIXO
-
 def validate_cpf(cpf: str) -> bool:
     """Valida um CPF verificando os dígitos verificadores."""
     # Remove caracteres não numéricos
@@ -28,10 +26,10 @@ def validate_cpf(cpf: str) -> bool:
     for i in range(9):
         soma += int(cpf[i]) * (10 - i)
     resto = soma % 11
-    dv1 = 0 if resto < 2 else 11 - resto
+    primeiro_digito_verificador = 0 if resto < 2 else 11 - resto
 
     # Verifica o primeiro dígito verificador
-    if dv1 != int(cpf[9]):
+    if primeiro_digito_verificador != int(cpf[9]):
         return False
 
     # Calcula o segundo dígito verificador
@@ -39,10 +37,10 @@ def validate_cpf(cpf: str) -> bool:
     for i in range(10):
         soma += int(cpf[i]) * (11 - i)
     resto = soma % 11
-    dv2 = 0 if resto < 2 else 11 - resto
+    segundo_digito_verificador = 0 if resto < 2 else 11 - resto
 
     # Verifica o segundo dígito verificador
-    return dv2 == int(cpf[10])
+    return segundo_digito_verificador == int(cpf[10])
 
 
 def validate_birth_date(date_str: str) -> bool:
@@ -59,11 +57,12 @@ def validate_birth_date(date_str: str) -> bool:
         # Verifica se é data válida e se é no passado
         today = datetime.now()
         return date < today and year >= 1900
+
     except ValueError:
-        # Se a data não for válida (ex: 31/02/2000)
         return False
 
 
+# Essa função pode causar problemas
 def validate_monthly_income(income: str) -> bool:
     """Valida se a renda mensal é um valor numérico positivo."""
     # Remove símbolos de moeda e formatação
@@ -105,12 +104,6 @@ def format_cpf(e):
     """Formata CPF em tempo real no campo de entrada."""
     value = ''.join(filter(str.isdigit, e.control.value))
 
-    # Se não houver dígitos, deixa o campo completamente vazio
-    if not value:
-        e.control.value = ""
-        e.control.update()
-        return
-
     # Limita a 11 dígitos
     value = value[:11]
 
@@ -132,16 +125,10 @@ def format_date(e):
     """Formata data em tempo real no campo de entrada."""
     value = ''.join(filter(str.isdigit, e.control.value))
 
-    # Se não houver dígitos, deixa o campo completamente vazio
-    if not value:
-        e.control.value = ""
-        e.control.update()
-        return
-
     # Limita a 8 dígitos
     value = value[:8]
 
-    # Formata como DD/MM/AAAA
+    # Formata como dd/mm/aaaa
     if len(value) <= 2:
         formatted = value
     elif len(value) <= 4:
@@ -153,6 +140,7 @@ def format_date(e):
     e.control.update()
 
 
+# Essa função não deixa o usuário apagar o campo
 def format_currency(e):
     """Formata valor monetário em tempo real no campo de entrada."""
     # Remove caracteres não numéricos e R$
@@ -179,14 +167,16 @@ def format_phone(e):
     value = value[:11]
 
     # Formata como (XX) XXXXX-XXXX ou (XX) XXXX-XXXX
-    if len(value) <= 2:
+    if len(value) == 0:
+        formatted = ""
+    elif len(value) <= 2:
         formatted = f"({value}"
     elif len(value) <= 6:
-        formatted = f"({value[:2]}) {value[2:]}"
+        formatted = f"({value[:2]}){value[2:]}"
     elif len(value) <= 10:
-        formatted = f"({value[:2]}) {value[2:6]}-{value[6:]}"
+        formatted = f"({value[:2]}){value[2:6]}-{value[6:]}"
     else:
-        formatted = f"({value[:2]}) {value[2:7]}-{value[7:]}"
+        formatted = f"({value[:2]}){value[2:7]}-{value[7:]}"
 
     e.control.value = formatted
     e.control.update()
@@ -195,12 +185,6 @@ def format_phone(e):
 def format_cep(e):
     """Formata CEP em tempo real no campo de entrada."""
     value = ''.join(filter(str.isdigit, e.control.value))
-
-    # Se não houver dígitos, deixa o campo completamente vazio
-    if not value:
-        e.control.value = ""
-        e.control.update()
-        return
 
     # Limita a 8 dígitos
     value = value[:8]
@@ -213,40 +197,3 @@ def format_cep(e):
 
     e.control.value = formatted
     e.control.update()
-
-
-def clean_input(text: str) -> str:
-    """Remove caracteres não alfanuméricos de uma string."""
-    return ''.join(char for char in text if char.isalnum())
-
-
-# ----- FUNÇÕES AUXILIARES PARA FORMATAÇÃO -----
-
-def format_cpf_string(cpf: str) -> str:
-    """Formata um CPF como XXX.XXX.XXX-XX."""
-    cpf = ''.join(filter(str.isdigit, cpf))
-    if len(cpf) != 11:
-        return ""
-
-    return f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}"
-
-
-def format_phone_string(phone: str) -> str:
-    """Formata um telefone como (XX) XXXXX-XXXX ou (XX) XXXX-XXXX."""
-    phone = ''.join(filter(str.isdigit, phone))
-
-    if len(phone) == 11:
-        return f"({phone[:2]}) {phone[2:7]}-{phone[7:]}"
-    elif len(phone) == 10:
-        return f"({phone[:2]}) {phone[2:6]}-{phone[6:]}"
-    else:
-        return ""
-
-
-def format_zip_code_string(cep: str) -> str:
-    """Formata um CEP como XXXXX-XXX."""
-    cep = ''.join(filter(str.isdigit, cep))
-    if len(cep) != 8:
-        return ""
-
-    return f"{cep[:5]}-{cep[5:]}"
