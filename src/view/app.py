@@ -1,6 +1,7 @@
 import flet as ft
 from src.utils.validation_formatting import *
 from logging import basicConfig, ERROR, error
+from src.utils.hash import generate_hash
 from src.model.user import User
 
 basicConfig(filename='main.log', level=ERROR,
@@ -324,77 +325,50 @@ class ImprextaeApp:
             self.show_user_menu()
 
         def save_profile(e):
-            # VERIFICAR O FUNCIONAMENTO DO CÓDIGO ATÉ O LIMITADOR ======================================================================================================================================================
+            if cpf_input.value != '' and not validate_cpf(cpf_input.value):
+                self.show_warning('CPF inválido!')
+            elif birth_date_input.value != '' and not validate_birth_date(birth_date_input.value):
+                self.show_warning('Data de nascimento inválida!')
+            elif monthly_income_input.value != '' and not validate_monthly_income(monthly_income_input.value):
+                self.show_warning('Renda mensal inválida!')
+            elif phone_input.value != '' and not validate_phone(phone_input.value):
+                self.show_warning('Telefone inválido!')
+            elif zip_code_input.value != '' and not validate_zip_code(zip_code_input.value):
+                self.show_warning('CEP inválido!')
+            elif number_input.value != '' and not validate_number(number_input.value):
+                self.show_warning('Número de residência inválido!')
+            elif password_input.value != password_confirmed_input.value:
+                self.show_warning('As senhas não coincidem!')
+            elif password_input.value != '' and not validate_password(password_input.value):
+                self.show_warning(
+                    'Senha fraca! A senha deve conter no mínimo 8 caracteres ou mais, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.')
+            else:
+                try:
+                    self.user.id_number = cpf_input.value
+                    self.user.birth_date = birth_date_input.value
+                    self.user.monthly_income = monthly_income_input.value
+                    self.user.phone = phone_input.value
+                    self.user.zip_code = zip_code_input.value
+                    self.user.state = state_input.value
+                    self.user.city = city_input.value
+                    self.user.neighborhood = neighborhood_input.value
+                    self.user.street = street_input.value
+                    self.user.number = number_input.value
+                    self.user.complement = complement_input.value
+                    self.user.password = generate_hash(password_input.value)
+                    update_result = self.user.update_account()
 
-            # Validar todos os campos antes de salvar
-            valid_form = True
-            error_messages = []
-
-            # Validação de nome (não deve estar vazio)
-            name = name_input.value.strip()
-            if not name:
-                valid_form = False
-                error_messages.append("Nome é obrigatório")
-
-            # Validação de CPF
-            cpf = ''.join(filter(str.isdigit, cpf_input.value))
-            if cpf and not validate_cpf(cpf):
-                valid_form = False
-                error_messages.append("CPF inválido")
-
-            # Validação de data de nascimento
-            birth_date = birth_date_input.value
-            if birth_date and not validate_birth_date(birth_date):
-                valid_form = False
-                error_messages.append("Data de nascimento inválida")
-
-            # Validação de renda mensal
-            income = monthly_income_input.value
-            if income and not validate_monthly_income(income):
-                valid_form = False
-                error_messages.append("Valor de renda mensal inválido")
-
-            # Validação de telefone
-            phone = phone_input.value
-            if phone and not validate_phone(phone):
-                valid_form = False
-                error_messages.append("Telefone inválido")
-
-            # Validação de senha (apenas se foi preenchida)
-            password = password_input.value
-            password_confirmed = password_confirmed_input.value
-
-            if password:
-                if not validate_password(password):
-                    valid_form = False
-                    error_messages.append(
-                        "Senha fraca! A senha deve conter no mínimo 8 caracteres, uma letra maiúscula, uma minúscula, um número e um caractere especial")
-                elif password != password_confirmed:
-                    valid_form = False
-                    error_messages.append("As senhas não coincidem")
-
-            # Validação de CEP
-            zip_code = ''.join(filter(str.isdigit, zip_code_input.value))
-            if zip_code and not validate_zip_code(zip_code):
-                valid_form = False
-                error_messages.append("CEP inválido")
-
-            # Validação de número
-            number = number_input.value
-            if number and not validate_number(number):
-                valid_form = False
-                error_messages.append("Número inválido")
-
-            # Se houver erros, mostrar mensagem e não prosseguir
-            if not valid_form:
-                self.show_warning("\n".join(error_messages))
-                return
-
-            # LIMITADOR =====================================================================================================================================================================================================
-
-            self.show_success("Perfil atualizado com sucesso!")
-            self.page.clean()
-            self.show_user_menu()
+                    if update_result[0] == 'Error':
+                        self.show_error(update_result[1])
+                    else:
+                        self.page.clean()
+                        self.show_success('Perfil atualizado com sucesso!')
+                        self.show_user_menu()
+                except Exception as e:
+                    error(f"Erro ao atualizar conta: {e}")
+                    self.show_error(
+                        'Ocorreu um erro ao tentar atualizar a conta. Tente novamente.')
+                    return
 
         # Barra superior
         title = ft.Text(
@@ -734,6 +708,7 @@ class ImprextaeApp:
 
         def logout(e):
             self.page.clean()
+            self.user = None
             self.show_login_view()
             self.show_success('Logout efetuado com sucesso!')
 
