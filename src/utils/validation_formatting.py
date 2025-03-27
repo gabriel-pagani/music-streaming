@@ -197,3 +197,10 @@ def format_cep(e):
 
     e.control.value = formatted
     e.control.update()
+
+
+def format_number(e):
+    """Formata número em tempo real no campo de entrada."""
+    value = ''.join(filter(str.isdigit, e.control.value))
+    e.control.value = value
+    e.control.update()

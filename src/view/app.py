@@ -570,7 +570,7 @@ class ImprextaeApp:
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
-            on_change=lambda e: validate_number(e)
+            on_change=format_number
         )
 
         complement_input = ft.TextField(
