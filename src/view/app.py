@@ -351,23 +351,24 @@ class ImprextaeApp:
                     if birth_date_input.value:
                         updated_user.birth_date = birth_date_input.value
                     if monthly_income_input.value:
-                        updated_user.monthly_income = monthly_income_input.value
+                        updated_user.monthly_income = float(
+                            monthly_income_input.value.replace('R$ ', '').replace(',', '.'))
                     if phone_input.value:
                         updated_user.phone = phone_input.value
                     if zip_code_input.value:
                         updated_user.zip_code = zip_code_input.value
                     if state_input.value:
-                        updated_user.state = state_input.value
+                        updated_user.state = state_input.value.strip().lower()
                     if city_input.value:
-                        updated_user.city = city_input.value
+                        updated_user.city = city_input.value.strip().lower()
                     if neighborhood_input.value:
-                        updated_user.neighborhood = neighborhood_input.value
+                        updated_user.neighborhood = neighborhood_input.value.strip().lower()
                     if street_input.value:
-                        updated_user.street = street_input.value
+                        updated_user.street = street_input.value.strip().lower()
                     if number_input.value:
                         updated_user.number = int(number_input.value)
                     if complement_input.value:
-                        updated_user.complement = complement_input.value
+                        updated_user.complement = complement_input.value.strip().lower()
                     if password_input.value:
                         updated_user.password = generate_hash(
                             password_input.value)
@@ -387,23 +388,24 @@ class ImprextaeApp:
                         if birth_date_input.value:
                             self.user.birth_date = birth_date_input.value
                         if monthly_income_input.value:
-                            self.user.monthly_income = monthly_income_input.value
+                            self.user.monthly_income = float(
+                                monthly_income_input.value.replace('R$ ', '').replace(',', '.'))
                         if phone_input.value:
                             self.user.phone = phone_input.value
                         if zip_code_input.value:
                             self.user.zip_code = zip_code_input.value
                         if state_input.value:
-                            self.user.state = state_input.value
+                            self.user.state = state_input.value.strip().lower()
                         if city_input.value:
-                            self.user.city = city_input.value
+                            self.user.city = city_input.value.strip().lower()
                         if neighborhood_input.value:
-                            self.user.neighborhood = neighborhood_input.value
+                            self.user.neighborhood = neighborhood_input.value.strip().lower()
                         if street_input.value:
-                            self.user.street = street_input.value
+                            self.user.street = street_input.value.strip().lower()
                         if number_input.value:
-                            self.user.number = number_input.value
+                            self.user.number = int(number_input.value)
                         if complement_input.value:
-                            self.user.complement = complement_input.value
+                            self.user.complement = complement_input.value.strip().lower()
 
                         self.page.clean()
                         self.show_success('Perfil atualizado com sucesso!')
@@ -429,9 +431,17 @@ class ImprextaeApp:
             on_click=back_to_menu
         )
 
+        save_btn = ft.IconButton(
+            icon=ft.Icons.SAVE,
+            icon_color=ft.Colors.WHITE,
+            tooltip="Salvar",
+            on_click=save_profile,
+            icon_size=40
+        )
+
         top_bar = ft.Container(
             content=ft.Row(
-                [back_btn, title, ft.Container(expand=True)],
+                [back_btn, title, ft.Container(expand=True), save_btn],
                 alignment=ft.MainAxisAlignment.START
             ),
             padding=ft.padding.all(20),
@@ -696,27 +706,11 @@ class ImprextaeApp:
             **card_style
         )
 
-        # Botão de salvar
-        save_button = ft.ElevatedButton(
-            text="Atualizar Informações",
-            icon=ft.Icons.SAVE,
-            icon_color=ft.Colors.WHITE,
-            width=400,
-            height=50,
-            bgcolor=ft.Colors.BLUE_900,
-            color=ft.Colors.WHITE,
-            on_click=save_profile,
-            style=ft.ButtonStyle(
-                shape=ft.RoundedRectangleBorder(radius=8)
-            )
-        )
-
         # Container do formulário em uma ListView com scroll
         form_content = ft.ListView(
             controls=[
                 personal_card,
-                address_card,
-                save_button
+                address_card
             ],
             spacing=10,
             padding=ft.padding.symmetric(horizontal=20, vertical=10),
