@@ -129,7 +129,6 @@ def format_date(e):
     e.control.update()
 
 
-# FUNÇÃO COM ERRO
 def format_currency(e):
     """Formata valor monetário em tempo real no campo de entrada."""
     # Remove caracteres não numéricos e R$
