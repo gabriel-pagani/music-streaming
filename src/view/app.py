@@ -2,6 +2,7 @@ import flet as ft
 from src.utils.validation_formatting import *
 from logging import basicConfig, ERROR, error
 from src.utils.hash import generate_hash
+from src.utils.search_cep import search_cep
 from src.model.user import User
 
 basicConfig(filename='main.log', level=ERROR,
@@ -552,8 +553,8 @@ class ImprextaeApp:
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
-            on_change=format_cep
-        )
+            on_change=format_cep,
+            on_blur=search_cep)
 
         state_input = ft.TextField(
             label="Estado",
