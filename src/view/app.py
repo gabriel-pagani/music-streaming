@@ -435,7 +435,7 @@ class ImprextaeApp:
         save_btn = ft.IconButton(
             icon=ft.Icons.SAVE,
             icon_color=ft.Colors.WHITE,
-            tooltip="Salvar",
+            tooltip="Salvar Alterações",
             on_click=save_profile,
             icon_size=40
         )
@@ -554,7 +554,9 @@ class ImprextaeApp:
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
             on_change=format_cep,
-            on_blur=search_cep)
+            on_blur=lambda e: search_cep(
+                e, state_input, city_input, neighborhood_input, street_input)
+        )
 
         state_input = ft.TextField(
             label="Estado",
