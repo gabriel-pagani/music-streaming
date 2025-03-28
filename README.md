@@ -61,7 +61,7 @@ python main.py
 ```
 
 # Licença 
-Este projeto está licenciado sob a Licença MIT - veja o arquivo LICENSE para mais detalhes. A Licença MIT é uma licença de software livre que permite o uso, cópia, modificação e distribuição do código, desde que incluída a nota de direitos autorais e a permissão original.
+Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](https://github.com/gabriel-pagani/sistema-de-emprestimos/blob/main/LICENSE) para mais detalhes. A Licença MIT é uma licença de software livre que permite o uso, cópia, modificação e distribuição do código, desde que incluída a nota de direitos autorais e a permissão original.
 
 # Contato 
 Email - gabrielpaganidesouza@gmail.com
