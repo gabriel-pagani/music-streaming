@@ -18,12 +18,6 @@ class ImprextaeApp:
 
     def setup_page(self) -> None:
         self.page.title = 'IMPREXTAE'
-        self.page.window.width = 825
-        self.page.window.height = 750
-        self.page.window.center()
-        self.page.window.to_front()
-        self.page.window.maximizable = False
-        self.page.window.resizable = False
         self.page.window.icon = r'icons\logo.ico'
         self.page.theme_mode = ft.ThemeMode.LIGHT
         self.page.bgcolor = ft.Colors.WHITE
@@ -102,7 +96,7 @@ class ImprextaeApp:
             self.show_register_view()
 
         # Componentes da tela de login
-        title = ft.Text("Imprextae!", size=50,
+        title = ft.Text("Imprextae!", size=70,
                         weight=ft.FontWeight.BOLD, color=ft.Colors.BLUE_900)
 
         email_input = ft.TextField(
@@ -224,7 +218,7 @@ class ImprextaeApp:
             self.show_login_view()
 
         # Componentes da tela de registro
-        title = ft.Text("Criar Conta", size=50,
+        title = ft.Text("Criar Conta", size=70,
                         weight=ft.FontWeight.BOLD, color=ft.Colors.BLUE_900)
 
         name_input = ft.TextField(
@@ -462,7 +456,7 @@ class ImprextaeApp:
             label="Nome",
             prefix_icon=ft.Icons.PERSON,
             hint_text="Digite seu nome aqui...",
-            width=350,
+            expand=True,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
             value=self.user.name.title(),
@@ -473,7 +467,7 @@ class ImprextaeApp:
             label="CPF",
             prefix_icon=ft.Icons.PERSON,
             hint_text="Digite seu CPF aqui...",
-            width=350,
+            expand=True,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
             value=self.user.id_number if self.user.id_number else '',
@@ -484,7 +478,7 @@ class ImprextaeApp:
             label="Data de Nascimento",
             prefix_icon=ft.Icons.CAKE,
             hint_text="dd/mm/aaaa",
-            width=350,
+            expand=True,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
             value=f'{self.user.birth_date[8:10]}/{self.user.birth_date[5:7]}/{self.user.birth_date[0:4]}' if self.user.birth_date else '',
@@ -495,7 +489,7 @@ class ImprextaeApp:
             label="Renda Mensal",
             prefix_icon=ft.Icons.ATTACH_MONEY,
             hint_text="R$ 0,00",
-            width=350,
+            expand=True,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
             value=f'R$ {self.user.monthly_income:.2f}'.replace(
@@ -507,7 +501,7 @@ class ImprextaeApp:
             label="Telefone",
             prefix_icon=ft.Icons.LOCAL_PHONE,
             hint_text="(00)00000-0000",
-            width=350,
+            expand=True,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
             value=self.user.phone if self.user.phone else '',
@@ -518,7 +512,7 @@ class ImprextaeApp:
             label="Email",
             prefix_icon=ft.Icons.MAIL,
             hint_text="Digite seu email aqui... ",
-            width=350,
+            expand=True,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
             disabled=True,
@@ -531,7 +525,7 @@ class ImprextaeApp:
             hint_text="Digite sua senha aqui... ",
             password=True,
             can_reveal_password=True,
-            width=350,
+            expand=True,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
             on_change=lambda e: self.show_password_confirmation(
@@ -544,7 +538,7 @@ class ImprextaeApp:
             hint_text="Digite sua senha aqui... ",
             password=True,
             can_reveal_password=True,
-            width=350,
+            expand=True,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
             visible=False
@@ -555,7 +549,7 @@ class ImprextaeApp:
             label="CEP",
             prefix_icon=ft.Icons.LOCATION_ON,
             hint_text="00000-000",
-            width=350,
+            expand=True,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
             value=self.user.zip_code if self.user.zip_code else '',
@@ -568,7 +562,7 @@ class ImprextaeApp:
             label="Estado",
             prefix_icon=ft.Icons.MAP,
             hint_text="Digite seu estado aqui...",
-            width=350,
+            expand=True,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
             value=self.user.state.title() if self.user.state else '',
@@ -578,7 +572,7 @@ class ImprextaeApp:
             label="Cidade",
             prefix_icon=ft.Icons.LOCATION_CITY,
             hint_text="Digite sua cidade aqui...",
-            width=350,
+            expand=True,
             border_color=ft.Colors.BLUE_400,
             value=self.user.city.title() if self.user.city else '',
             cursor_color=ft.Colors.BLUE_900
@@ -588,7 +582,7 @@ class ImprextaeApp:
             label="Bairro",
             prefix_icon=ft.Icons.HOLIDAY_VILLAGE,
             hint_text="Digite seu bairro aqui...",
-            width=350,
+            expand=True,
             border_color=ft.Colors.BLUE_400,
             value=self.user.neighborhood.title() if self.user.neighborhood else '',
             cursor_color=ft.Colors.BLUE_900
@@ -598,7 +592,7 @@ class ImprextaeApp:
             label="Rua",
             prefix_icon=ft.Icons.SIGNPOST,
             hint_text="Digite sua rua aqui...",
-            width=350,
+            expand=True,
             border_color=ft.Colors.BLUE_400,
             value=self.user.street.title() if self.user.street else '',
             cursor_color=ft.Colors.BLUE_900
@@ -608,7 +602,7 @@ class ImprextaeApp:
             label="Número",
             prefix_icon=ft.Icons.TAG,
             hint_text="Digite seu número aqui...",
-            width=350,
+            expand=True,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
             value=self.user.number if self.user.number else '',
@@ -619,7 +613,7 @@ class ImprextaeApp:
             label="Complemento",
             prefix_icon=ft.Icons.APARTMENT,
             hint_text="Digite seu complemento aqui...",
-            width=350,
+            expand=True,
             border_color=ft.Colors.BLUE_400,
             value=self.user.complement.title() if self.user.complement else '',
             cursor_color=ft.Colors.BLUE_900
@@ -640,36 +634,73 @@ class ImprextaeApp:
                         padding=ft.padding.only(bottom=10)
                     ),
                     ft.Divider(height=1, color=ft.Colors.BLUE_100),
-                    ft.Container(
-                        content=ft.Row([
-                            name_input,
-                            email_input
-                        ], wrap=True, spacing=20),
-                        padding=ft.padding.only(top=10)
+                    ft.ResponsiveRow(
+                        [
+                            ft.Column(
+                                col={"sm": 12, "md": 6, "lg": 6},
+                                controls=[
+                                    name_input
+                                ]
+                            ),
+                            ft.Column(
+                                col={"sm": 12, "md": 6, "lg": 6},
+                                controls=[
+                                    email_input
+                                ]
+                            )
+                        ]
                     ),
-                    ft.Container(
-                        content=ft.Row([
-                            cpf_input,
-                            phone_input
-                        ], wrap=True, spacing=20),
-                        padding=ft.padding.only(top=10)
+                    ft.ResponsiveRow(
+                        [
+                            ft.Column(
+                                col={"sm": 12, "md": 6, "lg": 6},
+                                controls=[
+                                    cpf_input
+                                ]
+                            ),
+                            ft.Column(
+                                col={"sm": 12, "md": 6, "lg": 6},
+                                controls=[
+                                    phone_input
+                                ]
+                            )
+                        ]
                     ),
-                    ft.Container(
-                        content=ft.Row([
-                            monthly_income_input,
-                            birth_date_input
-                        ], wrap=True, spacing=20),
-                        padding=ft.padding.only(top=10)
+                    ft.ResponsiveRow(
+                        [
+                            ft.Column(
+                                col={"sm": 12, "md": 6, "lg": 6},
+                                controls=[
+                                    monthly_income_input
+                                ]
+                            ),
+                            ft.Column(
+                                col={"sm": 12, "md": 6, "lg": 6},
+                                controls=[
+                                    birth_date_input
+                                ]
+                            )
+                        ]
                     ),
-                    ft.Container(
-                        content=ft.Row([
-                            password_input,
-                            password_confirmed_input
-                        ], wrap=True, spacing=20),
-                        padding=ft.padding.only(top=10)
+                    ft.ResponsiveRow(
+                        [
+                            ft.Column(
+                                col={"sm": 12, "md": 6, "lg": 6},
+                                controls=[
+                                    password_input
+                                ]
+                            ),
+                            ft.Column(
+                                col={"sm": 12, "md": 6, "lg": 6},
+                                controls=[
+                                    password_confirmed_input
+                                ]
+                            )
+                        ]
                     )
                 ]),
-                padding=20
+                padding=20,
+                expand=True
             ),
             **card_style
         )
@@ -688,35 +719,67 @@ class ImprextaeApp:
                         padding=ft.padding.only(bottom=10)
                     ),
                     ft.Divider(height=1, color=ft.Colors.BLUE_100),
-                    ft.Container(
-                        content=ft.Row([
-                            zip_code_input,
-                            state_input
-                        ], wrap=True, spacing=20),
-                        padding=ft.padding.only(top=10)
+                    ft.ResponsiveRow(
+                        [
+                            ft.Column(
+                                col={"sm": 12, "md": 6, "lg": 6},
+                                controls=[
+                                    zip_code_input
+                                ]
+                            ),
+                            ft.Column(
+                                col={"sm": 12, "md": 6, "lg": 6},
+                                controls=[
+                                    state_input
+                                ]
+                            )
+                        ]
                     ),
-                    ft.Container(
-                        content=ft.Row([
-                            city_input,
-                            neighborhood_input
-                        ], wrap=True, spacing=20),
-                        padding=ft.padding.only(top=10)
+                    ft.ResponsiveRow(
+                        [
+                            ft.Column(
+                                col={"sm": 12, "md": 6, "lg": 6},
+                                controls=[
+                                    city_input
+                                ]
+                            ),
+                            ft.Column(
+                                col={"sm": 12, "md": 6, "lg": 6},
+                                controls=[
+                                    neighborhood_input
+                                ]
+                            )
+                        ]
                     ),
-                    ft.Container(
-                        content=ft.Row([
-                            street_input,
-                            number_input
-                        ], wrap=True, spacing=20),
-                        padding=ft.padding.only(top=10)
+                    ft.ResponsiveRow(
+                        [
+                            ft.Column(
+                                col={"sm": 12, "md": 6, "lg": 6},
+                                controls=[
+                                    street_input
+                                ]
+                            ),
+                            ft.Column(
+                                col={"sm": 12, "md": 6, "lg": 6},
+                                controls=[
+                                    number_input
+                                ]
+                            )
+                        ]
                     ),
-                    ft.Container(
-                        content=ft.Row([
-                            complement_input
-                        ], wrap=True, spacing=20),
-                        padding=ft.padding.only(top=10)
+                    ft.ResponsiveRow(
+                        [
+                            ft.Column(
+                                col={"sm": 12, "md": 6, "lg": 6},
+                                controls=[
+                                    complement_input
+                                ]
+                            )
+                        ]
                     )
                 ]),
-                padding=20
+                padding=20,
+                expand=True
             ),
             **card_style
         )
@@ -791,13 +854,13 @@ class ImprextaeApp:
                 bottom_left=10, bottom_right=10),
         )
 
-        # Container comuns para os cards
+        # Container adaptável para os cards
         container_style = {
-            "width": 350,
-            "height": 150,
             "padding": 20,
             "border_radius": 15,
-            "margin": 10
+            "margin": 10,
+            "expand": True,
+            "height": 150
         }
 
         # Cards para cada opção do menu
@@ -929,27 +992,58 @@ class ImprextaeApp:
             )
         )
 
-        # Grid de cards
-        card_grid = ft.Row(
+        # Grid adaptativo usando ResponsiveRow
+        card_grid = ft.ResponsiveRow(
             [
-                ft.Column([update_profile_card, track_request_card],
-                          alignment=ft.MainAxisAlignment.CENTER),
-                ft.Column([new_loan_card, track_loan_card],
-                          alignment=ft.MainAxisAlignment.CENTER)
+                ft.Column(
+                    [
+                        update_profile_card
+                    ],
+                    col={"xs": 12, "sm": 12, "md": 6, "lg": 6},
+                    expand=True
+                ),
+                ft.Column(
+                    [
+                        new_loan_card
+                    ],
+                    col={"xs": 12, "sm": 12, "md": 6, "lg": 6},
+                    expand=True
+                ),
+                ft.Column(
+                    [
+                        track_request_card
+                    ],
+                    col={"xs": 12, "sm": 12, "md": 6, "lg": 6},
+                    expand=True
+                ),
+                ft.Column(
+                    [
+                        track_loan_card
+                    ],
+                    col={"xs": 12, "sm": 12, "md": 6, "lg": 6},
+                    expand=True
+                )
             ],
-            alignment=ft.MainAxisAlignment.CENTER,
-            spacing=15
+            spacing=10,
         )
 
         # Layout principal
         content = ft.Column(
             controls=[
                 top_bar,
-                card_grid
+                ft.ListView(
+                    controls=[
+                        card_grid
+                    ],
+                    spacing=10,
+                    padding=ft.padding.symmetric(horizontal=20, vertical=10),
+                    expand=True
+                )
             ],
-            spacing=15,
+            spacing=5,
             expand=True
         )
 
         self.page.clean()
+        self.page.scroll = ft.ScrollMode.AUTO
         self.page.add(content)
