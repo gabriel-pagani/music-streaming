@@ -437,7 +437,7 @@ class ImprextaeApp:
             icon_color=ft.Colors.WHITE,
             tooltip="Salvar Alterações",
             on_click=save_profile,
-            icon_size=40
+            icon_size=20
         )
 
         top_bar = ft.Container(
@@ -476,6 +476,7 @@ class ImprextaeApp:
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
+            value=self.user.id_number if self.user.id_number else '',
             on_change=format_cpf
         )
 
@@ -486,6 +487,8 @@ class ImprextaeApp:
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
+            value=self.user.birth_date[8:10] + '/' + self.user.birth_date[5:7] +
+            '/' + self.user.birth_date[0:4] if self.user.birth_date else '',
             on_change=format_date
         )
 
@@ -496,6 +499,8 @@ class ImprextaeApp:
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
+            value='R$ ' + str(self.user.monthly_income).replace('.',
+                                                                ',') if self.user.monthly_income else '',
             on_change=format_currency
         )
 
@@ -506,6 +511,7 @@ class ImprextaeApp:
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
+            value=self.user.phone if self.user.phone else '',
             on_change=format_phone
         )
 
@@ -553,6 +559,7 @@ class ImprextaeApp:
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
+            value=self.user.zip_code if self.user.zip_code else '',
             on_change=format_cep,
             on_blur=lambda e: search_cep(
                 e, state_input, city_input, neighborhood_input, street_input)
@@ -565,6 +572,7 @@ class ImprextaeApp:
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
+            value=self.user.state.title() if self.user.state else '',
         )
 
         city_input = ft.TextField(
@@ -573,6 +581,7 @@ class ImprextaeApp:
             hint_text="Digite sua cidade aqui...",
             width=350,
             border_color=ft.Colors.BLUE_400,
+            value=self.user.city.title() if self.user.city else '',
             cursor_color=ft.Colors.BLUE_900
         )
 
@@ -582,6 +591,7 @@ class ImprextaeApp:
             hint_text="Digite seu bairro aqui...",
             width=350,
             border_color=ft.Colors.BLUE_400,
+            value=self.user.neighborhood.title() if self.user.neighborhood else '',
             cursor_color=ft.Colors.BLUE_900
         )
 
@@ -591,6 +601,7 @@ class ImprextaeApp:
             hint_text="Digite sua rua aqui...",
             width=350,
             border_color=ft.Colors.BLUE_400,
+            value=self.user.street.title() if self.user.street else '',
             cursor_color=ft.Colors.BLUE_900
         )
 
@@ -601,6 +612,7 @@ class ImprextaeApp:
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
+            value=self.user.number if self.user.number else '',
             input_filter=ft.NumbersOnlyInputFilter()
         )
 
@@ -610,6 +622,7 @@ class ImprextaeApp:
             hint_text="Digite seu complemento aqui...",
             width=350,
             border_color=ft.Colors.BLUE_400,
+            value=self.user.complement.title() if self.user.complement else '',
             cursor_color=ft.Colors.BLUE_900
         )
 
@@ -631,21 +644,21 @@ class ImprextaeApp:
                     ft.Container(
                         content=ft.Row([
                             name_input,
-                            cpf_input
-                        ], wrap=True, spacing=20),
-                        padding=ft.padding.only(top=10)
-                    ),
-                    ft.Container(
-                        content=ft.Row([
-                            birth_date_input,
-                            monthly_income_input
-                        ], wrap=True, spacing=20),
-                        padding=ft.padding.only(top=10)
-                    ),
-                    ft.Container(
-                        content=ft.Row([
-                            phone_input,
                             email_input
+                        ], wrap=True, spacing=20),
+                        padding=ft.padding.only(top=10)
+                    ),
+                    ft.Container(
+                        content=ft.Row([
+                            cpf_input,
+                            phone_input
+                        ], wrap=True, spacing=20),
+                        padding=ft.padding.only(top=10)
+                    ),
+                    ft.Container(
+                        content=ft.Row([
+                            monthly_income_input,
+                            birth_date_input
                         ], wrap=True, spacing=20),
                         padding=ft.padding.only(top=10)
                     ),
