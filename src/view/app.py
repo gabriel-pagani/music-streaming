@@ -350,7 +350,7 @@ class ImprextaeApp:
                     if cpf_input.value:
                         updated_user.id_number = cpf_input.value
                     if birth_date_input.value:
-                        updated_user.birth_date = birth_date_input.value
+                        updated_user.birth_date = f'{birth_date_input.value[6:10]}-{birth_date_input.value[3:5]}-{birth_date_input.value[0:2]}'
                     if monthly_income_input.value:
                         updated_user.monthly_income = float(
                             monthly_income_input.value.replace('R$ ', '').replace(',', '.'))
@@ -387,7 +387,7 @@ class ImprextaeApp:
                         if cpf_input.value:
                             self.user.id_number = cpf_input.value
                         if birth_date_input.value:
-                            self.user.birth_date = birth_date_input.value
+                            self.user.birth_date = f'{birth_date_input.value[6:10]}-{birth_date_input.value[3:5]}-{birth_date_input.value[0:2]}'
                         if monthly_income_input.value:
                             self.user.monthly_income = float(
                                 monthly_income_input.value.replace('R$ ', '').replace(',', '.'))
@@ -487,8 +487,7 @@ class ImprextaeApp:
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
-            value=self.user.birth_date[8:10] + '/' + self.user.birth_date[5:7] +
-            '/' + self.user.birth_date[0:4] if self.user.birth_date else '',
+            value=f'{self.user.birth_date[8:10]}/{self.user.birth_date[5:7]}/{self.user.birth_date[0:4]}' if self.user.birth_date else '',
             on_change=format_date
         )
 
@@ -499,8 +498,8 @@ class ImprextaeApp:
             width=350,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
-            value='R$ ' + str(self.user.monthly_income).replace('.',
-                                                                ',') if self.user.monthly_income else '',
+            value=f'R$ {self.user.monthly_income:.2f}'.replace(
+                '.', ',') if self.user.monthly_income else '',
             on_change=format_currency
         )
 
