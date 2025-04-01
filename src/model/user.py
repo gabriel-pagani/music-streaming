@@ -59,7 +59,7 @@ class User:
                 params=(self.email,)
             )
 
-            if not response or 'data' not in response or not response['data']:
+            if response['data'] == []:
                 return ['Warning', 'Usuário inexistente!']
             else:
                 id = response['data'][0]['ID']
