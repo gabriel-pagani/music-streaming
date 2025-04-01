@@ -62,18 +62,6 @@ def validate_birth_date(date_str: str) -> bool:
         return False
 
 
-def validate_monthly_income(income: str) -> bool:
-    """Valida se a renda mensal é um valor numérico positivo."""
-    # Remove símbolos de moeda e formatação
-    clean_income = income.replace('R$ ', '').replace(',', '.').strip()
-
-    try:
-        income_value = float(clean_income)
-        return income_value >= 0
-    except ValueError:
-        return False
-
-
 def validate_zip_code(cep: str) -> bool:
     """Valida se o CEP está no formato correto."""
     # Remove hífen se existir
@@ -126,26 +114,6 @@ def format_date(e):
         formatted = f"{value[:2]}/{value[2:4]}/{value[4:]}"
 
     e.control.value = formatted
-    e.control.update()
-
-
-def format_currency(e):
-    """Formata valor monetário em tempo real no campo de entrada."""
-    # Remove caracteres não numéricos e R$
-    value = ''.join(filter(str.isdigit, e.control.value.replace(
-        'R$', '').replace(',', '').replace('.', '')))
-
-    if not value:
-        e.control.value = ""
-        e.control.update()
-        return
-
-    # Converte para float (centavos)
-    numeric_value_float = float(value) / 100
-    # Formata com R$ e vírgula para separador decimal
-    e.control.value = f"R$ {numeric_value_float:.2f}".replace(".", ",")
-    if e.control.value == 'R$ 0,00':
-        e.control.value = ''
     e.control.update()
 
 

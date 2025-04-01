@@ -81,8 +81,6 @@ class ImprextaeApp:
 
                     if self.user.user_type == 'Admin':
                         print('Visão do administrador')
-                    elif self.user.user_type == 'Approver':
-                        print('Visão do aprovador')
                     else:
                         self.show_user_menu()
 
@@ -324,8 +322,6 @@ class ImprextaeApp:
                 self.show_warning('CPF inválido!')
             elif birth_date_input.value != '' and not validate_birth_date(birth_date_input.value):
                 self.show_warning('Data de nascimento inválida!')
-            elif monthly_income_input.value != '' and not validate_monthly_income(monthly_income_input.value):
-                self.show_warning('Renda mensal inválida!')
             elif phone_input.value != '' and not validate_phone(phone_input.value):
                 self.show_warning('Telefone inválido!')
             elif zip_code_input.value != '' and not validate_zip_code(zip_code_input.value):
@@ -345,9 +341,6 @@ class ImprextaeApp:
                         updated_user.id_number = cpf_input.value
                     if birth_date_input.value:
                         updated_user.birth_date = f'{birth_date_input.value[6:10]}-{birth_date_input.value[3:5]}-{birth_date_input.value[0:2]}'
-                    if monthly_income_input.value:
-                        updated_user.monthly_income = float(
-                            monthly_income_input.value.replace('R$ ', '').replace(',', '.'))
                     if phone_input.value:
                         updated_user.phone = phone_input.value
                     if zip_code_input.value:
@@ -382,9 +375,6 @@ class ImprextaeApp:
                             self.user.id_number = cpf_input.value
                         if birth_date_input.value:
                             self.user.birth_date = f'{birth_date_input.value[6:10]}-{birth_date_input.value[3:5]}-{birth_date_input.value[0:2]}'
-                        if monthly_income_input.value:
-                            self.user.monthly_income = float(
-                                monthly_income_input.value.replace('R$ ', '').replace(',', '.'))
                         if phone_input.value:
                             self.user.phone = phone_input.value
                         if zip_code_input.value:
@@ -483,18 +473,6 @@ class ImprextaeApp:
             cursor_color=ft.Colors.BLUE_900,
             value=f'{self.user.birth_date[8:10]}/{self.user.birth_date[5:7]}/{self.user.birth_date[0:4]}' if self.user.birth_date else '',
             on_change=format_date
-        )
-
-        monthly_income_input = ft.TextField(
-            label="Renda Mensal",
-            prefix_icon=ft.Icons.ATTACH_MONEY,
-            hint_text="R$ 0,00",
-            expand=True,
-            border_color=ft.Colors.BLUE_400,
-            cursor_color=ft.Colors.BLUE_900,
-            value=f'R$ {self.user.monthly_income:.2f}'.replace(
-                '.', ',') if self.user.monthly_income else '',
-            on_change=format_currency
         )
 
         phone_input = ft.TextField(
@@ -671,13 +649,13 @@ class ImprextaeApp:
                             ft.Column(
                                 col={"sm": 12, "md": 6, "lg": 6},
                                 controls=[
-                                    monthly_income_input
+                                    birth_date_input
                                 ]
                             ),
                             ft.Column(
                                 col={"sm": 12, "md": 6, "lg": 6},
                                 controls=[
-                                    birth_date_input
+                                    password_input
                                 ]
                             )
                         ]
@@ -687,17 +665,12 @@ class ImprextaeApp:
                             ft.Column(
                                 col={"sm": 12, "md": 6, "lg": 6},
                                 controls=[
-                                    password_input
-                                ]
-                            ),
-                            ft.Column(
-                                col={"sm": 12, "md": 6, "lg": 6},
-                                controls=[
                                     password_confirmed_input
                                 ]
-                            )
+                            ),
                         ]
-                    )
+                    ),
+
                 ]),
                 padding=20,
                 expand=True
@@ -813,13 +786,13 @@ class ImprextaeApp:
             self.page.clean()
             self.show_update_profile()
 
-        def new_loan_click(e):
+        def card2(e):
             self.show_warning('Funcionalidade em desenvolvimento!')
 
-        def track_request_click(e):
+        def card3(e):
             self.show_warning('Funcionalidade em desenvolvimento!')
 
-        def track_loan_click(e):
+        def card4(e):
             self.show_warning('Funcionalidade em desenvolvimento!')
 
         def logout(e):
@@ -896,7 +869,7 @@ class ImprextaeApp:
             )
         )
 
-        new_loan_card = ft.Card(
+        car2 = ft.Card(
             elevation=5,
             content=ft.Container(
                 content=ft.Column(
@@ -904,20 +877,20 @@ class ImprextaeApp:
                         ft.Row([
                             ft.Icon(ft.Icons.ADD_CARD, size=30,
                                     color=ft.Colors.GREEN),
-                            ft.Text("Solicitar Empréstimo",
+                            ft.Text("Título",
                                     weight=ft.FontWeight.BOLD, size=18)
                         ]),
-                        ft.Text("Crie uma nova solicitação de empréstimo",
+                        ft.Text("Descrição",
                                 size=14, color=ft.Colors.GREY_700),
                         ft.Container(expand=True),
                         ft.Container(
                             content=ft.Text(
-                                "SOLICITAR", color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD),
+                                "Botão", color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD),
                             bgcolor=ft.Colors.GREEN,
                             border_radius=20,
                             padding=ft.padding.symmetric(
                                 horizontal=15, vertical=8),
-                            on_click=new_loan_click,
+                            on_click=card2,
                             ink=True
                         )
                     ],
@@ -928,7 +901,7 @@ class ImprextaeApp:
             )
         )
 
-        track_request_card = ft.Card(
+        card3 = ft.Card(
             elevation=5,
             content=ft.Container(
                 content=ft.Column(
@@ -936,20 +909,20 @@ class ImprextaeApp:
                         ft.Row([
                             ft.Icon(ft.Icons.SEARCH, size=30,
                                     color=ft.Colors.AMBER_700),
-                            ft.Text("Acompanhar Solicitação",
+                            ft.Text("Título",
                                     weight=ft.FontWeight.BOLD, size=18)
                         ]),
-                        ft.Text("Verifique o andamento das suas solicitações",
+                        ft.Text("Descrição",
                                 size=14, color=ft.Colors.GREY_700),
                         ft.Container(expand=True),
                         ft.Container(
                             content=ft.Text(
-                                "VERIFICAR", color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD),
+                                "Botão", color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD),
                             bgcolor=ft.Colors.AMBER_700,
                             border_radius=20,
                             padding=ft.padding.symmetric(
                                 horizontal=15, vertical=8),
-                            on_click=track_request_click,
+                            on_click=card3,
                             ink=True
                         )
                     ],
@@ -960,7 +933,7 @@ class ImprextaeApp:
             )
         )
 
-        track_loan_card = ft.Card(
+        card4 = ft.Card(
             elevation=5,
             content=ft.Container(
                 content=ft.Column(
@@ -968,20 +941,20 @@ class ImprextaeApp:
                         ft.Row([
                             ft.Icon(ft.Icons.ACCOUNT_BALANCE,
                                     size=30, color=ft.Colors.INDIGO),
-                            ft.Text("Acompanhar Empréstimo",
+                            ft.Text("Título",
                                     weight=ft.FontWeight.BOLD, size=18)
                         ]),
-                        ft.Text("Acompanhe seus empréstimos ativos",
+                        ft.Text("Descrição",
                                 size=14, color=ft.Colors.GREY_700),
                         ft.Container(expand=True),
                         ft.Container(
                             content=ft.Text(
-                                "GERENCIAR", color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD),
+                                "Botão", color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD),
                             bgcolor=ft.Colors.INDIGO,
                             border_radius=20,
                             padding=ft.padding.symmetric(
                                 horizontal=15, vertical=8),
-                            on_click=track_loan_click,
+                            on_click=card4,
                             ink=True
                         )
                     ],
@@ -1004,21 +977,21 @@ class ImprextaeApp:
                 ),
                 ft.Column(
                     [
-                        new_loan_card
+                        car2
                     ],
                     col={"xs": 12, "sm": 12, "md": 6, "lg": 6},
                     expand=True
                 ),
                 ft.Column(
                     [
-                        track_request_card
+                        card3
                     ],
                     col={"xs": 12, "sm": 12, "md": 6, "lg": 6},
                     expand=True
                 ),
                 ft.Column(
                     [
-                        track_loan_card
+                        card4
                     ],
                     col={"xs": 12, "sm": 12, "md": 6, "lg": 6},
                     expand=True

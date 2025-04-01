@@ -67,7 +67,6 @@ class User:
                 name = response['data'][0]['NOME']
                 id_number = response['data'][0]['CPF']
                 birth_date = response['data'][0]['DATA_NASCIMENTO']
-                monthly_income = response['data'][0]['RENDA_MENSAL']
                 phone = response['data'][0]['TELEFONE']
                 state = response['data'][0]['ESTADO']
                 city = response['data'][0]['CIDADE']
@@ -77,8 +76,6 @@ class User:
                 complement = response['data'][0]['COMPLEMENTO']
                 zip_code = response['data'][0]['CEP']
                 user_type = response['data'][0]['TIPO']
-                score = response['data'][0]['SCORE']
-                status = response['data'][0]['STATUS']
                 registration_date = response['data'][0]['DATA_CADASTRO']
                 update_date = response['data'][0]['DATA_ATUALIZACAO']
                 observations = response['data'][0]['OBSERVACOES']
@@ -88,7 +85,6 @@ class User:
                     self.name = name
                     self.id_number = id_number
                     self.birth_date = birth_date
-                    self.monthly_income = monthly_income
                     self.phone = phone
                     self.state = state
                     self.city = city
@@ -98,8 +94,6 @@ class User:
                     self.complement = complement
                     self.zip_code = zip_code
                     self.user_type = user_type
-                    self.score = score
-                    self.status = status
                     self.registration_date = registration_date
                     self.update_date = update_date
                     self.observations = observations
@@ -120,7 +114,6 @@ class User:
                 'hash_senha': self.password,
                 'cpf': self.id_number,
                 'data_nascimento': self.birth_date,
-                'renda_mensal': self.monthly_income,
                 'telefone': self.phone,
                 'estado': self.state,
                 'cidade': self.city,
