@@ -1,5 +1,5 @@
 # Descrição
-Esse projeto consiste em um gerenciador de empréstimos, ele tem o objetivo de controlar os empréstimos concedidos pelo usuário. Esse sistema foi desenvolvido com o objetivo de aprender mais sobre Python e seu POO (Programação Orientada a Objetos) e consequentemente outras habilidades importantes para um desenvolvedor.
+Esse sistema foi desenvolvido com o objetivo de aprender mais sobre Python e seu POO (Programação Orientada a Objetos) e consequentemente outras habilidades importantes para um desenvolvedor.
 
 # Pré-requisitos
 - Python 3.12+
@@ -9,11 +9,11 @@ Esse projeto consiste em um gerenciador de empréstimos, ele tem o objetivo de c
 # Instalação
 - Clone o repositório
 ```bash
-git clone https://github.com/gabriel-pagani/sistema-de-emprestimos.git
+git clone https://github.com/gabriel-pagani/poo-python.git
 ```
 - Entre na pasta clonada
 ```powershell
-cd sistema-de-emprestimos
+cd poo-python
 ```
 - Crie um ambiente virtual
 ```powershell
