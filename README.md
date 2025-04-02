@@ -9,11 +9,11 @@ Esse sistema foi desenvolvido com o objetivo de aprender mais sobre Python e seu
 # Instalação
 - Clone o repositório
 ```bash
-git clone https://github.com/gabriel-pagani/poo-python.git
+git clone https://github.com/gabriel-pagani/music-streaming.git
 ```
 - Entre na pasta clonada
 ```powershell
-cd poo-python
+cd music-streaming
 ```
 - Crie um ambiente virtual
 ```powershell
