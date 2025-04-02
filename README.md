@@ -29,14 +29,17 @@ pip install -r requirements.txt
 ```
 
 # Configuração
-Dentro da pasta sistema-de-emprestimos crie o arquivo .env e adicione o seguinte conteúdo 
+Na pasta music-streaming crie os arquivos "main.log" e ".env". Dentro do arquivo ".env" adicione o seguinte conteúdo
 ```
 SERVER=endereco_do_seu_servidor
 DATABASE=nome_da_sua_base_de_dados
 USER=seu_usuario
 PASSWORD=sua_senha
 ```
-Crie também o arquivo main.log
+
+Dentro do seu gerenciador do banco de dados execulte respectivamente os seguintes scripts
+- [Tabelas](https://github.com/gabriel-pagani/music-streaming/blob/master/data/script_database.sql)
+- [Triggers](https://github.com/gabriel-pagani/music-streaming/blob/master/data/script_triggers.sql)
 
 # Estrutura do Projeto
 ```
