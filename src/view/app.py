@@ -17,8 +17,8 @@ class App:
         self.show_login_view()
 
     def setup_page(self) -> None:
-        self.page.title = 'IMPREXTAE'
-        self.page.window.icon = r'icons\logo.ico'
+        self.page.title = 'Sprobify'
+        self.page.window.icon = r''
         self.page.theme_mode = ft.ThemeMode.LIGHT
         self.page.bgcolor = ft.Colors.WHITE
         self.page.padding = 0
@@ -94,7 +94,7 @@ class App:
             self.show_register_view()
 
         # Componentes da tela de login
-        title = ft.Text("Imprextae!", size=70,
+        title = ft.Text("Sprobify!", size=70,
                         weight=ft.FontWeight.BOLD, color=ft.Colors.BLUE_900)
 
         email_input = ft.TextField(
