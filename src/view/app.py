@@ -9,7 +9,7 @@ basicConfig(filename='main.log', level=ERROR,
             format='%(asctime)s - %(levelname)s - %(filename)s - %(message)s')
 
 
-class ImprextaeApp:
+class App:
     def __init__(self, page: ft.Page) -> None:
         self.page = page
         self.user = None

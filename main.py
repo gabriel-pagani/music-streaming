@@ -1,10 +1,10 @@
 from flet import Page, app, WEB_BROWSER
-from src.view.app import ImprextaeApp
+from src.view.app import App
 from src.utils.connection import close_connection
 
 
 def main(page: Page) -> None:
-    ImprextaeApp(page)
+    App(page)
 
 
 if __name__ == "__main__":
