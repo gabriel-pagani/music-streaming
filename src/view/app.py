@@ -329,12 +329,19 @@ class App:
             elif password_input.value != '' and not validate_password(password_input.value):
                 self.show_warning(
                     'Senha fraca! A senha deve conter no mínimo 8 caracteres ou mais, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.')
-            elif card_number_input.value != '' and len(card_number_input.value) != 19:
-                self.show_warning('Número do cartão inválido')
-            elif valid_thru_input.value != '' and validate_date_card(valid_thru_input.value):
-                self.show_warning('Data de validade inválida')
-            elif card_code_input.value != '' and len(str(card_code_input.value)) != 3:
-                self.show_warning('Código do cartão inválido')
+            elif (card_number_input.value != '' or valid_thru_input.value != '' or card_code_input.value != '' or card_name_input != ''):
+                # Se algum campo foi preenchido, então todos devem estar preenchidos
+                if card_number_input.value == '' or valid_thru_input.value == '' or card_code_input.value == '' or card_name_input == '':
+                    self.show_warning(
+                        'Por favor, preencha todos os campos do cartão')
+                elif len(str(card_number_input.value)) != 19:
+                    self.show_warning('Número do cartão inválido')
+                elif len(str(card_name_input.value)) <= 5:
+                    self.show_warning('Nome no cartão inválido')
+                elif validate_date_card(str(valid_thru_input.value)):
+                    self.show_warning('Data de validade inválida')
+                elif len(str(card_code_input.value)) != 3:
+                    self.show_warning('Código do cartão inválido')
             else:
                 try:
                     # Cria um novo objeto User com apenas os campos preenchidos
