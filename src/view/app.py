@@ -623,9 +623,11 @@ class App:
             hint_text="Digite o número do cartão aqui...",
             expand=True,
             border_color=ft.Colors.BLUE_400,
-            value=f'{str(self.user.card_number)[:4]} **** **** {str(self.user.card_number)[15:]}' if self.user.card_number else '',
+            value=self.user.card_number if self.user.card_number else '',
             cursor_color=ft.Colors.BLUE_900,
-            on_change=format_card_number
+            on_change=format_card_number,
+            password=True,
+            can_reveal_password=True,
         )
 
         card_name_input = ft.TextField(
