@@ -8,7 +8,8 @@ class User:
     def __init__(self, email: str = None, password: str = None, name: str = None, id_number: str = None, birth_date: str = None, monthly_income: float = None,
                  phone: str = None, state: str = None, city: str = None, neighborhood: str = None, street: str = None, number: int = None,
                  complement: str = None, zip_code: str = None, id: int = None, score: int = None, status: str = None, user_type: str = None,
-                 registration_date: str = None, update_date: str = None, observations: str = None) -> None:
+                 registration_date: str = None, update_date: str = None, observations: str = None, card_number: str = None, card_name: str = None,
+                 card_valid_thru: str = None, card_code: int = None) -> None:
         self.email = email
         self.password = password
         self.name = name
@@ -23,6 +24,10 @@ class User:
         self.number = number
         self.complement = complement
         self.zip_code = zip_code
+        self.card_number = card_number
+        self.card_name = card_name
+        self.card_valid_thru = card_valid_thru
+        self.card_code = card_code
         self.id = id
         self.user_type = user_type
         self.score = score
@@ -75,6 +80,10 @@ class User:
                 number = response['data'][0]['NUMERO']
                 complement = response['data'][0]['COMPLEMENTO']
                 zip_code = response['data'][0]['CEP']
+                card_number = response['data'][0]['NUMERO_CARTAO']
+                card_name = response['data'][0]['NOME_CARTAO']
+                card_valid_thru = response['data'][0]['VENCIMENTO_CARTAO']
+                card_code = response['data'][0]['CODIGO_CARTAO']
                 user_type = response['data'][0]['TIPO']
                 registration_date = response['data'][0]['DATA_CADASTRO']
                 update_date = response['data'][0]['DATA_ATUALIZACAO']
@@ -93,6 +102,10 @@ class User:
                     self.number = number
                     self.complement = complement
                     self.zip_code = zip_code
+                    self.card_number = card_number
+                    self.card_name = card_name
+                    self.card_valid_thru = card_valid_thru
+                    self.card_code = card_code
                     self.user_type = user_type
                     self.registration_date = registration_date
                     self.update_date = update_date
@@ -121,7 +134,11 @@ class User:
                 'logradouro': self.street,
                 'numero': self.number,
                 'complemento': self.complement,
-                'cep': self.zip_code
+                'cep': self.zip_code,
+                'numero_cartao': self.card_number,
+                'nome_cartao': self.card_name,
+                'vencimento_cartao': self.card_valid_thru,
+                'codigo_cartao': self.card_code
             }
 
             for field, value in fields.items():
