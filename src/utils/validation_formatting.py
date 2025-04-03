@@ -77,7 +77,6 @@ def validate_phone(phone: str) -> bool:
     return len(phone) == 11 and phone.isdigit()
 
 
-# Essa validação não está verificando se a data existe
 def validate_date_card(date_str: str) -> bool:
     """Valida data do cartão no formato mm/aa."""
     # Verifica se o formato é válido
@@ -85,13 +84,24 @@ def validate_date_card(date_str: str) -> bool:
         return False
 
     try:
-        # Tenta converter para data
-        month, year = map(int, date_str.split('/'))
-        date = datetime(year, month, 1)
+        # Extrai mês e ano
+        month, short_year = map(int, date_str.split('/'))
 
-        # Verifica se é data válida e se é no passado
-        today = datetime.now()
-        return date < today and year >= 1900
+        # Converte ano de 2 dígitos para 4 dígitos (assumindo século atual)
+        current_century = datetime.now().year // 100 * 100
+        year = current_century + short_year
+
+        # Verifica se mês é válido (1-12)
+        if month < 1 or month > 12:
+            return False
+
+        # Adiciona um mês e subtrai um dia para obter o último dia do mês
+        if month == 12:
+            expiry_date = datetime(year + 1, 1, 1)
+        else:
+            expiry_date = datetime(year, month + 1, 1)
+
+        return expiry_date > datetime.now()
 
     except ValueError:
         return False
