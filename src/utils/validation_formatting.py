@@ -77,6 +77,25 @@ def validate_phone(phone: str) -> bool:
     return len(phone) == 11 and phone.isdigit()
 
 
+def validate_date_card(date_str: str) -> bool:
+    """Valida data do cartão no formato mm/aa."""
+    # Verifica se o formato é válido
+    if not match(r'^(\d{2})/(\d{2})$', date_str):
+        return False
+
+    try:
+        # Tenta converter para data
+        month, year = map(int, date_str.split('/'))
+        date = datetime(year, month, 1)
+
+        # Verifica se é data válida e se é no passado
+        today = datetime.now()
+        return date < today and year >= 1900
+
+    except ValueError:
+        return False
+
+
 def format_cpf(e):
     """Formata CPF em tempo real no campo de entrada."""
     value = ''.join(filter(str.isdigit, e.control.value))
@@ -152,4 +171,53 @@ def format_cep(e):
         formatted = f"{value[:5]}-{value[5:]}"
 
     e.control.value = formatted
+    e.control.update()
+
+
+def format_card_number(e):
+    """Formata o número do cartão em tempo real no campo de entrada."""
+    value = ''.join(filter(str.isdigit, e.control.value))
+
+    # Limita a 16 dígitos
+    value = value[:16]
+
+    # Formata como XXXX XXXX XXXX XXXX
+    if len(value) <= 4:
+        formatted = value
+    elif len(value) <= 8:
+        formatted = f"{value[:4]} {value[4:]}"
+    elif len(value) <= 12:
+        formatted = f"{value[:4]} {value[4:8]} {value[8:]}"
+    else:
+        formatted = f"{value[:4]} {value[4:8]} {value[8:12]} {value[12:]}"
+
+    e.control.value = formatted
+    e.control.update()
+
+
+def format_date_card(e):
+    """Formata data em tempo real no campo de entrada."""
+    value = ''.join(filter(str.isdigit, e.control.value))
+
+    # Limita a 4 dígitos
+    value = value[:4]
+
+    # Formata como mm/aa
+    if len(value) <= 2:
+        formatted = value
+    else:
+        formatted = f"{value[:2]}/{value[2:]}"
+
+    e.control.value = formatted
+    e.control.update()
+
+
+def format_card_code(e):
+    """Formata o código do cartão em tempo real no campo de entrada."""
+    value = ''.join(filter(str.isdigit, e.control.value))
+
+    # Limita a 3 dígitos
+    value = value[:3]
+
+    e.control.value = value
     e.control.update()
