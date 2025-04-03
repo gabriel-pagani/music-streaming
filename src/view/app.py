@@ -78,11 +78,7 @@ class App:
                     self.user = login_result[2]
                     self.page.clean()
                     self.show_success(login_result[1])
-
-                    if self.user.user_type == 'Admin':
-                        print('Visão do administrador')
-                    else:
-                        self.show_user_menu()
+                    self.show_menu_view()
 
                 elif login_result[0] == 'Warning':
                     self.show_warning(login_result[1])
@@ -312,10 +308,10 @@ class App:
 
         self.page.add(container)
 
-    def show_update_profile(self) -> None:
+    def show_update_view(self) -> None:
         def back_to_menu(e):
             self.page.clean()
-            self.show_user_menu()
+            self.show_menu_view()
 
         def save_profile(e):
             if cpf_input.value != '' and not validate_cpf(cpf_input.value):
@@ -394,7 +390,7 @@ class App:
 
                         self.page.clean()
                         self.show_success('Perfil atualizado com sucesso!')
-                        self.show_user_menu()
+                        self.show_menu_view()
                 except Exception as e:
                     error(f"Erro ao atualizar conta: {e}")
                     self.show_error(
@@ -781,10 +777,10 @@ class App:
         self.page.clean()
         self.page.add(content)
 
-    def show_user_menu(self) -> None:
+    def show_menu_view(self) -> None:
         def update_click(e):
             self.page.clean()
-            self.show_update_profile()
+            self.show_update_view()
 
         def card2(e):
             self.show_warning('Funcionalidade em desenvolvimento!')
