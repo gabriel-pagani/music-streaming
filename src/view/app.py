@@ -110,7 +110,8 @@ class App:
             can_reveal_password=True,
             width=400,
             border_color=ft.Colors.BLUE_400,
-            cursor_color=ft.Colors.BLUE_900
+            cursor_color=ft.Colors.BLUE_900,
+            on_submit=login_click,
         )
 
         login_button = ft.ElevatedButton(
@@ -255,7 +256,8 @@ class App:
             width=400,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
-            visible=False
+            visible=False,
+            on_submit=register_click,
         )
 
         register_button = ft.ElevatedButton(
@@ -327,6 +329,12 @@ class App:
             elif password_input.value != '' and not validate_password(password_input.value):
                 self.show_warning(
                     'Senha fraca! A senha deve conter no mínimo 8 caracteres ou mais, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.')
+            elif card_number_input.value != '' and len(card_number_input.value) != 19:
+                self.show_warning('Número do cartão inválido')
+            elif valid_thru_input.value != '' and validate_date_card(valid_thru_input.value):
+                self.show_warning('Data de validade inválida')
+            elif card_code_input.value != '' and len(str(card_code_input.value)) != 3:
+                self.show_warning('Código do cartão inválido')
             else:
                 try:
                     # Cria um novo objeto User com apenas os campos preenchidos
@@ -356,6 +364,14 @@ class App:
                     if password_input.value:
                         updated_user.password = generate_hash(
                             password_input.value)
+                    if card_number_input.value:
+                        updated_user.card_number = card_number_input.value.strip().lower()
+                    if card_name_input.value:
+                        updated_user.card_name = card_name_input.value.strip().lower()
+                    if valid_thru_input.value:
+                        updated_user.card_valid_thru = valid_thru_input.value.strip().lower()
+                    if card_code_input.value:
+                        updated_user.card_code = int(card_code_input.value)
 
                     update_result = updated_user.update_account()
 
@@ -387,6 +403,14 @@ class App:
                             self.user.number = int(number_input.value)
                         if complement_input.value:
                             self.user.complement = complement_input.value.strip().lower()
+                        if card_number_input.value:
+                            self.user.card_number = card_number_input.value.strip().lower()
+                        if card_name_input.value:
+                            self.user.card_name = card_name_input.value.strip().lower()
+                        if valid_thru_input.value:
+                            self.user.card_valid_thru = valid_thru_input.value.strip().lower()
+                        if card_code_input.value:
+                            self.user.card_code = int(card_code_input.value)
 
                         self.page.clean()
                         self.show_success('Perfil atualizado com sucesso!')
@@ -593,6 +617,76 @@ class App:
             cursor_color=ft.Colors.BLUE_900
         )
 
+        card_number_input = ft.TextField(
+            label="Número do Cartão",
+            prefix_icon=ft.Icons.NUMBERS,
+            hint_text="Digite o número do cartão aqui...",
+            expand=True,
+            border_color=ft.Colors.BLUE_400,
+            value=f'{str(self.user.card_number)[:4]} **** **** {str(self.user.card_number)[15:]}' if self.user.card_number else '',
+            cursor_color=ft.Colors.BLUE_900,
+            on_change=format_card_number
+        )
+
+        card_name_input = ft.TextField(
+            label="Nome no Cartão",
+            prefix_icon=ft.Icons.PERSON,
+            hint_text="Digite o nome no cartão aqui...",
+            expand=True,
+            border_color=ft.Colors.BLUE_400,
+            value=self.user.card_name.upper() if self.user.card_name else '',
+            cursor_color=ft.Colors.BLUE_900
+        )
+
+        valid_thru_input = ft.TextField(
+            label="Validade do Catão",
+            prefix_icon=ft.Icons.DATE_RANGE,
+            hint_text="Digite a validade do cartão aqui...",
+            expand=True,
+            border_color=ft.Colors.BLUE_400,
+            cursor_color=ft.Colors.BLUE_900,
+            value=self.user.card_valid_thru if self.user.card_valid_thru else '',
+            on_change=format_date_card
+        )
+
+        card_code_input = ft.TextField(
+            label="Código do Cartão",
+            prefix_icon=ft.Icons.CODE,
+            hint_text="Digite o código do cartão aqui...",
+            expand=True,
+            border_color=ft.Colors.BLUE_400,
+            value=self.user.card_code if self.user.card_code else '',
+            cursor_color=ft.Colors.BLUE_900,
+            input_filter=ft.NumbersOnlyInputFilter(),
+            on_change=format_card_code,
+            password=True,
+            can_reveal_password=True,
+        )
+
+        signature_confirmation_button = ft.ElevatedButton(
+            text="Confirmar Assinatura",
+            width=500,
+            height=50,
+            bgcolor=ft.Colors.GREEN_900,
+            color=ft.Colors.WHITE,
+            # on_click=login_click,
+            style=ft.ButtonStyle(
+                shape=ft.RoundedRectangleBorder(radius=8)
+            )
+        )
+
+        cancel_subscription_button = ft.ElevatedButton(
+            text="Cancelar Assinatura",
+            width=500,
+            height=50,
+            bgcolor=ft.Colors.RED_900,
+            color=ft.Colors.WHITE,
+            # on_click=login_click,
+            style=ft.ButtonStyle(
+                shape=ft.RoundedRectangleBorder(radius=8)
+            )
+        )
+
         # Cards
         personal_card = ft.Card(
             content=ft.Container(
@@ -753,11 +847,66 @@ class App:
             **card_style
         )
 
+        bank_details_card = ft.Card(
+            content=ft.Container(
+                content=ft.Column([
+                    ft.Container(
+                        content=ft.Row([
+                            ft.Icon(ft.Icons.CREDIT_CARD,
+                                    color=ft.Colors.BLUE_900),
+                            ft.Text("Informações Bancárias",
+                                    weight=ft.FontWeight.BOLD,
+                                    size=18,
+                                    color=ft.Colors.BLUE_900)
+                        ]),
+                        padding=ft.padding.only(bottom=10)
+                    ),
+                    ft.Divider(height=1, color=ft.Colors.BLUE_100),
+                    ft.ResponsiveRow(
+                        [
+                            ft.Column(
+                                col={"sm": 12, "md": 6, "lg": 6},
+                                controls=[
+                                    card_number_input
+                                ]
+                            ),
+                            ft.Column(
+                                col={"sm": 12, "md": 6, "lg": 6},
+                                controls=[
+                                    card_name_input
+                                ]
+                            )
+                        ]
+                    ),
+                    ft.ResponsiveRow(
+                        [
+                            ft.Column(
+                                col={"sm": 12, "md": 6, "lg": 6},
+                                controls=[
+                                    valid_thru_input
+                                ]
+                            ),
+                            ft.Column(
+                                col={"sm": 12, "md": 6, "lg": 6},
+                                controls=[
+                                    card_code_input
+                                ]
+                            )
+                        ]
+                    ),
+                ]),
+                padding=20,
+                expand=True
+            ),
+            **card_style
+        )
+
         # Container do formulário em uma ListView com scroll
         form_content = ft.ListView(
             controls=[
                 personal_card,
-                address_card
+                address_card,
+                bank_details_card,
             ],
             spacing=10,
             padding=ft.padding.symmetric(horizontal=20, vertical=10),

@@ -77,6 +77,7 @@ def validate_phone(phone: str) -> bool:
     return len(phone) == 11 and phone.isdigit()
 
 
+# Essa validação não está verificando se a data existe
 def validate_date_card(date_str: str) -> bool:
     """Valida data do cartão no formato mm/aa."""
     # Verifica se o formato é válido
