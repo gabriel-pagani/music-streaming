@@ -40,6 +40,8 @@ PASSWORD=sua_senha
 Dentro do seu gerenciador do banco de dados execulte respectivamente os seguintes scripts
 - [Tabelas](https://github.com/gabriel-pagani/music-streaming/blob/master/data/script_database.sql)
 - [Triggers](https://github.com/gabriel-pagani/music-streaming/blob/master/data/script_triggers.sql)
+- [Chave](https://github.com/gabriel-pagani/music-streaming/blob/master/data/script_key.sql)
+- [Criptografia](https://github.com/gabriel-pagani/music-streaming/blob/master/data/script_encryption_procedure.sql) e [Descriptografia](https://github.com/gabriel-pagani/music-streaming/blob/master/data/script_decryption_procedure.sql)
 
 # Estrutura do Projeto
 ```
