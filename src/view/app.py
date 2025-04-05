@@ -329,19 +329,6 @@ class App:
             elif password_input.value != '' and not validate_password(password_input.value):
                 self.show_warning(
                     'Senha fraca! A senha deve conter no mínimo 8 caracteres ou mais, uma letra maiúscula, uma letra minúscula, um número e um caractere especial.')
-            elif (card_number_input.value != '' or valid_thru_input.value != '' or card_code_input.value != '' or card_name_input != ''):
-                # Se algum campo foi preenchido, então todos devem estar preenchidos
-                if card_number_input.value == '' or valid_thru_input.value == '' or card_code_input.value == '' or card_name_input == '':
-                    self.show_warning(
-                        'Por favor, preencha todos os campos do cartão')
-                elif len(str(card_number_input.value)) != 19:
-                    self.show_warning('Número do cartão inválido')
-                elif len(str(card_name_input.value)) <= 5:
-                    self.show_warning('Nome no cartão inválido')
-                elif validate_date_card(str(valid_thru_input.value)):
-                    self.show_warning('Data de validade inválida')
-                elif len(str(card_code_input.value)) != 3:
-                    self.show_warning('Código do cartão inválido')
             else:
                 try:
                     # Cria um novo objeto User com apenas os campos preenchidos
@@ -349,13 +336,16 @@ class App:
 
                     # Adiciona apenas os campos que foram realmente preenchidos
                     if cpf_input.value:
-                        updated_user.id_number = cpf_input.value
+                        updated_user.id_number = ''.join(
+                            filter(str.isdigit, cpf_input.value))
                     if birth_date_input.value:
-                        updated_user.birth_date = f'{birth_date_input.value[6:10]}-{birth_date_input.value[3:5]}-{birth_date_input.value[0:2]}'
+                        updated_user.birth_date = birth_date_input.value
                     if phone_input.value:
-                        updated_user.phone = phone_input.value
+                        updated_user.phone = ''.join(
+                            filter(str.isdigit, phone_input.value))
                     if zip_code_input.value:
-                        updated_user.zip_code = zip_code_input.value
+                        updated_user.zip_code = ''.join(
+                            filter(str.isdigit, zip_code_input.value))
                     if state_input.value:
                         updated_user.state = state_input.value.strip().lower()
                     if city_input.value:
@@ -365,20 +355,12 @@ class App:
                     if street_input.value:
                         updated_user.street = street_input.value.strip().lower()
                     if number_input.value:
-                        updated_user.number = int(number_input.value)
+                        updated_user.number = number_input.value.strip().lower()
                     if complement_input.value:
                         updated_user.complement = complement_input.value.strip().lower()
                     if password_input.value:
                         updated_user.password = generate_hash(
                             password_input.value)
-                    if card_number_input.value:
-                        updated_user.card_number = card_number_input.value.strip().lower()
-                    if card_name_input.value:
-                        updated_user.card_name = card_name_input.value.strip().lower()
-                    if valid_thru_input.value:
-                        updated_user.card_valid_thru = valid_thru_input.value.strip().lower()
-                    if card_code_input.value:
-                        updated_user.card_code = int(card_code_input.value)
 
                     update_result = updated_user.update_account()
 
@@ -389,15 +371,19 @@ class App:
                     else:
                         # Atualize o usuário atual com os novos valores
                         if password_input.value:
-                            self.user.password = password_input.value
+                            self.user.password = generate_hash(
+                                password_input.value)
                         if cpf_input.value:
-                            self.user.id_number = cpf_input.value
+                            self.user.id_number = ''.join(
+                                filter(str.isdigit, cpf_input.value))
                         if birth_date_input.value:
-                            self.user.birth_date = f'{birth_date_input.value[6:10]}-{birth_date_input.value[3:5]}-{birth_date_input.value[0:2]}'
+                            self.user.birth_date = f'{birth_date_input.value[6:]}-{birth_date_input.value[3:5]}-{birth_date_input.value[:2]}'
                         if phone_input.value:
-                            self.user.phone = phone_input.value
+                            self.user.phone = ''.join(
+                                filter(str.isdigit, phone_input.value))
                         if zip_code_input.value:
-                            self.user.zip_code = zip_code_input.value
+                            self.user.zip_code = ''.join(
+                                filter(str.isdigit, zip_code_input.value))
                         if state_input.value:
                             self.user.state = state_input.value.strip().lower()
                         if city_input.value:
@@ -407,17 +393,9 @@ class App:
                         if street_input.value:
                             self.user.street = street_input.value.strip().lower()
                         if number_input.value:
-                            self.user.number = int(number_input.value)
+                            self.user.number = number_input.value.strip().lower()
                         if complement_input.value:
                             self.user.complement = complement_input.value.strip().lower()
-                        if card_number_input.value:
-                            self.user.card_number = card_number_input.value.strip().lower()
-                        if card_name_input.value:
-                            self.user.card_name = card_name_input.value.strip().lower()
-                        if valid_thru_input.value:
-                            self.user.card_valid_thru = valid_thru_input.value.strip().lower()
-                        if card_code_input.value:
-                            self.user.card_code = int(card_code_input.value)
 
                         self.page.clean()
                         self.show_success('Perfil atualizado com sucesso!')
@@ -487,7 +465,7 @@ class App:
             expand=True,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
-            value=self.user.id_number if self.user.id_number else '',
+            value=f'{self.user.id_number[:3]}.{self.user.id_number[3:6]}.{self.user.id_number[6:9]}-{self.user.id_number[9:]}' if self.user.id_number else '',
             on_change=format_cpf
         )
 
@@ -498,7 +476,7 @@ class App:
             expand=True,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
-            value=f'{self.user.birth_date[8:10]}/{self.user.birth_date[5:7]}/{self.user.birth_date[0:4]}' if self.user.birth_date else '',
+            value=f'{self.user.birth_date[8:]}/{self.user.birth_date[5:7]}/{self.user.birth_date[:4]}' if self.user.birth_date else '',
             on_change=format_date
         )
 
@@ -509,7 +487,7 @@ class App:
             expand=True,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
-            value=self.user.phone if self.user.phone else '',
+            value=f'({self.user.phone[:2]}){self.user.phone[2:7]}-{self.user.phone[7:]}' if self.user.phone else '',
             on_change=format_phone
         )
 
@@ -557,7 +535,7 @@ class App:
             expand=True,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
-            value=self.user.zip_code if self.user.zip_code else '',
+            value=f'{self.user.zip_code[:5]}-{self.user.zip_code[5:]}' if self.user.zip_code else '',
             on_change=format_cep,
             on_blur=lambda e: search_cep(
                 e, state_input, city_input, neighborhood_input, street_input)
@@ -610,8 +588,7 @@ class App:
             expand=True,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
-            value=self.user.number if self.user.number else '',
-            input_filter=ft.NumbersOnlyInputFilter()
+            value=self.user.number if self.user.number else ''
         )
 
         complement_input = ft.TextField(
