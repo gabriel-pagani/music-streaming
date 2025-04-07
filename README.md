@@ -49,6 +49,7 @@ projeto/
 ├── assets/             # Elementos visuais
 ├── data/               # Scripts do banco de dados
 ├── src/                # Código fonte
+├── tests/              # Arquivos com features em desenvolvimento
 ├── venv/               # Configurações do ambiente virtual
 ├── .env                # Arquivo de configuração de ambiente
 ├── .gitignore          # Especifica arquivos a serem ignorados pelo git
