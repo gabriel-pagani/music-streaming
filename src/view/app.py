@@ -3,7 +3,7 @@ from src.utils.validation_formatting import *
 from logging import basicConfig, ERROR, error
 from src.utils.hash import generate_hash
 from src.utils.search_cep import search_cep
-from src.model.user import User
+from src.controller.user import User
 
 basicConfig(filename='main.log', level=ERROR,
             format='%(asctime)s - %(levelname)s - %(filename)s - %(message)s')
