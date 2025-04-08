@@ -809,6 +809,7 @@ class App:
 
         def logout(e):
             self.page.clean()
+            self.page.scroll = None
             self.user = None
             self.show_login_view()
             self.show_success('Logout efetuado com sucesso!')
