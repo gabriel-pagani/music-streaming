@@ -40,7 +40,7 @@ class User:
                 params=(self.email,)
             )
 
-            if response and 'data' in response and response['data'] and response['data'][0]['count'] > 0:
+            if response['data'][0]['count'] > 0:
                 return ['Warning', 'Este email já está cadastrado!']
             else:
                 hashed_password = generate_hash(self.password)
@@ -128,7 +128,9 @@ class User:
             clause = ''
             values = list()
             fields = {
+                'email': self.email,
                 'senha': self.password,
+                'nome': self.name,
                 'cpf': self.id_number,
                 'telefone': self.phone,
                 'data_nascimento': self.birth_date,
