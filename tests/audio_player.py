@@ -42,7 +42,7 @@ class App:
         music_name = ft.Text(
             value="Tu Tu Tu Du - Max Verstappen",
             color=ft.Colors.WHITE,
-            size=3,
+            size=35,
             font_family="Arial",
             weight=ft.FontWeight.BOLD,
             text_align=ft.TextAlign.CENTER,
