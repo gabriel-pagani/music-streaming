@@ -66,45 +66,14 @@ def validate_zip_code(cep: str) -> bool:
     """Valida se o CEP está no formato correto."""
     # Remove hífen se existir
     cep = ''.join(filter(str.isdigit, cep))
-    return len(cep) == 8 and cep.isdigit()
+    return len(cep) == 8
 
 
 def validate_phone(phone: str) -> bool:
     """Valida se o telefone está no formato correto."""
     # Remove formatação se existir
     phone = ''.join(filter(str.isdigit, phone))
-    # Verifica se tem 10 ou 11 dígitos (com ou sem o 9)
-    return len(phone) == 11 and phone.isdigit()
-
-
-def validate_date_card(date_str: str) -> bool:
-    """Valida data do cartão no formato mm/aa."""
-    # Verifica se o formato é válido
-    if not match(r'^(\d{2})/(\d{2})$', date_str):
-        return False
-
-    try:
-        # Extrai mês e ano
-        month, short_year = map(int, date_str.split('/'))
-
-        # Converte ano de 2 dígitos para 4 dígitos (assumindo século atual)
-        current_century = datetime.now().year // 100 * 100
-        year = current_century + short_year
-
-        # Verifica se mês é válido (1-12)
-        if month < 1 or month > 12:
-            return False
-
-        # Adiciona um mês e subtrai um dia para obter o último dia do mês
-        if month == 12:
-            expiry_date = datetime(year + 1, 1, 1)
-        else:
-            expiry_date = datetime(year, month + 1, 1)
-
-        return expiry_date > datetime.now()
-
-    except ValueError:
-        return False
+    return len(phone) == 11
 
 
 def format_cpf(e):
@@ -182,53 +151,4 @@ def format_cep(e):
         formatted = f"{value[:5]}-{value[5:]}"
 
     e.control.value = formatted
-    e.control.update()
-
-
-def format_card_number(e):
-    """Formata o número do cartão em tempo real no campo de entrada."""
-    value = ''.join(filter(str.isdigit, e.control.value))
-
-    # Limita a 16 dígitos
-    value = value[:16]
-
-    # Formata como XXXX XXXX XXXX XXXX
-    if len(value) <= 4:
-        formatted = value
-    elif len(value) <= 8:
-        formatted = f"{value[:4]} {value[4:]}"
-    elif len(value) <= 12:
-        formatted = f"{value[:4]} {value[4:8]} {value[8:]}"
-    else:
-        formatted = f"{value[:4]} {value[4:8]} {value[8:12]} {value[12:]}"
-
-    e.control.value = formatted
-    e.control.update()
-
-
-def format_date_card(e):
-    """Formata data em tempo real no campo de entrada."""
-    value = ''.join(filter(str.isdigit, e.control.value))
-
-    # Limita a 4 dígitos
-    value = value[:4]
-
-    # Formata como mm/aa
-    if len(value) <= 2:
-        formatted = value
-    else:
-        formatted = f"{value[:2]}/{value[2:]}"
-
-    e.control.value = formatted
-    e.control.update()
-
-
-def format_card_code(e):
-    """Formata o código do cartão em tempo real no campo de entrada."""
-    value = ''.join(filter(str.isdigit, e.control.value))
-
-    # Limita a 3 dígitos
-    value = value[:3]
-
-    e.control.value = value
     e.control.update()

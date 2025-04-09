@@ -318,6 +318,8 @@ class App:
         def save_profile(e):
             if cpf_input.value != '' and not validate_cpf(cpf_input.value):
                 self.show_warning('CPF inválido!')
+            elif email_input.value != '' and not validate_email(email_input.value.strip()):
+                self.show_warning('Email inválido!')
             elif birth_date_input.value != '' and not validate_birth_date(birth_date_input.value):
                 self.show_warning('Data de nascimento inválida!')
             elif phone_input.value != '' and not validate_phone(phone_input.value):
@@ -338,6 +340,10 @@ class App:
                     if cpf_input.value:
                         updated_user.id_number = ''.join(
                             filter(str.isdigit, cpf_input.value))
+                    if name_input.value:
+                        updated_user.name = name_input.value.strip.lower()
+                    if email_input.value:
+                        updated_user.email = email_input.value.strip.lower()
                     if birth_date_input.value:
                         updated_user.birth_date = birth_date_input.value
                     if phone_input.value:
@@ -373,6 +379,10 @@ class App:
                         if password_input.value:
                             self.user.password = generate_hash(
                                 password_input.value)
+                        if email_input.value:
+                            self.user.email = email_input.value.strip().lower()
+                        if name_input.value:
+                            self.user.name = name_input.value.strip().lower()
                         if cpf_input.value:
                             self.user.id_number = ''.join(
                                 filter(str.isdigit, cpf_input.value))
@@ -455,7 +465,6 @@ class App:
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
             value=self.user.name.title(),
-            disabled=True
         )
 
         cpf_input = ft.TextField(
@@ -498,8 +507,7 @@ class App:
             expand=True,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
-            disabled=True,
-            value=self.user.email
+            value=self.user.email.lower()
         )
 
         password_input = ft.TextField(
@@ -588,7 +596,7 @@ class App:
             expand=True,
             border_color=ft.Colors.BLUE_400,
             cursor_color=ft.Colors.BLUE_900,
-            value=self.user.number if self.user.number else ''
+            value=self.user.number.upper() if self.user.number else ''
         )
 
         complement_input = ft.TextField(
@@ -599,78 +607,6 @@ class App:
             border_color=ft.Colors.BLUE_400,
             value=self.user.complement.title() if self.user.complement else '',
             cursor_color=ft.Colors.BLUE_900
-        )
-
-        card_number_input = ft.TextField(
-            label="Número do Cartão",
-            prefix_icon=ft.Icons.NUMBERS,
-            hint_text="Digite o número do cartão aqui...",
-            expand=True,
-            border_color=ft.Colors.BLUE_400,
-            value=self.user.card_number if self.user.card_number else '',
-            cursor_color=ft.Colors.BLUE_900,
-            on_change=format_card_number,
-            password=True,
-            can_reveal_password=True,
-        )
-
-        card_name_input = ft.TextField(
-            label="Nome no Cartão",
-            prefix_icon=ft.Icons.PERSON,
-            hint_text="Digite o nome no cartão aqui...",
-            expand=True,
-            border_color=ft.Colors.BLUE_400,
-            value=self.user.card_name.upper() if self.user.card_name else '',
-            cursor_color=ft.Colors.BLUE_900
-        )
-
-        valid_thru_input = ft.TextField(
-            label="Validade do Catão",
-            prefix_icon=ft.Icons.DATE_RANGE,
-            hint_text="Digite a validade do cartão aqui...",
-            expand=True,
-            border_color=ft.Colors.BLUE_400,
-            cursor_color=ft.Colors.BLUE_900,
-            value=self.user.card_valid_thru if self.user.card_valid_thru else '',
-            on_change=format_date_card
-        )
-
-        card_code_input = ft.TextField(
-            label="Código do Cartão",
-            prefix_icon=ft.Icons.CODE,
-            hint_text="Digite o código do cartão aqui...",
-            expand=True,
-            border_color=ft.Colors.BLUE_400,
-            value=self.user.card_code if self.user.card_code else '',
-            cursor_color=ft.Colors.BLUE_900,
-            input_filter=ft.NumbersOnlyInputFilter(),
-            on_change=format_card_code,
-            password=True,
-            can_reveal_password=True,
-        )
-
-        signature_confirmation_button = ft.ElevatedButton(
-            text="Confirmar Assinatura",
-            width=500,
-            height=50,
-            bgcolor=ft.Colors.GREEN_900,
-            color=ft.Colors.WHITE,
-            # on_click=login_click,
-            style=ft.ButtonStyle(
-                shape=ft.RoundedRectangleBorder(radius=8)
-            )
-        )
-
-        cancel_subscription_button = ft.ElevatedButton(
-            text="Cancelar Assinatura",
-            width=500,
-            height=50,
-            bgcolor=ft.Colors.RED_900,
-            color=ft.Colors.WHITE,
-            # on_click=login_click,
-            style=ft.ButtonStyle(
-                shape=ft.RoundedRectangleBorder(radius=8)
-            )
         )
 
         # Cards
@@ -833,66 +769,11 @@ class App:
             **card_style
         )
 
-        bank_details_card = ft.Card(
-            content=ft.Container(
-                content=ft.Column([
-                    ft.Container(
-                        content=ft.Row([
-                            ft.Icon(ft.Icons.CREDIT_CARD,
-                                    color=ft.Colors.BLUE_900),
-                            ft.Text("Informações Bancárias",
-                                    weight=ft.FontWeight.BOLD,
-                                    size=18,
-                                    color=ft.Colors.BLUE_900)
-                        ]),
-                        padding=ft.padding.only(bottom=10)
-                    ),
-                    ft.Divider(height=1, color=ft.Colors.BLUE_100),
-                    ft.ResponsiveRow(
-                        [
-                            ft.Column(
-                                col={"sm": 12, "md": 6, "lg": 6},
-                                controls=[
-                                    card_number_input
-                                ]
-                            ),
-                            ft.Column(
-                                col={"sm": 12, "md": 6, "lg": 6},
-                                controls=[
-                                    card_name_input
-                                ]
-                            )
-                        ]
-                    ),
-                    ft.ResponsiveRow(
-                        [
-                            ft.Column(
-                                col={"sm": 12, "md": 6, "lg": 6},
-                                controls=[
-                                    valid_thru_input
-                                ]
-                            ),
-                            ft.Column(
-                                col={"sm": 12, "md": 6, "lg": 6},
-                                controls=[
-                                    card_code_input
-                                ]
-                            )
-                        ]
-                    ),
-                ]),
-                padding=20,
-                expand=True
-            ),
-            **card_style
-        )
-
         # Container do formulário em uma ListView com scroll
         form_content = ft.ListView(
             controls=[
                 personal_card,
                 address_card,
-                bank_details_card,
             ],
             spacing=10,
             padding=ft.padding.symmetric(horizontal=20, vertical=10),
@@ -928,6 +809,7 @@ class App:
 
         def logout(e):
             self.page.clean()
+            self.page.scroll = None
             self.user = None
             self.show_login_view()
             self.show_success('Logout efetuado com sucesso!')
