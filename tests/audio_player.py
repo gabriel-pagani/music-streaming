@@ -23,6 +23,14 @@ class App:
             src="assets\\audios\\tu-tu-tu-du-max-verstappen.mp3",
             volume=10
         )
+        self.time_line = ft.Slider(
+            min=0,
+            max=100,
+            value=0,
+            active_color=ft.Colors.WHITE,
+            inactive_color=ft.Colors.WHITE12,
+            width=400,
+        )
         self.background = ft.Image(
             src="assets\\images\\max-logo.jpg",
             fit=ft.ImageFit.COVER,
@@ -42,7 +50,7 @@ class App:
         music_name = ft.Text(
             value="Tu Tu Tu Du - Max Verstappen",
             color=ft.Colors.WHITE,
-            size=35,
+            size=30,
             font_family="Arial",
             weight=ft.FontWeight.BOLD,
             text_align=ft.TextAlign.CENTER,
@@ -50,17 +58,17 @@ class App:
 
         play_button = ft.IconButton(
             icon=ft.Icons.PLAY_ARROW,
-            icon_color=ft.Colors.WHITE,
+            icon_color=ft.Colors.BLACK87,
             icon_size=50,
-            bgcolor=ft.Colors.GREEN_900,
+            bgcolor=ft.Colors.WHITE,
             on_click=play,
         )
 
         stop_button = ft.IconButton(
             icon=ft.Icons.PAUSE,
-            icon_color=ft.Colors.WHITE,
+            icon_color=ft.Colors.BLACK87,
             icon_size=50,
-            bgcolor=ft.Colors.RED_900,
+            bgcolor=ft.Colors.WHITE,
             on_click=pause,
         )
 
@@ -94,6 +102,11 @@ class App:
             controls=[
                 self.background,
                 music_name_container,  # Background image
+                ft.Container(             # Container para o time_line
+            content=self.time_line,
+            alignment=ft.alignment.center,  # Alinha o time_line no centro
+            padding=ft.Padding(0, 180, 0, 0),  # Ajusta o espaçamento para posicionar abaixo do nome
+                ),
                 container         # Botões centralizados
             ],
             expand=True  # Garante que o Stack ocupe todo o espaço da página
