@@ -3,8 +3,8 @@ Esse sistema foi desenvolvido com o objetivo de aprender mais sobre Python e seu
 
 # Pré-requisitos
 - Python 3.12+
-- Windows 11
-- SQL Server 20+
+- Windows 10+
+- SQL Server 18+
 
 # Instalação
 - Clone o repositório
