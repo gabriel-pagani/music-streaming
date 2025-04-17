@@ -341,9 +341,9 @@ class App:
                         updated_user.id_number = ''.join(
                             filter(str.isdigit, cpf_input.value))
                     if name_input.value:
-                        updated_user.name = name_input.value.strip.lower()
+                        updated_user.name = name_input.value.strip().lower()
                     if email_input.value:
-                        updated_user.email = email_input.value.strip.lower()
+                        updated_user.email = email_input.value.strip().lower()
                     if birth_date_input.value:
                         updated_user.birth_date = birth_date_input.value
                     if phone_input.value:
