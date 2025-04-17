@@ -5,7 +5,6 @@ from logging import error
 
 
 load_dotenv()
-
 _connection = None
 
 
@@ -53,21 +52,13 @@ def server_request(query: str, params: tuple = None) -> dict:
                     result.append(dict(zip(columns, row)))
 
                 response['data'] = result
-                response['message'] = 'Consulta executada com sucesso!'
             else:
                 connection.commit()
-                response['affected_rows'] = cursor.rowcount
-                response['message'] = 'Script executado com sucesso!'
 
     except Error as e:
-        error(f"Erro de banco de dados: {e}")
-        connection.rollback()
-        response['error'] = True
-        response['message'] = 'Erro na conexão com o banco de dados'
+        error(f"Erro no banco de dados: {e}")
     except Exception as e:
         error(f"Erro inesperado: {e}")
-        response['error'] = True
-        response['message'] = 'Ocorreu um erro inesperado'
 
     return response
 
