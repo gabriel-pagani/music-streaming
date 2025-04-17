@@ -12,9 +12,9 @@ basicConfig(filename='main.log', level=ERROR,
 class App:
     def __init__(self, page: ft.Page) -> None:
         self.page = page
-        self.user = User(email='testes', password='testes', name='Gabriel')
+        self.user = None
         self.setup_page()
-        self.show_menu_view()
+        self.show_login_view()
 
     def setup_page(self) -> None:
         self.page.title = 'Sprobify'
@@ -856,7 +856,7 @@ class App:
                 bottom_left=10, bottom_right=10),
         )
 
-        ...  # Desenvolver os elementos apartir daqui
+        ...  # Terminar de desenvolver os elementos apartir daqui
 
         # Layout principal
         content = ft.Column(
