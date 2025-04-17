@@ -60,9 +60,6 @@ class App:
             self.page.update()
 
         self.timeline = ft.Slider(
-            min=0,
-            max=1,
-            value=0,
             on_change=self.seek_position,
             divisions=100
         )
