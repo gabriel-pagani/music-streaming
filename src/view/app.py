@@ -12,9 +12,9 @@ basicConfig(filename='main.log', level=ERROR,
 class App:
     def __init__(self, page: ft.Page) -> None:
         self.page = page
-        self.user = None
+        self.user = User(email='testes', password='testes', name='Gabriel')
         self.setup_page()
-        self.show_login_view()
+        self.show_menu_view()
 
     def setup_page(self) -> None:
         self.page.title = 'Sprobify'
@@ -418,30 +418,39 @@ class App:
 
         # Barra superior
         title = ft.Text(
-            f"Atualização de Cadastro",
+            f"Painel da Conta",
             size=20,
             weight=ft.FontWeight.BOLD,
             color=ft.Colors.WHITE
         )
 
-        back_btn = ft.IconButton(
-            icon=ft.Icons.ARROW_BACK,
-            icon_color=ft.Colors.WHITE,
-            tooltip="Voltar",
-            on_click=back_to_menu
-        )
-
-        save_btn = ft.IconButton(
-            icon=ft.Icons.SAVE,
-            icon_color=ft.Colors.WHITE,
-            tooltip="Salvar Alterações",
-            on_click=save_profile,
-            icon_size=20
+        popup_button = ft.PopupMenuButton(
+            items=[
+                ft.PopupMenuItem(
+                    content=ft.Row(
+                        [
+                            ft.Icon(ft.Icons.SAVE),
+                            ft.Text("Salvar Alterações"),
+                        ]
+                    ),
+                    on_click=save_profile,
+                ),
+                ft.PopupMenuItem(
+                    content=ft.Row(
+                        [
+                            ft.Icon(ft.Icons.ARROW_BACK),
+                            ft.Text("Voltar"),
+                        ]
+                    ),
+                    on_click=back_to_menu,
+                ),
+            ],
+            icon_color=ft.Colors.WHITE
         )
 
         top_bar = ft.Container(
             content=ft.Row(
-                [back_btn, title, ft.Container(expand=True), save_btn],
+                [title, ft.Container(expand=True), popup_button],
                 alignment=ft.MainAxisAlignment.START
             ),
             padding=ft.padding.all(20),
@@ -794,18 +803,9 @@ class App:
         self.page.add(content)
 
     def show_menu_view(self) -> None:
-        def update_click(e):
+        def update_account(e):
             self.page.clean()
             self.show_update_view()
-
-        def card2(e):
-            self.show_warning('Funcionalidade em desenvolvimento!')
-
-        def card3(e):
-            self.show_warning('Funcionalidade em desenvolvimento!')
-
-        def card4(e):
-            self.show_warning('Funcionalidade em desenvolvimento!')
 
         def logout(e):
             self.page.clean()
@@ -814,7 +814,6 @@ class App:
             self.show_login_view()
             self.show_success('Logout efetuado com sucesso!')
 
-        # Barra superior com informações do usuário
         user_greeting = ft.Text(
             f"Olá, {self.user.name.title()}!",
             size=20,
@@ -822,16 +821,33 @@ class App:
             color=ft.Colors.WHITE
         )
 
-        logout_btn = ft.IconButton(
-            icon=ft.Icons.LOGOUT,
-            icon_color=ft.Colors.WHITE,
-            tooltip="Sair",
-            on_click=logout
+        popup_button = ft.PopupMenuButton(
+            items=[
+                ft.PopupMenuItem(
+                    content=ft.Row(
+                        [
+                            ft.Icon(ft.Icons.PERSON),
+                            ft.Text("Minha Conta"),
+                        ]
+                    ),
+                    on_click=update_account,
+                ),
+                ft.PopupMenuItem(
+                    content=ft.Row(
+                        [
+                            ft.Icon(ft.Icons.LOGOUT),
+                            ft.Text("Sair"),
+                        ]
+                    ),
+                    on_click=logout,
+                ),
+            ],
+            icon_color=ft.Colors.WHITE
         )
 
         top_bar = ft.Container(
             content=ft.Row(
-                [user_greeting, ft.Container(expand=True), logout_btn],
+                [user_greeting, ft.Container(expand=True), popup_button],
                 alignment=ft.MainAxisAlignment.SPACE_BETWEEN
             ),
             padding=ft.padding.all(20),
@@ -840,191 +856,12 @@ class App:
                 bottom_left=10, bottom_right=10),
         )
 
-        # Container adaptável para os cards
-        container_style = {
-            "padding": 20,
-            "border_radius": 15,
-            "margin": 10,
-            "expand": True,
-            "height": 150
-        }
-
-        # Cards para cada opção do menu
-        update_profile_card = ft.Card(
-            elevation=5,
-            content=ft.Container(
-                content=ft.Column(
-                    [
-                        ft.Row([
-                            ft.Icon(ft.Icons.PERSON_OUTLINE, size=30,
-                                    color=ft.Colors.BLUE_900),
-                            ft.Text("Atualizar Cadastro",
-                                    weight=ft.FontWeight.BOLD, size=18)
-                        ]),
-                        ft.Text("Mantenha seus dados pessoais atualizados",
-                                size=14, color=ft.Colors.GREY_700),
-                        ft.Container(expand=True),
-                        ft.Container(
-                            content=ft.Text(
-                                "ACESSAR", color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD),
-                            bgcolor=ft.Colors.BLUE_900,
-                            border_radius=20,
-                            padding=ft.padding.symmetric(
-                                horizontal=15, vertical=8),
-                            on_click=update_click,
-                            ink=True
-                        )
-                    ],
-                    spacing=10,
-                    alignment=ft.MainAxisAlignment.START
-                ),
-                **container_style
-            )
-        )
-
-        car2 = ft.Card(
-            elevation=5,
-            content=ft.Container(
-                content=ft.Column(
-                    [
-                        ft.Row([
-                            ft.Icon(ft.Icons.ADD_CARD, size=30,
-                                    color=ft.Colors.GREEN),
-                            ft.Text("Título",
-                                    weight=ft.FontWeight.BOLD, size=18)
-                        ]),
-                        ft.Text("Descrição",
-                                size=14, color=ft.Colors.GREY_700),
-                        ft.Container(expand=True),
-                        ft.Container(
-                            content=ft.Text(
-                                "Botão", color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD),
-                            bgcolor=ft.Colors.GREEN,
-                            border_radius=20,
-                            padding=ft.padding.symmetric(
-                                horizontal=15, vertical=8),
-                            on_click=card2,
-                            ink=True
-                        )
-                    ],
-                    spacing=10,
-                    alignment=ft.MainAxisAlignment.START
-                ),
-                **container_style
-            )
-        )
-
-        card3 = ft.Card(
-            elevation=5,
-            content=ft.Container(
-                content=ft.Column(
-                    [
-                        ft.Row([
-                            ft.Icon(ft.Icons.SEARCH, size=30,
-                                    color=ft.Colors.AMBER_700),
-                            ft.Text("Título",
-                                    weight=ft.FontWeight.BOLD, size=18)
-                        ]),
-                        ft.Text("Descrição",
-                                size=14, color=ft.Colors.GREY_700),
-                        ft.Container(expand=True),
-                        ft.Container(
-                            content=ft.Text(
-                                "Botão", color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD),
-                            bgcolor=ft.Colors.AMBER_700,
-                            border_radius=20,
-                            padding=ft.padding.symmetric(
-                                horizontal=15, vertical=8),
-                            on_click=card3,
-                            ink=True
-                        )
-                    ],
-                    spacing=10,
-                    alignment=ft.MainAxisAlignment.START
-                ),
-                **container_style
-            )
-        )
-
-        card4 = ft.Card(
-            elevation=5,
-            content=ft.Container(
-                content=ft.Column(
-                    [
-                        ft.Row([
-                            ft.Icon(ft.Icons.ACCOUNT_BALANCE,
-                                    size=30, color=ft.Colors.INDIGO),
-                            ft.Text("Título",
-                                    weight=ft.FontWeight.BOLD, size=18)
-                        ]),
-                        ft.Text("Descrição",
-                                size=14, color=ft.Colors.GREY_700),
-                        ft.Container(expand=True),
-                        ft.Container(
-                            content=ft.Text(
-                                "Botão", color=ft.Colors.WHITE, weight=ft.FontWeight.BOLD),
-                            bgcolor=ft.Colors.INDIGO,
-                            border_radius=20,
-                            padding=ft.padding.symmetric(
-                                horizontal=15, vertical=8),
-                            on_click=card4,
-                            ink=True
-                        )
-                    ],
-                    spacing=10,
-                    alignment=ft.MainAxisAlignment.START
-                ),
-                **container_style
-            )
-        )
-
-        # Grid adaptativo usando ResponsiveRow
-        card_grid = ft.ResponsiveRow(
-            [
-                ft.Column(
-                    [
-                        update_profile_card
-                    ],
-                    col={"xs": 12, "sm": 12, "md": 6, "lg": 6},
-                    expand=True
-                ),
-                ft.Column(
-                    [
-                        car2
-                    ],
-                    col={"xs": 12, "sm": 12, "md": 6, "lg": 6},
-                    expand=True
-                ),
-                ft.Column(
-                    [
-                        card3
-                    ],
-                    col={"xs": 12, "sm": 12, "md": 6, "lg": 6},
-                    expand=True
-                ),
-                ft.Column(
-                    [
-                        card4
-                    ],
-                    col={"xs": 12, "sm": 12, "md": 6, "lg": 6},
-                    expand=True
-                )
-            ],
-            spacing=10,
-        )
+        ...  # Desenvolver os elementos apartir daqui
 
         # Layout principal
         content = ft.Column(
             controls=[
                 top_bar,
-                ft.ListView(
-                    controls=[
-                        card_grid
-                    ],
-                    spacing=10,
-                    padding=ft.padding.symmetric(horizontal=20, vertical=10),
-                    expand=True
-                )
             ],
             spacing=5,
             expand=True
