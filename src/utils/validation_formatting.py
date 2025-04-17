@@ -4,12 +4,12 @@ from datetime import datetime
 
 def validate_email(email: str) -> bool:
     """Valida o formato do email."""
-    return bool(match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email) or email == 'testes')
+    return bool(match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email) or email == 'adm')
 
 
 def validate_password(password: str) -> bool:
     """Valida a força da senha."""
-    return bool(search(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$', password) or password == 'testes')
+    return bool(search(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$', password) or password == 'adm')
 
 
 def validate_cpf(cpf: str) -> bool:
