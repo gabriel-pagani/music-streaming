@@ -53,14 +53,14 @@ class App:
 
         # Botões
         self.play_button = ft.IconButton(
-            icon=ft.icons.PLAY_ARROW_ROUNDED,
+            icon=ft.Icons.PLAY_ARROW_ROUNDED,
             on_click=self.toggle_play_pause  # Agora o método está acessível
         )
 
         # Botão de repetição
         self.repeat_button = ft.IconButton(
-            icon=ft.icons.REPEAT,
-            selected_icon=ft.icons.REPEAT_ON,
+            icon=ft.Icons.REPEAT,
+            selected_icon=ft.Icons.REPEAT_ON,
             selected=False,
             on_click=self.toggle_repeat,
             tooltip="Repetir música"
@@ -72,10 +72,10 @@ class App:
         """
         if self.is_playing:
             self.audio.pause()
-            self.play_button.icon = ft.icons.PLAY_ARROW_ROUNDED
+            self.play_button.icon = ft.Icons.PLAY_ARROW_ROUNDED
         else:
             self.audio.resume()
-            self.play_button.icon = ft.icons.PAUSE_ROUNDED
+            self.play_button.icon = ft.Icons.PAUSE_ROUNDED
 
         self.is_playing = not self.is_playing
         self.page.update()
@@ -99,7 +99,8 @@ class App:
         if duration:
             self.duration = duration / 1000  # Atualiza a duração em segundos
             self.time_line.max = self.duration
-            self.txt_end.value = self.format_time(self.duration)  # Atualiza o texto do tempo final
+            self.txt_end.value = self.format_time(
+                self.duration)  # Atualiza o texto do tempo final
             self.page.update()
 
     def on_position_changed(self, e):
@@ -113,7 +114,8 @@ class App:
                 self.time_line.update()
 
             # Verifica se a música terminou e a repetição está ativada
-            if self.repetir and position >= self.duration * 1000:  # Multiplicado por 1000 para converter em milissegundos
+            # Multiplicado por 1000 para converter em milissegundos
+            if self.repetir and position >= self.duration * 1000:
                 self.audio.seek(0)  # Recomeça a música
                 self.audio.resume()  # Reinicia a reprodução
                 self.page.update()
@@ -133,12 +135,11 @@ class App:
                 self.audio.seek(0)
                 self.audio.resume()
                 self.is_playing = True
-                self.play_button.icon = ft.icons.PAUSE_ROUNDED
+                self.play_button.icon = ft.Icons.PAUSE_ROUNDED
             else:
                 self.is_playing = False
-                self.play_button.icon = ft.icons.PLAY_ARROW_ROUNDED
+                self.play_button.icon = ft.Icons.PLAY_ARROW_ROUNDED
             self.page.update()
-
 
     def show_page(self) -> None:
         music_name = ft.Text(
@@ -152,9 +153,12 @@ class App:
 
         timeline_section = ft.Row(
             [
-                ft.Container(content=self.txt_start, padding=ft.Padding(20, 0, 0, 0)),
-                ft.Container(content=self.time_line, expand=True, padding=ft.Padding(10, 4, 10, 0)),
-                ft.Container(content=self.txt_end, padding=ft.Padding(0, 0, 20, 0)),
+                ft.Container(content=self.txt_start,
+                             padding=ft.Padding(20, 0, 0, 0)),
+                ft.Container(content=self.time_line, expand=True,
+                             padding=ft.Padding(10, 4, 10, 0)),
+                ft.Container(content=self.txt_end,
+                             padding=ft.Padding(0, 0, 20, 0)),
             ],
             alignment="center",
             vertical_alignment="center",
@@ -163,13 +167,15 @@ class App:
         control_buttons = ft.Row(
             [
                 ft.IconButton(
-                    icon=ft.icons.FAST_REWIND_SHARP,
-                    on_click=lambda e: self.pular_para({"data": max(0, self.time_line.value - 5)})
+                    icon=ft.Icons.FAST_REWIND_SHARP,
+                    on_click=lambda e: self.pular_para(
+                        {"data": max(0, self.time_line.value - 5)})
                 ),
                 self.play_button,
                 ft.IconButton(
-                    icon=ft.icons.FAST_FORWARD_SHARP,
-                    on_click=lambda e: self.pular_para({"data": min(self.duration, self.time_line.value + 5)})
+                    icon=ft.Icons.FAST_FORWARD_SHARP,
+                    on_click=lambda e: self.pular_para(
+                        {"data": min(self.duration, self.time_line.value + 5)})
                 ),
                 self.repeat_button  # Adiciona o botão de repetição aqui
             ],
@@ -177,8 +183,8 @@ class App:
         )
 
         layout = ft.Stack(
-            controls=[  
-                self.background,  
+            controls=[
+                self.background,
                 ft.Container(
                     content=music_name,
                     alignment=ft.alignment.top_center,
