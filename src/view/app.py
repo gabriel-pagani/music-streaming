@@ -406,10 +406,7 @@ class App:
                             self.user.number = number_input.value.strip().lower()
                         if complement_input.value:
                             self.user.complement = complement_input.value.strip().lower()
-
-                        self.page.clean()
                         self.show_success('Perfil atualizado com sucesso!')
-                        self.show_menu_view()
                 except Exception as e:
                     error(f"Erro ao atualizar conta: {e}")
                     self.show_error(
