@@ -1,37 +1,34 @@
 import flet as ft
-import pygame
-import threading
 import time
-from mutagen.mp3 import MP3
 
 
 class App:
     def __init__(self, page: ft.Page) -> None:
         self.page = page
-        self.start = 0
+        self.duration = 0  # Inicializa a duração como 0
         self.is_playing = False
+        self.repetir = False  # Flag de repetição
         self.setup_page()
         self.show_page()
-        self.ja_iniciou = False
-        self.atualizando = False
-        self.repetir = False
 
     def setup_page(self) -> None:
-        pygame.mixer.init()
-        self.CAMINHO_MUSICA = "assets\\audios\\tu-tu-tu-du-max-verstappen.mp3"
-        self.audio = MP3(self.CAMINHO_MUSICA)
-        self.duration = int(self.audio.info.length)
-
         self.page.title = 'Sprobify'
-        self.page.window.height = 540
-        self.page.window.width = 540
+        self.page.window.height = 512
+        self.page.window.width = 512
         self.page.window.center()
         self.page.window.to_front()
         self.page.window.resizable = False
         self.page.window.maximizable = False
-        self.page.theme_mode = ft.ThemeMode.LIGHT
-        self.page.bgcolor = ft.Colors.WHITE
-        self.page.padding = 0
+        self.page.theme_mode = ft.ThemeMode.DARK
+        self.audio = ft.Audio(
+            src="assets\\audios\\tu-tu-tu-du-max-verstappen.mp3",
+            volume=0.05,
+            on_duration_changed=self.on_duration_changed,
+            on_position_changed=self.on_position_changed,
+            on_state_changed=self.on_audio_state_changed,  # ← novo!
+        )
+
+        self.page.overlay.append(self.audio)
 
         self.background = ft.Image(
             src="assets\\images\\max-logo.jpg",
@@ -40,23 +37,27 @@ class App:
             height=self.page.window.height,
         )
 
+        # Inicializa os textos de tempo
         self.txt_start = ft.Text("0:00", color="white")
         self.txt_end = ft.Text(self.format_time(self.duration), color="white")
 
+        # Slider
         self.time_line = ft.Slider(
             min=0,
-            max=self.duration,
+            max=1,
             value=0,
-            divisions=self.duration,
-            expand=True,
-            on_change_end=self.pular_para,
+            interaction=True,  # Deixe o slider interativo
+            on_change=self.seek_position,
+            divisions=100
         )
 
+        # Botões
         self.play_button = ft.IconButton(
             icon=ft.icons.PLAY_ARROW_ROUNDED,
-            on_click=self.toggle_play_pause
+            on_click=self.toggle_play_pause  # Agora o método está acessível
         )
 
+        # Botão de repetição
         self.repeat_button = ft.IconButton(
             icon=ft.icons.REPEAT,
             selected_icon=ft.icons.REPEAT_ON,
@@ -65,7 +66,24 @@ class App:
             tooltip="Repetir música"
         )
 
+    def toggle_play_pause(self, e):
+        """
+        Alterna entre reproduzir e pausar a música.
+        """
+        if self.is_playing:
+            self.audio.pause()
+            self.play_button.icon = ft.icons.PLAY_ARROW_ROUNDED
+        else:
+            self.audio.resume()
+            self.play_button.icon = ft.icons.PAUSE_ROUNDED
+
+        self.is_playing = not self.is_playing
+        self.page.update()
+
     def toggle_repeat(self, e):
+        """
+        Alterna entre ativar e desativar a repetição.
+        """
         self.repetir = not self.repetir
         self.repeat_button.selected = self.repetir
         self.repeat_button.update()
@@ -73,52 +91,54 @@ class App:
     def format_time(self, segundos):
         return f"{int(segundos) // 60}:{int(segundos) % 60:02d}"
 
-    def toggle_play_pause(self, event=None):
-        self.is_playing = not self.is_playing
+    def on_duration_changed(self, e):
+        """
+        Atualiza a duração da música quando o evento de mudança de duração é disparado.
+        """
+        duration = self.audio.get_duration()
+        if duration:
+            self.duration = duration / 1000  # Atualiza a duração em segundos
+            self.time_line.max = self.duration
+            self.txt_end.value = self.format_time(self.duration)  # Atualiza o texto do tempo final
+            self.page.update()
 
+    def on_position_changed(self, e):
+        """
+        Atualiza a posição do slider com a posição atual da música e verifica a repetição.
+        """
         if self.is_playing:
-            self.play_button.icon = ft.icons.PAUSE_ROUNDED
-            if not self.ja_iniciou:
-                pygame.mixer.music.load(self.CAMINHO_MUSICA)
-                pygame.mixer.music.play()
-                self.ja_iniciou = True
-            else:
-                pygame.mixer.music.unpause()
+            position = self.audio.get_current_position()
+            if position is not None:
+                self.time_line.value = position / 1000
+                self.time_line.update()
 
-            if not self.atualizando:
-                threading.Thread(target=self.atualizar_slider, daemon=True).start()
-        else:
-            self.play_button.icon = ft.icons.PLAY_ARROW_ROUNDED
-            pygame.mixer.music.pause()
-
-        self.play_button.update()
-
-    def atualizar_slider(self):
-        self.atualizando = True
-        while self.atualizando:
-            if self.is_playing:
-                posicao = pygame.mixer.music.get_pos() // 1000
-                self.time_line.value = posicao
-                self.txt_start.value = self.format_time(posicao)
+            # Verifica se a música terminou e a repetição está ativada
+            if self.repetir and position >= self.duration * 1000:  # Multiplicado por 1000 para converter em milissegundos
+                self.audio.seek(0)  # Recomeça a música
+                self.audio.resume()  # Reinicia a reprodução
                 self.page.update()
 
-                if posicao >= self.duration:
-                    if self.repetir:
-                        pygame.mixer.music.play()
-                    else:
-                        self.is_playing = False
-                        self.play_button.icon = ft.icons.PLAY_ARROW_ROUNDED
-                        self.play_button.update()
-                        self.atualizando = False
-            time.sleep(1)
+    def seek_position(self, e):
+        """
+        Muda a posição da música conforme o usuário interage com o slider.
+        """
+        if self.audio.get_duration() is not None:
+            new_position = int(self.time_line.value * 1000)
+            self.audio.seek(new_position)
+            self.audio.update()
 
-    def pular_para(self, e):
-        segundos = int(e.data)
-        pygame.mixer.music.stop()
-        pygame.mixer.music.play(start=segundos)
-        self.time_line.value = segundos
-        self.txt_start.value = self.format_time(segundos)
-        self.page.update()
+    def on_audio_state_changed(self, e):
+        if e.data == "completed":
+            if self.repetir:
+                self.audio.seek(0)
+                self.audio.resume()
+                self.is_playing = True
+                self.play_button.icon = ft.icons.PAUSE_ROUNDED
+            else:
+                self.is_playing = False
+                self.play_button.icon = ft.icons.PLAY_ARROW_ROUNDED
+            self.page.update()
+
 
     def show_page(self) -> None:
         music_name = ft.Text(
@@ -151,14 +171,14 @@ class App:
                     icon=ft.icons.FAST_FORWARD_SHARP,
                     on_click=lambda e: self.pular_para({"data": min(self.duration, self.time_line.value + 5)})
                 ),
-                self.repeat_button
+                self.repeat_button  # Adiciona o botão de repetição aqui
             ],
             alignment="spaceEvenly",
         )
 
         layout = ft.Stack(
-            controls=[
-                self.background,
+            controls=[  
+                self.background,  
                 ft.Container(
                     content=music_name,
                     alignment=ft.alignment.top_center,
