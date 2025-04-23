@@ -171,6 +171,11 @@ class App:
                 volume_icon.name = ft.Icons.VOLUME_UP
             self.page.update()
 
+        def resize_list_view(e):
+            available_height = self.page.height - 275
+            playlist_column.height = max(200, available_height)
+            self.page.update()
+
         # Cabeçalho com saudação e menu
         user_greeting = ft.Text(
             f"Olá, Gabriel!",
@@ -424,6 +429,7 @@ class App:
             auto_scroll=True,
             height=682
         )
+        self.page.on_resized = resize_list_view
 
         playlist_container = ft.Container(
             content=ft.Column(
