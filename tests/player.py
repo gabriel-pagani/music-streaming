@@ -173,7 +173,7 @@ class App:
 
         def resize_list_view(e):
             available_height = self.page.height - 275
-            playlist_column.height = max(200, available_height)
+            playlist_column.height = max(75, available_height)
             self.page.update()
 
         # Cabeçalho com saudação e menu
@@ -448,23 +448,10 @@ class App:
         content = ft.Column(
             controls=[
                 top_bar,
-                ft.Container(
-                    content=ft.ResponsiveRow(
-                        [
-                            ft.Column(
-                                [playlist_container],
-                                col={"xs": 12, "sm": 12, "md": 12, "lg": 12},
-                                expand=True
-                            )
-                        ],
-                        expand=True
-                    ),
-                    expand=True
-                ),
+                playlist_container,
                 music_player
             ],
-            spacing=0,
-            expand=True
+            spacing=0
         )
 
         self.page.clean()
