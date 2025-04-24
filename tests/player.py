@@ -176,6 +176,61 @@ class App:
             playlist_column.height = max(75, available_height)
             self.page.update()
 
+        def create_playlist_item(music):
+            return ft.Container(
+                content=ft.Row(
+                    [
+                        ft.Container(
+                            width=40,
+                            height=40,
+                            bgcolor=ft.Colors.BLUE_100,
+                            border_radius=5,
+                            content=ft.Icon(ft.Icons.MUSIC_NOTE,
+                                            size=20, color=ft.Colors.BLUE_900),
+                            alignment=ft.alignment.center
+                        ),
+                        ft.Container(width=10),
+                        ft.Column(
+                            [
+                                ft.Text(music.title,
+                                        weight=ft.FontWeight.BOLD),
+                                ft.Text(f"{music.artist} • {music.album}",
+                                        size=12, color=ft.Colors.GREY_700)
+                            ],
+                            spacing=2,
+                            tight=True
+                        ),
+                        ft.Container(expand=True),
+                        ft.IconButton(
+                            icon=ft.Icons.PLAY_CIRCLE,
+                            icon_color=ft.Colors.BLUE_900,
+                            on_click=lambda e, idx=music.id: play_selected_music(
+                                e, idx)
+                        )
+                    ],
+                    alignment=ft.MainAxisAlignment.START,
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER
+                ),
+                padding=ft.padding.all(10),
+                margin=ft.margin.only(bottom=5),
+                border_radius=5,
+                bgcolor=ft.Colors.WHITE,
+                border=ft.border.all(1, ft.Colors.GREY_300),
+            )
+
+        def play_selected_music(e, music_id):
+            # Encontrar o índice da música pelo ID
+            for i, music in enumerate(self.player_state.playlist):
+                if music.id == music_id:
+                    self.player_state.current_music_index = i
+                    update_music_display()
+                    # Iniciar a reprodução
+                    self.player_state.is_playing = True
+                    play_button.icon = ft.Icons.PAUSE
+                    self.page.update()
+                    # Aqui implementaria a lógica para tocar a música
+                    break
+
         # Cabeçalho com saudação e menu
         user_greeting = ft.Text(
             f"Olá, Gabriel!",
@@ -362,62 +417,6 @@ class App:
                 offset=ft.Offset(0, -3)
             )
         )
-
-        # Lista de reprodução
-        def create_playlist_item(music):
-            return ft.Container(
-                content=ft.Row(
-                    [
-                        ft.Container(
-                            width=40,
-                            height=40,
-                            bgcolor=ft.Colors.BLUE_100,
-                            border_radius=5,
-                            content=ft.Icon(ft.Icons.MUSIC_NOTE,
-                                            size=20, color=ft.Colors.BLUE_900),
-                            alignment=ft.alignment.center
-                        ),
-                        ft.Container(width=10),
-                        ft.Column(
-                            [
-                                ft.Text(music.title,
-                                        weight=ft.FontWeight.BOLD),
-                                ft.Text(f"{music.artist} • {music.album}",
-                                        size=12, color=ft.Colors.GREY_700)
-                            ],
-                            spacing=2,
-                            tight=True
-                        ),
-                        ft.Container(expand=True),
-                        ft.IconButton(
-                            icon=ft.Icons.PLAY_CIRCLE,
-                            icon_color=ft.Colors.BLUE_900,
-                            on_click=lambda e, idx=music.id: play_selected_music(
-                                e, idx)
-                        )
-                    ],
-                    alignment=ft.MainAxisAlignment.START,
-                    vertical_alignment=ft.CrossAxisAlignment.CENTER
-                ),
-                padding=ft.padding.all(10),
-                margin=ft.margin.only(bottom=5),
-                border_radius=5,
-                bgcolor=ft.Colors.WHITE,
-                border=ft.border.all(1, ft.Colors.GREY_300),
-            )
-
-        def play_selected_music(e, music_id):
-            # Encontrar o índice da música pelo ID
-            for i, music in enumerate(self.player_state.playlist):
-                if music.id == music_id:
-                    self.player_state.current_music_index = i
-                    update_music_display()
-                    # Iniciar a reprodução
-                    self.player_state.is_playing = True
-                    play_button.icon = ft.Icons.PAUSE
-                    self.page.update()
-                    # Aqui implementaria a lógica para tocar a música
-                    break
 
         # Criação da lista de reprodução
         playlist_items = [create_playlist_item(
