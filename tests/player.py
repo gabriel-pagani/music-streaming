@@ -427,7 +427,7 @@ class App:
             playlist_items,
             spacing=5,
             auto_scroll=True,
-            height=682
+            height=self.page.height - 275
         )
         self.page.on_resized = resize_list_view
 
