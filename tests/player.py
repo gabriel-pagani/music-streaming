@@ -1,237 +1,183 @@
 import flet as ft
+from src.controller.music import Music
 
 
 class App:
     def __init__(self, page: ft.Page) -> None:
         self.page = page
+        self.music = Music(id=2)
+        self.playlist = []
+        self.audio = None
+        self.timeline = None
         self.setup_page()
+        self.load_playlist()
+        self.initialize_audio()
         self.show_interface()
 
     def setup_page(self) -> None:
+        """Configura as propriedades básicas da página"""
         self.page.title = 'Sprobify'
         self.page.theme_mode = ft.ThemeMode.LIGHT
         self.page.bgcolor = ft.Colors.WHITE
         self.page.padding = 0
         self.page.update()
 
+    def load_playlist(self) -> None:
+        """Carrega músicas do banco de dados"""
+        self.playlist = [
+            Music(id=1).get_data(),
+            Music(id=2).get_data(),
+            Music(id=3).get_data(),
+            Music(id=4).get_data(),
+        ]
+
+    def initialize_audio(self) -> None:
+        """Inicializa o componente de áudio"""
+        self.audio = ft.Audio(
+            src_base64=self.playlist[self.music.id - 1]['music'],
+            volume=self.music.volume,
+            on_duration_changed=self.on_duration_changed,
+            on_position_changed=self.on_position_changed
+        )
+        self.page.overlay.append(self.audio)
+        self.page.update()
+
+    def on_duration_changed(self, e) -> None:
+        """Callback quando a duração da música é detectada"""
+        duration = self.audio.get_duration()
+        if duration and self.timeline:
+            self.timeline.max = duration / 1000
+            self.page.update()
+
+    def on_position_changed(self, e) -> None:
+        """Callback para atualizar a posição da timeline durante a reprodução"""
+        if self.music.is_playing and self.timeline:
+            position = self.audio.get_current_position()
+            if position is not None:
+                self.timeline.value = position / 1000
+                self.timeline.update()
+
+    def seek_position(self, e) -> None:
+        """Altera a posição de reprodução da música"""
+        if self.audio.get_duration() is not None:
+            new_position = int(self.timeline.value * 1000)
+            self.audio.seek(new_position)
+            self.audio.update()
+
     def show_interface(self) -> None:
-        # Classe para representar uma música do banco de dados
-        class Music:
-            def __init__(self, id, title, artist, album, cover_url, file_path):
-                self.id = id
-                self.title = title
-                self.artist = artist
-                self.album = album
-                self.cover_url = cover_url
-                self.file_path = file_path
+        """Cria e exibe a interface do player"""
+        # ELEMENTOS DA INTERFACE
 
-        # Estado do player
-        class PlayerState:
-            def __init__(self):
-                self.current_music_index = 0
-                self.is_playing = False
-                self.is_shuffle = False
-                self.is_loop = False
-                self.volume = 50
-                self.playlist = []
+        # 1. COMPONENTES DO PLAYER DE MÚSICA
 
-        # Instanciando o estado do player
-        self.player_state = PlayerState()
+        # 1.1 Exibição de informações da música atual
+        current_music = self.playlist[self.music.id - 1]
 
-        # Função para simular o carregamento de músicas do banco de dados
-        def load_music_from_db():
-            # Simulação de dados que viriam do banco de dados
-            # Na implementação real, substitua isso por uma consulta ao banco
-            return [
-                Music(1, "Bohemian Rhapsody", "Queen",
-                      "A Night at the Opera", None, "/path/to/music1.mp3"),
-                Music(2, "Imagine", "John Lennon", "Imagine",
-                      None, "/path/to/music2.mp3"),
-                Music(3, "Shape of You", "Ed Sheeran",
-                      "÷", None, "/path/to/music3.mp3"),
-                Music(4, "Billie Jean", "Michael Jackson",
-                      "Thriller", None, "/path/to/music4.mp3"),
-                Music(1, "Bohemian Rhapsody", "Queen",
-                      "A Night at the Opera", None, "/path/to/music1.mp3"),
-                Music(2, "Imagine", "John Lennon", "Imagine",
-                      None, "/path/to/music2.mp3"),
-                Music(3, "Shape of You", "Ed Sheeran",
-                      "÷", None, "/path/to/music3.mp3"),
-                Music(4, "Billie Jean", "Michael Jackson",
-                      "Thriller", None, "/path/to/music4.mp3"),
-                Music(1, "Bohemian Rhapsody", "Queen",
-                      "A Night at the Opera", None, "/path/to/music1.mp3"),
-                Music(3, "Shape of You", "Ed Sheeran",
-                      "÷", None, "/path/to/music3.mp3"),
-                Music(4, "Billie Jean", "Michael Jackson",
-                      "Thriller", None, "/path/to/music4.mp3"),
-                Music(1, "Bohemian Rhapsody", "Queen",
-                      "A Night at the Opera", None, "/path/to/music1.mp3"),
-            ]
+        music_title = ft.Text(
+            current_music['title'] if self.playlist else "Sem música",
+            weight=ft.FontWeight.BOLD,
+            size=16,
+            overflow=ft.TextOverflow.ELLIPSIS
+        )
 
-        # Carregando as músicas
-        self.player_state.playlist = load_music_from_db()
-        current_music = self.player_state.playlist[self.player_state.current_music_index]
+        artist_name = ft.Text(
+            current_music['artist'] if self.playlist else "",
+            size=14,
+            color=ft.Colors.GREY_800,
+            overflow=ft.TextOverflow.ELLIPSIS
+        )
 
-        # Funções de navegação
-        def update_account(e):
-            pass
+        album_name = ft.Text(
+            current_music['album'] if self.playlist else "",
+            size=12,
+            color=ft.Colors.GREY_600,
+            overflow=ft.TextOverflow.ELLIPSIS
+        )
 
-        def logout(e):
-            pass
+        # 1.2 Timeline para navegação na música
+        self.timeline = ft.Slider(
+            min=0,
+            max=100,  # Será atualizado quando a música carregar
+            value=0,
+            on_change=self.seek_position,
+            thumb_color=ft.Colors.BLUE_900,
+            active_color=ft.Colors.BLUE_900,
+            inactive_color=ft.Colors.BLUE_100,
+            tooltip="Posição"
+        )
 
-        # Funções para controle do player de música
-        def update_music_display():
-            if self.player_state.playlist:
-                current = self.player_state.playlist[self.player_state.current_music_index]
-                music_title.value = current.title
-                artist_name.value = current.artist
-                album_name.value = current.album
+        # 1.3 Controles de reprodução
 
-                # Aqui você pode atualizar a capa do álbum se tiver URL
-                # album_cover.src = current.cover_url if current.cover_url else None
+        # Botões de controle
+        random_button = ft.IconButton(
+            icon=ft.Icons.SHUFFLE,
+            icon_color=ft.Colors.GREY,
+            on_click=self.toggle_shuffle,
+            tooltip="Aleatório"
+        )
 
-                self.page.update()
+        previous_button = ft.IconButton(
+            icon=ft.Icons.SKIP_PREVIOUS,
+            icon_color=ft.Colors.BLUE_900,
+            on_click=self.skip_previous,
+            tooltip="Anterior"
+        )
 
-        def play_pause(e):
-            self.player_state.is_playing = not self.player_state.is_playing
-            if self.player_state.is_playing:
-                play_button.icon = ft.Icons.PAUSE
-                # Aqui você implementaria a lógica para tocar a música
-                # player.play(current_music.file_path)
-            else:
-                play_button.icon = ft.Icons.PLAY_ARROW
-                # Aqui você implementaria a lógica para pausar a música
-                # player.pause()
-            self.page.update()
+        play_button = ft.IconButton(
+            icon=ft.Icons.PLAY_ARROW,
+            icon_color=ft.Colors.BLUE_900,
+            icon_size=40,
+            on_click=self.play_pause,
+            tooltip="Reproduzir/Pausar"
+        )
 
-        def skip_next(e):
-            playlist_len = len(self.player_state.playlist)
-            if playlist_len > 0:
-                if self.player_state.is_shuffle:
-                    import random
-                    self.player_state.current_music_index = random.randint(
-                        0, playlist_len - 1)
-                else:
-                    self.player_state.current_music_index = (
-                        self.player_state.current_music_index + 1) % playlist_len
+        next_button = ft.IconButton(
+            icon=ft.Icons.SKIP_NEXT,
+            icon_color=ft.Colors.BLUE_900,
+            on_click=self.skip_next,
+            tooltip="Próxima"
+        )
 
-                update_music_display()
+        loop_button = ft.IconButton(
+            icon=ft.Icons.LOOP,
+            icon_color=ft.Colors.GREY,
+            on_click=self.toggle_loop,
+            tooltip="Repetir"
+        )
 
-                # Se estiver tocando, continua tocando a próxima música
-                if self.player_state.is_playing:
-                    # Lógica para tocar a música
-                    pass
+        # 1.4 Controle de volume
+        volume_slider = ft.Slider(
+            min=0,
+            max=100,
+            value=self.music.volume * 100,  # Convert 0-1 to 0-100
+            thumb_color=ft.Colors.BLUE_900,
+            active_color=ft.Colors.BLUE_900,
+            on_change=self.change_volume,
+            tooltip="Volume"
+        )
 
-        def skip_previous(e):
-            playlist_len = len(self.player_state.playlist)
-            if playlist_len > 0:
-                if self.player_state.is_shuffle:
-                    import random
-                    self.player_state.current_music_index = random.randint(
-                        0, playlist_len - 1)
-                else:
-                    self.player_state.current_music_index = (
-                        self.player_state.current_music_index - 1) % playlist_len
+        volume_icon = ft.Icon(
+            name=ft.Icons.VOLUME_UP,
+            color=ft.Colors.BLUE_900,
+        )
 
-                update_music_display()
+        # 1.5 Capa do álbum
+        album_cover = ft.Image(
+            src_base64=current_music['cover'],
+            width=60,
+            height=60,
+            fit=ft.ImageFit.COVER,
+            border_radius=10
+        ) if current_music.get('cover') else ft.Container(
+            width=60,
+            height=60,
+            bgcolor=ft.Colors.BLUE_200,
+            border_radius=10,
+            content=ft.Icon(ft.Icons.MUSIC_NOTE, color=ft.Colors.BLUE_900),
+            alignment=ft.alignment.center
+        )
 
-                # Se estiver tocando, continua tocando a música anterior
-                if self.player_state.is_playing:
-                    # Lógica para tocar a música
-                    pass
-
-        def toggle_shuffle(e):
-            self.player_state.is_shuffle = not self.player_state.is_shuffle
-            if self.player_state.is_shuffle:
-                random_button.icon_color = ft.Colors.BLUE_900
-            else:
-                random_button.icon_color = ft.Colors.GREY
-            self.page.update()
-
-        def toggle_loop(e):
-            self.player_state.is_loop = not self.player_state.is_loop
-            if self.player_state.is_loop:
-                loop_button.icon_color = ft.Colors.BLUE_900
-            else:
-                loop_button.icon_color = ft.Colors.GREY
-            self.page.update()
-
-        def change_volume(e):
-            self.player_state.volume = int(volume_slider.value)
-            # Implemente a lógica para alterar o volume no player real
-            # player.set_volume(self.player_state.volume)
-
-            # Atualizar ícone de volume conforme valor
-            if self.player_state.volume == 0:
-                volume_icon.name = ft.Icons.VOLUME_OFF
-            elif self.player_state.volume < 50:
-                volume_icon.name = ft.Icons.VOLUME_DOWN
-            else:
-                volume_icon.name = ft.Icons.VOLUME_UP
-            self.page.update()
-
-        def resize_list_view(e):
-            available_height = self.page.height - 275
-            playlist_column.height = max(75, available_height)
-            self.page.update()
-
-        def create_playlist_item(music):
-            return ft.Container(
-                content=ft.Row(
-                    [
-                        ft.Container(
-                            width=40,
-                            height=40,
-                            bgcolor=ft.Colors.BLUE_100,
-                            border_radius=5,
-                            content=ft.Icon(ft.Icons.MUSIC_NOTE,
-                                            size=20, color=ft.Colors.BLUE_900),
-                            alignment=ft.alignment.center
-                        ),
-                        ft.Container(width=10),
-                        ft.Column(
-                            [
-                                ft.Text(music.title,
-                                        weight=ft.FontWeight.BOLD),
-                                ft.Text(f"{music.artist} • {music.album}",
-                                        size=12, color=ft.Colors.GREY_700)
-                            ],
-                            spacing=2,
-                            tight=True
-                        ),
-                        ft.Container(expand=True),
-                        ft.IconButton(
-                            icon=ft.Icons.PLAY_CIRCLE,
-                            icon_color=ft.Colors.BLUE_900,
-                            on_click=lambda e, idx=music.id: play_selected_music(
-                                e, idx)
-                        )
-                    ],
-                    alignment=ft.MainAxisAlignment.START,
-                    vertical_alignment=ft.CrossAxisAlignment.CENTER
-                ),
-                padding=ft.padding.all(10),
-                margin=ft.margin.only(bottom=5),
-                border_radius=5,
-                bgcolor=ft.Colors.WHITE,
-                border=ft.border.all(1, ft.Colors.GREY_300),
-            )
-
-        def play_selected_music(e, music_id):
-            # Encontrar o índice da música pelo ID
-            for i, music in enumerate(self.player_state.playlist):
-                if music.id == music_id:
-                    self.player_state.current_music_index = i
-                    update_music_display()
-                    # Iniciar a reprodução
-                    self.player_state.is_playing = True
-                    play_button.icon = ft.Icons.PAUSE
-                    self.page.update()
-                    # Aqui implementaria a lógica para tocar a música
-                    break
-
-        # Cabeçalho com saudação e menu
+        # 2. CABEÇALHO
         user_greeting = ft.Text(
             f"Olá, Gabriel!",
             size=20,
@@ -248,7 +194,7 @@ class App:
                             ft.Text("Minha Conta"),
                         ]
                     ),
-                    on_click=update_account,
+                    on_click=self.update_account,
                 ),
                 ft.PopupMenuItem(
                     content=ft.Row(
@@ -257,7 +203,7 @@ class App:
                             ft.Text("Sair"),
                         ]
                     ),
-                    on_click=logout,
+                    on_click=self.logout,
                 ),
             ],
             icon_color=ft.Colors.WHITE
@@ -274,137 +220,61 @@ class App:
                 bottom_left=10, bottom_right=10),
         )
 
-        # Player de música com melhor organização para responsividade
-        music_title = ft.Text(
-            current_music.title if self.player_state.playlist else "Sem música",
-            weight=ft.FontWeight.BOLD,
-            size=16,
-            overflow=ft.TextOverflow.ELLIPSIS
-        )
+        # 3. ORGANIZAÇÃO DOS CONTROLES EM LAYOUTS
 
-        artist_name = ft.Text(
-            current_music.artist if self.player_state.playlist else "",
-            size=14,
-            color=ft.Colors.GREY_800,
-            overflow=ft.TextOverflow.ELLIPSIS
-        )
-
-        album_name = ft.Text(
-            current_music.album if self.player_state.playlist else "",
-            size=12,
-            color=ft.Colors.GREY_600,
-            overflow=ft.TextOverflow.ELLIPSIS
-        )
-
-        # Botões de controle
-        random_button = ft.IconButton(
-            icon=ft.Icons.SHUFFLE,
-            icon_color=ft.Colors.GREY,
-            on_click=toggle_shuffle,
-            tooltip="Aleatório"
-        )
-
-        previous_button = ft.IconButton(
-            icon=ft.Icons.SKIP_PREVIOUS,
-            icon_color=ft.Colors.BLUE_900,
-            on_click=skip_previous,
-            tooltip="Anterior"
-        )
-
-        play_button = ft.IconButton(
-            icon=ft.Icons.PLAY_ARROW,
-            icon_color=ft.Colors.BLUE_900,
-            icon_size=40,
-            on_click=play_pause,
-            tooltip="Reproduzir/Pausar"
-        )
-
-        next_button = ft.IconButton(
-            icon=ft.Icons.SKIP_NEXT,
-            icon_color=ft.Colors.BLUE_900,
-            on_click=skip_next,
-            tooltip="Próxima"
-        )
-
-        loop_button = ft.IconButton(
-            icon=ft.Icons.LOOP,
-            icon_color=ft.Colors.GREY,
-            on_click=toggle_loop,
-            tooltip="Repetir"
-        )
-
-        # Controle de volume
-        volume_slider = ft.Slider(
-            min=0,
-            max=100,
-            value=self.player_state.volume,
-            thumb_color=ft.Colors.BLUE_900,
-            active_color=ft.Colors.BLUE_900,
-            on_change=change_volume,
-            tooltip="Volume"
-        )
-
-        volume_icon = ft.Icon(
-            name=ft.Icons.VOLUME_UP,
-            color=ft.Colors.BLUE_900,
-        )
-
-        # Capa do álbum (representada por um container)
-        album_cover = ft.Container(
-            width=60,
-            height=60,
-            bgcolor=ft.Colors.BLUE_200,
-            border_radius=10,
-            content=ft.Icon(ft.Icons.MUSIC_NOTE, color=ft.Colors.BLUE_900),
-            alignment=ft.alignment.center
-        )
-
-        # Layout responsivo do player
+        # 3.1 Informações da música
         music_info = ft.Column(
             [music_title, artist_name, album_name],
             spacing=2,
             tight=True
         )
 
+        # 3.2 Controles de reprodução
         player_controls = ft.Row(
             [random_button, previous_button, play_button, next_button, loop_button],
             alignment=ft.MainAxisAlignment.CENTER
         )
 
+        # 3.3 Controle de volume
         volume_control = ft.Row(
             [volume_icon, volume_slider],
             spacing=0
         )
 
-        # Player responsivo adaptado para diferentes tamanhos de tela
+        # 3.4 Layout do player completo
         music_player = ft.Container(
-            content=ft.Row(
+            content=ft.Column(
                 [
-                    # Capa e informações da música
-                    ft.Column(
+                    # Timeline
+                    self.timeline,
+                    ft.Container(height=10),
+
+                    # Player completo
+                    ft.Row(
                         [
-                            ft.Row([
-                                album_cover,
-                                ft.Container(width=10),
-                                music_info
-                            ], vertical_alignment=ft.CrossAxisAlignment.CENTER)
+                            # Capa e informações da música
+                            ft.Row(
+                                [
+                                    album_cover,
+                                    ft.Container(width=10),
+                                    music_info
+                                ],
+                                vertical_alignment=ft.CrossAxisAlignment.CENTER
+                            ),
+
+                            ft.Container(expand=True),
+
+                            # Controles de reprodução
+                            player_controls,
+
+                            ft.Container(expand=True),
+
+                            # Controle de volume
+                            volume_control
                         ],
-                        horizontal_alignment=ft.CrossAxisAlignment.START
-                    ),
-
-                    # Controles de reprodução
-                    ft.Column(
-                        [player_controls],
-                        horizontal_alignment=ft.CrossAxisAlignment.CENTER
-                    ),
-
-                    # Controle de volume
-                    ft.Column(
-                        [volume_control],
-                        horizontal_alignment=ft.CrossAxisAlignment.END
+                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN
                     )
-                ],
-                alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+                ]
             ),
             padding=ft.padding.all(15),
             border_radius=ft.border_radius.only(top_left=10, top_right=10),
@@ -418,17 +288,18 @@ class App:
             )
         )
 
-        # Criação da lista de reprodução
-        playlist_items = [create_playlist_item(
-            music) for music in self.player_state.playlist]
+        # 4. LISTA DE REPRODUÇÃO
+        playlist_items = [self.create_playlist_item(
+            music) for music in self.playlist]
 
         playlist_column = ft.ListView(
             playlist_items,
             spacing=5,
             auto_scroll=True,
-            height=self.page.height - 275
+            height=self.page.height - 353
         )
-        self.page.on_resized = resize_list_view
+        self.page.on_resized = lambda e: self.resize_list_view(
+            e, playlist_column)
 
         playlist_container = ft.Container(
             content=ft.Column(
@@ -443,7 +314,7 @@ class App:
             expand=True
         )
 
-        # Layout principal responsivo
+        # 5. LAYOUT PRINCIPAL COMPLETO
         content = ft.Column(
             controls=[
                 top_bar,
@@ -453,12 +324,212 @@ class App:
             spacing=0
         )
 
+        # Adicionando à página
         self.page.clean()
         self.page.scroll = ft.ScrollMode.AUTO
         self.page.add(content)
 
-        # Inicializa o display com a música atual
-        update_music_display()
+    # MÉTODOS DE CONTROLE DO PLAYER
+
+    def update_music_display(self) -> None:
+        """Atualiza a exibição com os dados da música atual"""
+        if self.playlist:
+            current = self.playlist[self.music.id - 1]
+            # Atualizar labels
+            for control in self.page.controls[0].controls:
+                if isinstance(control, ft.Container) and control.content and isinstance(control.content, ft.Column):
+                    for child in control.content.controls:
+                        if isinstance(child, ft.Column) and len(child.controls) > 0:
+                            if isinstance(child.controls[0], ft.Text) and child.controls[0].value == "Biblioteca de Músicas":
+                                # Não faça nada
+                                pass
+
+            # Atualizar áudio
+            self.audio.src_base64 = current['music']
+            self.audio.update()
+            self.page.update()
+
+    def play_pause(self, e) -> None:
+        """Alterna entre reproduzir e pausar a música"""
+        self.music.is_playing = not self.music.is_playing
+        if self.music.is_playing:
+            e.control.icon = ft.Icons.PAUSE
+            self.audio.resume()
+        else:
+            e.control.icon = ft.Icons.PLAY_ARROW
+            self.audio.pause()
+        self.page.update()
+
+    def skip_next(self, e) -> None:
+        """Avança para a próxima música"""
+        playlist_len = len(self.playlist)
+        if playlist_len > 0:
+            if self.music.is_random:
+                import random
+                self.music.id = random.randint(1, playlist_len)
+            else:
+                self.music.id = (self.music.id % playlist_len) + 1
+
+            # Atualizar com a nova música
+            current_music = self.playlist[self.music.id - 1]
+            self.audio.src_base64 = current_music['music']
+            self.audio.update()
+
+            # Reiniciar timeline
+            if self.timeline:
+                self.timeline.value = 0
+
+            # Se estiver tocando, continua tocando a próxima música
+            if self.music.is_playing:
+                self.audio.play()
+
+            self.update_music_display()
+
+    def skip_previous(self, e) -> None:
+        """Volta para a música anterior"""
+        playlist_len = len(self.playlist)
+        if playlist_len > 0:
+            if self.music.is_random:
+                import random
+                self.music.id = random.randint(1, playlist_len)
+            else:
+                self.music.id = (self.music.id - 2) % playlist_len + 1
+
+            # Atualizar com a nova música
+            current_music = self.playlist[self.music.id - 1]
+            self.audio.src_base64 = current_music['music']
+            self.audio.update()
+
+            # Reiniciar timeline
+            if self.timeline:
+                self.timeline.value = 0
+
+            # Se estiver tocando, continua tocando a música anterior
+            if self.music.is_playing:
+                self.audio.play()
+
+            self.update_music_display()
+
+    def toggle_shuffle(self, e) -> None:
+        """Alterna o modo aleatório"""
+        self.music.is_random = not self.music.is_random
+        if self.music.is_random:
+            e.control.icon_color = ft.Colors.BLUE_900
+        else:
+            e.control.icon_color = ft.Colors.GREY
+        self.page.update()
+
+    def toggle_loop(self, e) -> None:
+        """Alterna o modo de repetição"""
+        self.music.is_looping = not self.music.is_looping
+        if self.music.is_looping:
+            e.control.icon_color = ft.Colors.BLUE_900
+        else:
+            e.control.icon_color = ft.Colors.GREY
+        self.page.update()
+
+    def change_volume(self, e) -> None:
+        """Altera o volume do player"""
+        volume_value = e.control.value
+        self.music.volume = volume_value / 100  # Convert 0-100 to 0-1
+
+        # Atualizar o volume no componente de áudio
+        self.audio.volume = self.music.volume
+        self.audio.update()
+
+        # Atualizar ícone de volume conforme valor
+        volume_icon = e.control.parent.controls[0]
+        if volume_value == 0:
+            volume_icon.name = ft.Icons.VOLUME_OFF
+        elif volume_value < 50:
+            volume_icon.name = ft.Icons.VOLUME_DOWN
+        else:
+            volume_icon.name = ft.Icons.VOLUME_UP
+        self.page.update()
+
+    def resize_list_view(self, e, playlist_column) -> None:
+        """Ajusta o tamanho da lista de reprodução conforme o tamanho da janela"""
+        available_height = self.page.height - 353
+        playlist_column.height = max(75, available_height)
+        self.page.update()
+
+    def create_playlist_item(self, music) -> ft.Container:
+        """Cria um item para a lista de reprodução"""
+        return ft.Container(
+            content=ft.Row(
+                [
+                    ft.Container(
+                        width=40,
+                        height=40,
+                        bgcolor=ft.Colors.BLUE_100,
+                        border_radius=5,
+                        content=ft.Icon(ft.Icons.MUSIC_NOTE,
+                                        size=20, color=ft.Colors.BLUE_900),
+                        alignment=ft.alignment.center
+                    ),
+                    ft.Container(width=10),
+                    ft.Column(
+                        [
+                            ft.Text(music['title'],
+                                    weight=ft.FontWeight.BOLD),
+                            ft.Text(f"{music['artist']} • {music['album']}",
+                                    size=12, color=ft.Colors.GREY_700)
+                        ],
+                        spacing=2,
+                        tight=True
+                    ),
+                    ft.Container(expand=True),
+                    ft.IconButton(
+                        icon=ft.Icons.PLAY_CIRCLE,
+                        icon_color=ft.Colors.BLUE_900,
+                        on_click=lambda e, id=music['id']: self.play_selected_music(
+                            e, id)
+                    )
+                ],
+                alignment=ft.MainAxisAlignment.START,
+                vertical_alignment=ft.CrossAxisAlignment.CENTER
+            ),
+            padding=ft.padding.all(10),
+            margin=ft.margin.only(bottom=5),
+            border_radius=5,
+            bgcolor=ft.Colors.WHITE,
+            border=ft.border.all(1, ft.Colors.GREY_300),
+        )
+
+    def play_selected_music(self, e, music_id) -> None:
+        """Reproduz uma música selecionada da lista"""
+        # Música selecionada
+        self.music.id = music_id
+
+        # Atualizar interface com nova música
+        current_music = self.playlist[self.music.id - 1]
+        self.audio.src_base64 = current_music['music']
+        self.audio.update()
+
+        # Iniciar a reprodução
+        self.music.is_playing = True
+
+        # Atualizar botão de play
+        for control in self.page.controls[0].controls:
+            if isinstance(control, ft.Container) and control.content and isinstance(control.content, ft.Column):
+                for column_control in control.content.controls:
+                    if isinstance(column_control, ft.Row):
+                        for row_control in column_control.controls:
+                            if isinstance(row_control, ft.IconButton) and row_control.tooltip == "Reproduzir/Pausar":
+                                row_control.icon = ft.Icons.PAUSE
+                                break
+
+        # Tocar música
+        self.audio.play()
+        self.update_music_display()
+
+    def update_account(self, e) -> None:
+        """Atualiza as informações da conta"""
+        pass
+
+    def logout(self, e) -> None:
+        """Realiza logout do sistema"""
+        pass
 
 
 def main(page: ft.Page) -> None:
