@@ -2,9 +2,9 @@
 Esse sistema foi desenvolvido com o objetivo de aprender mais sobre Python e seu POO (Programação Orientada a Objetos) e consequentemente outras habilidades importantes para um desenvolvedor.
 
 # Pré-requisitos
-- Python 3.12+
-- Windows 10+
+- Python 3.9+
 - SQL Server 18+
+- Git 2.49+
 
 # Instalação
 - Clone o repositório
